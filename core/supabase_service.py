@@ -8,6 +8,10 @@ from supabase import create_client, Client
 from django.conf import settings
 from decouple import config
 import logging
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 

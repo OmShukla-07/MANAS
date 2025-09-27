@@ -7,6 +7,10 @@ from django.core.management import call_command
 from django.conf import settings
 from core.supabase_service import supabase_service
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 class Command(BaseCommand):
     help = 'Setup and migrate MANAS database to Supabase PostgreSQL'
