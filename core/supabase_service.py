@@ -8,10 +8,14 @@ from supabase import create_client, Client
 from django.conf import settings
 from decouple import config
 import logging
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Try to load environment variables from .env file if available (for local development)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # dotenv not available, use system environment variables directly
+    pass
 
 logger = logging.getLogger(__name__)
 
