@@ -1,0 +1,320 @@
+{% extends 'admin/base_new.html' %}
+{% load static %}
+
+{% block title %}MANAS Supabase Integration{% endblock %}
+
+{% block extra_css %}
+<style>
+    .supabase-dashboard {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .status-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-left: 4px solid #00d4aa;
+    }
+    
+    .status-card.error {
+        border-left-color: #ff4444;
+    }
+    
+    .status-card.warning {
+        border-left-color: #ffaa00;
+    }
+    
+    .status-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+    
+    .status-connected { background-color: #00d4aa; }
+    .status-error { background-color: #ff4444; }
+    .status-warning { background-color: #ffaa00; }
+    
+    .setup-steps {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    .step-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .step-item:last-child {
+        border-bottom: none;
+    }
+    
+    .step-number {
+        background: #00d4aa;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        margin-right: 10px;
+    }
+    
+    .command-box {
+        background: #2d3748;
+        color: #e2e8f0;
+        padding: 15px;
+        border-radius: 6px;
+        font-family: 'Courier New', monospace;
+        margin: 10px 0;
+    }
+    
+    .btn-supabase {
+        background: #00d4aa;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin: 5px;
+    }
+    
+    .btn-supabase:hover {
+        background: #00b89c;
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .feature-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero-section {
+        text-align: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #00d4aa 0%, #00b89c 100%);
+        color: white;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="supabase-dashboard">
+    <div class="hero-section">
+        <h1>🚀 MANAS Supabase Integration</h1>
+        <p>Production-ready PostgreSQL database with real-time features</p>
+    </div>
+
+    <!-- Status Cards -->
+    <div id="status-cards">
+        <div class="status-card">
+            <h3><span class="status-indicator status-warning"></span>Loading System Status...</h3>
+            <p>Checking Supabase configuration and database connection...</p>
+        </div>
+    </div>
+
+    <!-- Setup Guide -->
+    <div class="setup-steps">
+        <h2>📋 Quick Setup Guide</h2>
+        
+        <div class="step-item">
+            <span class="step-number">1</span>
+            <strong>Create Supabase Project</strong>
+            <p>Go to <a href="https://supabase.com" target="_blank">supabase.com</a> and create a new project</p>
+        </div>
+        
+        <div class="step-item">
+            <span class="step-number">2</span>
+            <strong>Get Project Credentials</strong>
+            <p>Copy your Project URL, anon key, and service role key from Project Settings → API</p>
+        </div>
+        
+        <div class="step-item">
+            <span class="step-number">3</span>
+            <strong>Update Environment Variables</strong>
+            <p>Add your Supabase credentials to your <code>.env</code> file:</p>
+            <div class="command-box">
+SUPABASE_URL=https://your-project-ref.supabase.co<br>
+SUPABASE_KEY=your-anon-key<br>
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key<br>
+DATABASE_URL=postgresql://postgres:[password]@[host]:[port]/postgres
+            </div>
+        </div>
+        
+        <div class="step-item">
+            <span class="step-number">4</span>
+            <strong>Run Migration Command</strong>
+            <div class="command-box">python manage.py setup_supabase</div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h3>🗄️ PostgreSQL Database</h3>
+            <p>Production-ready database with automatic backups, scaling, and performance optimization.</p>
+        </div>
+        
+        <div class="feature-card">
+            <h3>⚡ Real-time Features</h3>
+            <p>Live updates for chat messages, crisis alerts, and system notifications.</p>
+        </div>
+        
+        <div class="feature-card">
+            <h3>🔐 Built-in Security</h3>
+            <p>Row-level security, authentication, and secure API access out of the box.</p>
+        </div>
+        
+        <div class="feature-card">
+            <h3>📊 Dashboard & Analytics</h3>
+            <p>Built-in database dashboard with query editor, table browser, and analytics.</p>
+        </div>
+        
+        <div class="feature-card">
+            <h3>💾 File Storage</h3>
+            <p>CDN-backed file storage for user uploads, profile pictures, and documents.</p>
+        </div>
+        
+        <div class="feature-card">
+            <h3>🌍 Global Scale</h3>
+            <p>Edge locations worldwide for fast access from anywhere in the world.</p>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="text-align: center; margin-top: 30px;">
+        <button class="btn-supabase" onclick="checkStatus()">🔄 Refresh Status</button>
+        <button class="btn-supabase" onclick="viewSetupGuide()">📖 View Full Setup Guide</button>
+        <a href="https://supabase.com" target="_blank" class="btn-supabase">🚀 Go to Supabase</a>
+    </div>
+</div>
+
+<script>
+// Load status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkStatus();
+});
+
+function checkStatus() {
+    fetch('/api/v1/core/supabase/status/', {
+        headers: {
+            'Authorization': 'Bearer ' + (localStorage.getItem('token') || ''),
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateStatusCards(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('status-cards').innerHTML = `
+            <div class="status-card error">
+                <h3><span class="status-indicator status-error"></span>Status Check Failed</h3>
+                <p>Could not check system status. Please ensure you're logged in as an admin.</p>
+            </div>
+        `;
+    });
+}
+
+function updateStatusCards(data) {
+    let html = '';
+    
+    if (data.success) {
+        // Supabase Status
+        const supabaseStatus = data.supabase.configured ? 'connected' : 'warning';
+        const supabaseClass = data.supabase.configured ? '' : 'warning';
+        
+        html += `
+            <div class="status-card ${supabaseClass}">
+                <h3><span class="status-indicator status-${supabaseStatus}"></span>Supabase Configuration</h3>
+                <p><strong>Status:</strong> ${data.supabase.configured ? 'Configured' : 'Not Configured'}</p>
+                ${data.supabase.url ? `<p><strong>URL:</strong> ${data.supabase.url}</p>` : ''}
+                <p><strong>Connection:</strong> ${data.supabase.connection_status.message}</p>
+            </div>
+        `;
+        
+        // Database Status
+        const dbClass = data.database.status === 'supabase' ? '' : 'warning';
+        const dbStatusIcon = data.database.status === 'supabase' ? 'connected' : 'warning';
+        
+        html += `
+            <div class="status-card ${dbClass}">
+                <h3><span class="status-indicator status-${dbStatusIcon}"></span>Database</h3>
+                <p><strong>Type:</strong> ${data.database.type}</p>
+                <p><strong>Status:</strong> ${data.database.status === 'supabase' ? 'Production Ready' : 'Development Mode'}</p>
+            </div>
+        `;
+        
+        // AI System Status
+        const aiStatusIcon = data.ai_system.status === 'available' ? 'connected' : 'warning';
+        const aiClass = data.ai_system.status === 'available' ? '' : 'warning';
+        
+        html += `
+            <div class="status-card ${aiClass}">
+                <h3><span class="status-indicator status-${aiStatusIcon}"></span>AI System</h3>
+                <p><strong>Status:</strong> ${data.ai_system.status}</p>
+                <p><strong>Providers:</strong> ${data.ai_system.providers.length}</p>
+                ${data.ai_system.providers.map(p => `<small>• ${p.name}: ${p.model}</small>`).join('<br>')}
+            </div>
+        `;
+        
+        // Deployment Status
+        const deployClass = data.deployment_status.ready_for_production ? '' : 'warning';
+        const deployIcon = data.deployment_status.ready_for_production ? 'connected' : 'warning';
+        
+        html += `
+            <div class="status-card ${deployClass}">
+                <h3><span class="status-indicator status-${deployIcon}"></span>Deployment Status</h3>
+                <p><strong>Production Ready:</strong> ${data.deployment_status.ready_for_production ? 'Yes' : 'No'}</p>
+                <p><strong>Debug Mode:</strong> ${data.deployment_status.debug_mode ? 'On (Development)' : 'Off (Production)'}</p>
+            </div>
+        `;
+        
+    } else {
+        html = `
+            <div class="status-card error">
+                <h3><span class="status-indicator status-error"></span>System Error</h3>
+                <p>Failed to get system status: ${data.error}</p>
+            </div>
+        `;
+    }
+    
+    document.getElementById('status-cards').innerHTML = html;
+}
+
+function viewSetupGuide() {
+    fetch('/api/v1/core/supabase/setup-guide/')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Open setup guide in a new tab or modal
+            const guide = data.setup_guide;
+            alert('Setup guide loaded! Check the console for detailed steps or implement a modal here.');
+            console.log('Supabase Setup Guide:', guide);
+        }
+    })
+    .catch(error => {
+        console.error('Error loading setup guide:', error);
+    });
+}
+</script>
+{% endblock %}
