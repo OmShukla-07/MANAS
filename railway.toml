@@ -1,0 +1,12 @@
+# Railway Deployment Configuration
+# This file tells Railway how to deploy your Django app
+
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn manas_backend.wsgi:application --bind 0.0.0.0:$PORT"
+
+[env]
+PYTHONPATH = "/app"
+DISABLE_COLLECTSTATIC = "1"
