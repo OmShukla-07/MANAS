@@ -25,10 +25,16 @@ class SupabaseService:
     """
     
     def __init__(self):
-        self.url = config('SUPABASE_URL', default=None)
-        self.key = config('SUPABASE_KEY', default=None)
-        self.service_role_key = config('SUPABASE_SERVICE_ROLE_KEY', default=None)
-        self.storage_bucket = config('SUPABASE_STORAGE_BUCKET', default='manas-files')
+        # Try multiple methods to get environment variables
+        self.url = os.environ.get('SUPABASE_URL') or config('SUPABASE_URL', default=None)
+        self.key = os.environ.get('SUPABASE_KEY') or config('SUPABASE_KEY', default=None)
+        self.service_role_key = os.environ.get('SUPABASE_SERVICE_ROLE_KEY') or config('SUPABASE_SERVICE_ROLE_KEY', default=None)
+        self.storage_bucket = os.environ.get('SUPABASE_STORAGE_BUCKET') or config('SUPABASE_STORAGE_BUCKET', default='manas-files')
+        
+        # Debug logging for Railway
+        logger.info(f"Supabase URL configured: {'Yes' if self.url else 'No'}")
+        logger.info(f"Supabase Key configured: {'Yes' if self.key else 'No'}")
+        logger.info(f"Service Role Key configured: {'Yes' if self.service_role_key else 'No'}")
         
         # Initialize Supabase client if credentials are available
         self.client = None

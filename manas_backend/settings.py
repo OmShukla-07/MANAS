@@ -10,16 +10,23 @@ from pathlib import Path
 from decouple import config
 import dj_database_url
 
+# Enhanced environment variable loading for Railway and other platforms
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-change-in-production')
+SECRET_KEY = os.environ.get('SECRET_KEY') or config('SECRET_KEY', default='django-insecure-dev-key-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes') if os.environ.get('DEBUG') else config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if os.environ.get('ALLOWED_HOSTS') else config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
 
 
 # Application definition
@@ -96,7 +103,7 @@ AUTHENTICATION_BACKENDS = [
 
 # Database Configuration
 # Production: Supabase PostgreSQL, Development: SQLite
-DATABASE_URL = config('DATABASE_URL', default='sqlite:///db.sqlite3')
+DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL', default='sqlite:///db.sqlite3')
 
 if DATABASE_URL.startswith('sqlite'):
     DATABASES = {
@@ -291,14 +298,14 @@ CELERY_TIMEZONE = TIME_ZONE
 # ==============================================================================
 
 # Google Gemini AI
-GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
-GEMINI_API_KEY_BACKUP = config('GEMINI_API_KEY_BACKUP', default='')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY') or config('GEMINI_API_KEY', default='')
+GEMINI_API_KEY_BACKUP = os.environ.get('GEMINI_API_KEY_BACKUP') or config('GEMINI_API_KEY_BACKUP', default='')
 GEMINI_MODEL = 'gemini-pro'
 GEMINI_MODEL_ADVANCED = config('GEMINI_MODEL_ADVANCED', default='gemini-pro')
 
 # Google Cloud Translation API
-GOOGLE_TRANSLATE_API_KEY = config('GOOGLE_TRANSLATE_API_KEY', default='')
-GOOGLE_TRANSLATE_PROJECT_ID = config('GOOGLE_TRANSLATE_PROJECT_ID', default='')
+GOOGLE_TRANSLATE_API_KEY = os.environ.get('GOOGLE_TRANSLATE_API_KEY') or config('GOOGLE_TRANSLATE_API_KEY', default='')
+GOOGLE_TRANSLATE_PROJECT_ID = os.environ.get('GOOGLE_TRANSLATE_PROJECT_ID') or config('GOOGLE_TRANSLATE_PROJECT_ID', default='')
 
 # AI Chatbot Models Configuration
 AI_CHATBOT_MODELS = {
@@ -320,7 +327,7 @@ AI_CHATBOT_MODELS = {
 }
 
 # OpenAI (Backup)
-OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY') or config('OPENAI_API_KEY', default='')
 
 # ==============================================================================
 # STATIC FILES & MEDIA CONFIGURATION
