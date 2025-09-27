@@ -242,19 +242,15 @@ if DEBUG:
     # Use database sessions for development
     SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 else:
-    # Use Redis cache for production
+    # Use database cache for production (Railway compatible)
     CACHES = {
         'default': {
-            'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': REDIS_URL,
-            'OPTIONS': {
-                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            }
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'cache_table',
         }
     }
-    # Session storage
-    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-    SESSION_CACHE_ALIAS = 'default'
+    # Use database sessions for production (Railway compatible)
+    SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # ==============================================================================
 # CHANNELS & WEBSOCKET CONFIGURATION
@@ -268,12 +264,10 @@ if DEBUG:
         },
     }
 else:
+    # Use in-memory channels for production (Railway compatible)
     CHANNEL_LAYERS = {
         'default': {
-            'BACKEND': 'channels_redis.core.RedisChannelLayer',
-            'CONFIG': {
-                "hosts": [REDIS_URL],
-            },
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
         },
     }
 
