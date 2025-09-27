@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MANAS Admin{% endblock %}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    {% load static %}
+    <!-- Base Admin Styles -->
+    <link rel="stylesheet" href="{% static 'css/admin_base.css' %}">
+    
+    <!-- Page-specific styles -->
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Meta -->
+    <meta name="description" content="MANAS - Mental Health Admin Panel">
+    <meta name="author" content="MANAS Team">
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo">MANAS</div>
+                <span class="admin-badge">Admin Panel</span>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="nav-menu">
+                <div class="nav-item">
+                    <a href="{% url 'admin_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                        <i data-feather="home" class="nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="nav-item">
+                    <a href="{% url 'admin_user_management' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_user_management' %}active{% endif %}">
+                        <i data-feather="users" class="nav-icon"></i>
+                        <span>Users</span>
+                    </a>
+                </div>
+                
+                <div class="nav-item">
+                    <a href="{% url 'admin_crisis_tracking' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_crisis_tracking' %}active{% endif %}">
+                        <i data-feather="alert-triangle" class="nav-icon"></i>
+                        <span>Crisis</span>
+                    </a>
+                </div>
+                
+                <div class="nav-item">
+                    <a href="{% url 'admin_profile' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_profile' %}active{% endif %}">
+                        <i data-feather="user" class="nav-icon"></i>
+                        <span>Profile</span>
+                    </a>
+                </div>
+                
+                <div class="nav-item">
+                    <a href="{% url 'admin_system_settings' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_system_settings' %}active{% endif %}">
+                        <i data-feather="settings" class="nav-icon"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <!-- User Section -->
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-name">{{ user.get_full_name|default:user.username }}</div>
+                    <div class="user-role">{{ user.role|capfirst }} Admin</div>
+                </div>
+                <div class="user-avatar">
+                    {{ user.first_name.0|default:'A' }}{{ user.last_name.0|default:'' }}
+                </div>
+                <a href="{% url 'logout' %}" class="logout-btn">
+                    <i data-feather="log-out" style="width: 16px; height: 16px;"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="admin-main">
+        {% block page_header %}
+        <div class="page-header">
+            <h1 class="page-title">{% block page_title %}Admin Dashboard{% endblock %}</h1>
+            <p class="page-subtitle">{% block page_subtitle %}Manage your MANAS platform{% endblock %}</p>
+        </div>
+        {% endblock %}
+        
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} mb-3">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Page Content -->
+        {% block content %}
+        <div class="content-card">
+            <p>Welcome to the MANAS Admin Panel. Select a section from the navigation above.</p>
+        </div>
+        {% endblock %}
+    </main>
+    
+    <!-- Scripts -->
+    <script>
+        // Initialize Feather Icons
+        feather.replace();
+        
+        // Add any global admin scripts here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-hide alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                }, 5000);
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

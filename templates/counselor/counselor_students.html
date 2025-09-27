@@ -1,0 +1,680 @@
+{% extends 'counselor/base_counselor_admin.html' %}
+
+{% block title %}Student Management - MANAS{% endblock %}
+
+{% block content %}
+<!-- Student Management Header -->
+<div style="background: linear-gradient(135deg, rgba(120, 123, 218, 0.1) 0%, rgba(142, 224, 254, 0.1) 100%); border: 1px solid rgba(120, 123, 218, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 style="font-size: 1.125rem; font-weight: 700; color: #787bda; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                👥 Student Management Dashboard
+            </h3>
+            <p style="color: #4c51bf; font-size: 0.875rem;">Monitor and manage {{ total_students|default:"156" }} students across all counseling programs</p>
+        </div>
+        <button style="background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem;" 
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(120, 123, 218, 0.3)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"/>
+            </svg>
+            Add New Student
+        </button>
+    </div>
+</div>
+
+<!-- Students Statistics Overview -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div style="background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; transition: all 0.3s ease;"
+         onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(120, 123, 218, 0.15)'"
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0, 0, 0, 0.1)'">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
+                <svg width="24" height="24" fill="white" viewBox="0 0 20 20">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                </svg>
+            </div>
+            <span style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">+8 this week</span>
+        </div>
+        <div style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.25rem;">{{ total_students|default:"156" }}</div>
+        <div style="color: #64748b; font-size: 0.875rem; font-weight: 500;">Total Students</div>
+    </div>
+
+    <div style="background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; transition: all 0.3s ease;"
+         onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(142, 224, 254, 0.15)'"
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0, 0, 0, 0.1)'">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #8ee0fe 0%, #ffe9b4 100%); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
+                <svg width="24" height="24" fill="white" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <span style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">Currently counseling</span>
+        </div>
+        <div style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.25rem;">{{ active_students|default:"28" }}</div>
+        <div style="color: #64748b; font-size: 0.875rem; font-weight: 500;">Active Cases</div>
+    </div>
+
+    <div style="background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; transition: all 0.3s ease;"
+         onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(255, 233, 180, 0.15)'"
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0, 0, 0, 0.1)'">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #ffe9b4 0%, #fcc681 100%); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
+                <svg width="24" height="24" fill="white" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd"/>
+                </svg>
+            </div>
+            <span style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">Increasing intake</span>
+        </div>
+        <div style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.25rem;">{{ new_students|default:"12" }}</div>
+        <div style="color: #64748b; font-size: 0.875rem; font-weight: 500;">New This Month</div>
+    </div>
+
+    <div style="background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; transition: all 0.3s ease;"
+         onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(240, 146, 146, 0.15)'"
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0, 0, 0, 0.1)'">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #fcc681 0%, #f09292 100%); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
+                <svg width="24" height="24" fill="white" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" clipRule="evenodd"/>
+                </svg>
+            </div>
+            <span style="background: rgba(220, 38, 38, 0.1); color: #dc2626; padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">Needs attention</span>
+        </div>
+        <div style="font-size: 2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.25rem;">{{ priority_students|default:"5" }}</div>
+        <div style="color: #64748b; font-size: 0.875rem; font-weight: 500;">High Priority</div>
+    </div>
+</div>
+
+<!-- Student Management & Filtering -->
+<div style="background: white; border-radius: 0.75rem; padding: 1.5rem; border: 1px solid #e2e8f0; margin-bottom: 2rem; transition: all 0.3s ease;"
+     onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 40px rgba(120, 123, 218, 0.15)'"
+     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.5rem;">
+            👥 Active Students Directory
+        </h3>
+        <div style="display: flex; gap: 0.75rem;">
+            <button style="background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%); color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;"
+                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(120, 123, 218, 0.3)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+                    onclick="showAddStudentModal()">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"/>
+                </svg>
+                Add Student
+            </button>
+            <button style="background: linear-gradient(135deg, rgba(255, 233, 180, 0.8) 0%, rgba(252, 198, 129, 0.8) 100%); color: #92400e; padding: 0.5rem 1rem; border-radius: 0.375rem; border: 1px solid rgba(252, 198, 129, 0.3); font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;"
+                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(252, 198, 129, 0.3)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+                    onclick="exportStudents()">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM3.293 12.707a1 1 0 010-1.414l3-3a1 1 0 011.414 1.414L6.414 11H13a1 1 0 110 2H6.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3z" clipRule="evenodd"/>
+                </svg>
+                Export Data
+            </button>
+        </div>
+    </div>
+    
+    <!-- Students Directory Section -->
+    <div class="students-container">
+        <!-- Search and Filter Section -->
+        <div class="filter-section">
+            <div class="search-group">
+                <label for="student-search">Search Students</label>
+                <div class="search-input-wrapper">
+                    <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
+                    </svg>
+                    <input type="text" id="student-search" class="search-input" placeholder="Search by name, email, or student ID..." onkeyup="filterStudents()">
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label for="status-filter">Status Filter</label>
+                <select id="status-filter" class="filter-select" onchange="filterStudents()">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="priority">High Priority</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="department-filter">Department</label>
+                <select id="department-filter" class="filter-select" onchange="filterStudents()">
+                    <option value="">All Departments</option>
+                    <option value="engineering">Engineering</option>
+                    <option value="medicine">Medicine</option>
+                    <option value="arts">Arts & Sciences</option>
+                    <option value="business">Business</option>
+                    <option value="law">Law</option>
+                </select>
+            </div>
+            
+            <div class="clear-button-wrapper">
+                <button class="clear-button" onclick="clearFilters()">
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
+                    </svg>
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Students Grid -->
+        <div class="students-grid">
+            <!-- Student Card 1 - Emily Johnson -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="avatar-wrapper">
+                        <div class="avatar avatar-active">EJ</div>
+                        <div class="status-dot status-online"></div>
+                    </div>
+                    <div class="student-info">
+                        <h4 class="student-name">Emily Johnson</h4>
+                        <p class="student-id">ID: ST-2024-001</p>
+                        <p class="student-email">emily.johnson@student.edu</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn view-btn" title="View Profile">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn schedule-btn" title="Schedule Session">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn edit-btn" title="Edit Student">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.828-2.828z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="student-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">1 day ago</div>
+                        <div class="stat-label">Last Session</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value status-excellent">Excellent</div>
+                        <div class="stat-label">Progress</div>
+                    </div>
+                </div>
+                
+                <div class="student-footer">
+                    <span class="status-badge status-active">Active</span>
+                </div>
+            </div>
+
+            <!-- Student Card 2 - Michael Chen -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="avatar-wrapper">
+                        <div class="avatar avatar-priority">MC</div>
+                        <div class="status-dot status-priority"></div>
+                    </div>
+                    <div class="student-info">
+                        <h4 class="student-name">Michael Chen</h4>
+                        <p class="student-id">ID: ST-2023-145</p>
+                        <p class="student-email">michael.chen@student.edu</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn view-btn" title="View Profile">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn schedule-btn" title="Schedule Session">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn edit-btn" title="Edit Student">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.828-2.828z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="student-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">3 days ago</div>
+                        <div class="stat-label">Last Session</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value status-needs-attention">Needs Attention</div>
+                        <div class="stat-label">Progress</div>
+                    </div>
+                </div>
+                
+                <div class="student-footer">
+                    <span class="status-badge status-priority">High Priority</span>
+                </div>
+            </div>
+
+            <!-- Additional Student Cards -->
+            <div class="student-card">
+                <div class="student-header">
+                    <div class="avatar-wrapper">
+                        <div class="avatar avatar-inactive">SB</div>
+                        <div class="status-dot status-offline"></div>
+                    </div>
+                    <div class="student-info">
+                        <h4 class="student-name">Sarah Brown</h4>
+                        <p class="student-id">ID: ST-2024-089</p>
+                        <p class="student-email">sarah.brown@student.edu</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn view-btn" title="View Profile">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn schedule-btn" title="Schedule Session">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn edit-btn" title="Edit Student">
+                            <svg viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.828-2.828z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="student-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">22</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">1 week ago</div>
+                        <div class="stat-label">Last Session</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value status-good">Good</div>
+                        <div class="stat-label">Progress</div>
+                    </div>
+                </div>
+                
+                <div class="student-footer">
+                    <span class="status-badge status-inactive">Inactive</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Student Directory Styles */
+        .students-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-section {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: end;
+        }
+
+        .search-group label,
+        .filter-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #9ca3af;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .search-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: #787bda;
+            box-shadow: 0 0 0 3px rgba(120, 123, 218, 0.1);
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 140px;
+        }
+
+        .clear-button {
+            background: linear-gradient(135deg, rgba(240, 146, 146, 0.1) 0%, rgba(252, 198, 129, 0.1) 100%);
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(240, 146, 146, 0.3);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .clear-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(240, 146, 146, 0.2);
+        }
+
+        .clear-button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+        }
+
+        .student-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .student-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 18px;
+        }
+
+        .avatar-active {
+            background: linear-gradient(135deg, #8ee0fe 0%, #ffe9b4 100%);
+        }
+
+        .avatar-priority {
+            background: linear-gradient(135deg, #fcc681 0%, #f09292 100%);
+        }
+
+        .avatar-inactive {
+            background: linear-gradient(135deg, #a1a1aa 0%, #d1d5db 100%);
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+
+        .status-online { background: #10b981; }
+        .status-priority { background: #dc2626; }
+        .status-offline { background: #6b7280; }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0 0 4px 0;
+            font-size: 16px;
+        }
+
+        .student-id,
+        .student-email {
+            font-size: 14px;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .view-btn { color: #787bda; }
+        .view-btn:hover { background: #787bda; color: white; }
+
+        .schedule-btn { color: #10b981; }
+        .schedule-btn:hover { background: #10b981; color: white; }
+
+        .edit-btn { color: #f59e0b; }
+        .edit-btn:hover { background: #f59e0b; color: white; }
+
+        .student-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 18px;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-excellent { color: #10b981; }
+        .status-good { color: #3b82f6; }
+        .status-needs-attention { color: #f59e0b; }
+
+        .student-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+        }
+
+        .status-priority {
+            background: rgba(220, 38, 38, 0.1);
+            color: #dc2626;
+        }
+
+        .status-inactive {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .filter-section {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .student-stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+    <script>
+        // Filter functionality for student search
+        function filterStudents() {
+            const searchTerm = document.getElementById('student-search').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const departmentFilter = document.getElementById('department-filter').value;
+            
+            const studentCards = document.querySelectorAll('.student-card');
+            
+            studentCards.forEach(card => {
+                const studentName = card.querySelector('.student-name').textContent.toLowerCase();
+                const studentEmail = card.querySelector('.student-email').textContent.toLowerCase();
+                const studentId = card.querySelector('.student-id').textContent.toLowerCase();
+                const statusBadge = card.querySelector('.status-badge');
+                
+                // Check search term
+                const matchesSearch = studentName.includes(searchTerm) || 
+                                    studentEmail.includes(searchTerm) || 
+                                    studentId.includes(searchTerm);
+                
+                // Check status filter
+                let matchesStatus = true;
+                if (statusFilter) {
+                    const cardStatus = statusBadge.classList.contains(`status-${statusFilter}`) || 
+                                     statusBadge.textContent.toLowerCase().includes(statusFilter);
+                    matchesStatus = cardStatus;
+                }
+                
+                // Show/hide card based on filters
+                if (matchesSearch && matchesStatus) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('student-search').value = '';
+            document.getElementById('status-filter').value = '';
+            document.getElementById('department-filter').value = '';
+            
+            // Show all cards
+            const studentCards = document.querySelectorAll('.student-card');
+            studentCards.forEach(card => {
+                card.style.display = 'block';
+            });
+        }
+
+        // Add Student Modal functionality
+        function showAddStudentModal() {
+            alert('Add Student Modal would open here');
+        }
+
+        // Export functionality
+        function exportStudents() {
+            alert('Export functionality would trigger here');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any initialization code here
+            console.log('Student management page loaded successfully');
+        });
+    </script>
+
+{% endblock %}

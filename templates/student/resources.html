@@ -1,0 +1,429 @@
+{% extends 'student/base_student.html' %}
+{% load static %}
+
+{% block title %}Resources - MANAS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/resources-unified.css' %}">
+{% endblock %}
+
+{% block header_title %}Wellness Resources{% endblock %}
+
+{% block content %}
+<!-- Tab Navigation -->
+<div class="tab-navigation">
+    <button class="tab-btn active" onclick="showTab('learn')">Learn</button>
+    <button class="tab-btn" onclick="showTab('wellness')">Wellness Tools</button>
+    <button class="tab-btn" onclick="showTab('assessment')">Self-Assessment</button>
+</div>
+
+<!-- Learn Section -->
+<div id="learn-section" class="learn-section">
+    <h2 class="section-title">LEARN</h2>
+    
+    <!-- Topic Cards Grid -->
+    <div class="topic-grid">
+        <div class="topic-card" onclick="openTopic('anxiety')">
+            <div class="topic-icon">
+                <span class="emoji">🧠</span>
+            </div>
+            <h3 class="topic-title">Anxiety Management</h3>
+            <p class="topic-meta">12 articles • 8 videos</p>
+        </div>
+
+        <div class="topic-card" onclick="openTopic('stress')">
+            <div class="topic-icon">
+                <span class="emoji">😊</span>
+            </div>
+            <h3 class="topic-title">Stress Relief</h3>
+            <p class="topic-meta">15 articles • 10 videos</p>
+        </div>
+
+        <div class="topic-card" onclick="openTopic('social')">
+            <div class="topic-icon">
+                <span class="emoji">💼</span>
+            </div>
+            <h3 class="topic-title">Social Skills</h3>
+            <p class="topic-meta">8 articles • 5 videos</p>
+        </div>
+
+        <div class="topic-card" onclick="openTopic('sleep')">
+            <div class="topic-icon">
+                <span class="emoji">😴</span>
+            </div>
+            <h3 class="topic-title">Sleep Health</h3>
+            <p class="topic-meta">9 articles • 6 videos</p>
+        </div>
+
+        <div class="topic-card" onclick="openTopic('academic')">
+            <div class="topic-icon">
+                <span class="emoji">📚</span>
+            </div>
+            <h3 class="topic-title">Academic Pressure</h3>
+            <p class="topic-meta">11 articles • 7 videos</p>
+        </div>
+
+        <div class="topic-card" onclick="openTopic('resilience')">
+            <div class="topic-icon">
+                <span class="emoji">⚡</span>
+            </div>
+            <h3 class="topic-title">Resilience Building</h3>
+            <p class="topic-meta">10 articles • 9 videos</p>
+        </div>
+    </div>
+
+    <!-- Featured This Week -->
+    <div class="featured-section">
+        <h3 class="featured-title">Featured This Week</h3>
+        
+        <div class="featured-list">
+            <div class="featured-item" onclick="openResource('breathing-exercise')">
+                <div class="item-icon">
+                    <span class="emoji">⚠️</span>
+                </div>
+                <div class="item-content">
+                    <h4 class="item-title">5-Minute Breathing Exercise</h4>
+                    <div class="item-meta">
+                        <span class="meta-type">video</span>
+                        <span class="meta-duration">• 5:23</span>
+                        <span class="meta-language">• Hindi/English</span>
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="bookmark-btn" onclick="toggleBookmark('breathing-exercise', event)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="featured-item" onclick="openResource('exam-anxiety')">
+                <div class="item-icon">
+                    <span class="emoji">🧠</span>
+                </div>
+                <div class="item-content">
+                    <h4 class="item-title">Managing Exam Anxiety</h4>
+                    <div class="item-meta">
+                        <span class="meta-type">article</span>
+                        <span class="meta-duration">• 7 min</span>
+                        <span class="meta-rating">• ⭐ 4.8</span>
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="bookmark-btn" onclick="toggleBookmark('exam-anxiety', event)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="featured-item" onclick="openResource('sleep-stories')">
+                <div class="item-icon">
+                    <span class="emoji">🎧</span>
+                </div>
+                <div class="item-content">
+                    <h4 class="item-title">Sleep Stories</h4>
+                    <div class="item-meta">
+                        <span class="meta-type">audio</span>
+                        <span class="meta-duration">• 15:30</span>
+                        <span class="meta-downloads">• 1200 downloads</span>
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="bookmark-btn" onclick="toggleBookmark('sleep-stories', event)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="featured-item" onclick="openResource('mindfulness-guide')">
+                <div class="item-icon">
+                    <span class="emoji">🧘</span>
+                </div>
+                <div class="item-content">
+                    <h4 class="item-title">Mindfulness for Students</h4>
+                    <div class="item-meta">
+                        <span class="meta-type">guide</span>
+                        <span class="meta-duration">• 12 min</span>
+                        <span class="meta-rating">• ⭐ 4.9</span>
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="bookmark-btn" onclick="toggleBookmark('mindfulness-guide', event)">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Wellness Tools Section -->
+<div id="wellness-section" class="wellness-section" style="display: none;">
+    <h2 class="section-title">WELLNESS TOOLS</h2>
+    
+    <div class="tools-grid">
+        <div class="tool-card" onclick="location.href='{% url 'student_dashboard' %}'">
+            <div class="tool-icon breathing">
+                <i class="fas fa-lungs"></i>
+            </div>
+            <h3 class="tool-title">Breathing Exercises</h3>
+            <p class="tool-description">Guided breathing techniques for instant calm</p>
+            <div class="tool-stats">
+                <span class="usage-count">Used 1.2k times today</span>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="location.href='{% url 'student_dashboard' %}'">
+            <div class="tool-icon meditation">
+                <i class="fas fa-leaf"></i>
+            </div>
+            <h3 class="tool-title">Mindfulness Timer</h3>
+            <p class="tool-description">Meditation sessions with ambient sounds</p>
+            <div class="tool-stats">
+                <span class="usage-count">842 active sessions</span>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="location.href='{% url 'student_dashboard' %}'">
+            <div class="tool-icon journal">
+                <i class="fas fa-book"></i>
+            </div>
+            <h3 class="tool-title">Mood Journal</h3>
+            <p class="tool-description">Track your emotions and thoughts daily</p>
+            <div class="tool-stats">
+                <span class="usage-count">Personal & Private</span>
+            </div>
+        </div>
+
+        <div class="tool-card" onclick="location.href='{% url 'student_game_zone' %}'">
+            <div class="tool-icon games">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <h3 class="tool-title">Wellness Games</h3>
+            <p class="tool-description">Fun activities to boost mental health</p>
+            <div class="tool-stats">
+                <span class="usage-count">6 games available</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assessment Section -->
+<div id="assessment-section" class="assessment-section" style="display: none;">
+    <h2 class="section-title">SELF-ASSESSMENT</h2>
+    
+    <div class="assessment-intro">
+        <p>Regular self-assessment helps you understand your mental health and track your progress over time.</p>
+    </div>
+
+    <div class="assessment-grid">
+        <div class="assessment-card">
+            <div class="assessment-icon anxiety">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h3 class="assessment-title">Anxiety Level Check</h3>
+            <p class="assessment-description">Quick assessment of your current anxiety levels</p>
+            <div class="assessment-info">
+                <span class="duration">5 minutes</span>
+                <span class="questions">7 questions</span>
+            </div>
+            <button class="start-btn" onclick="startAssessment('anxiety')">Start Assessment</button>
+        </div>
+
+        <div class="assessment-card">
+            <div class="assessment-icon stress">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3 class="assessment-title">Stress Scale</h3>
+            <p class="assessment-description">Evaluate your stress levels and coping mechanisms</p>
+            <div class="assessment-info">
+                <span class="duration">8 minutes</span>
+                <span class="questions">10 questions</span>
+            </div>
+            <button class="start-btn" onclick="startAssessment('stress')">Start Assessment</button>
+        </div>
+
+        <div class="assessment-card">
+            <div class="assessment-icon wellbeing">
+                <i class="fas fa-smile"></i>
+            </div>
+            <h3 class="assessment-title">Overall Wellbeing</h3>
+            <p class="assessment-description">Comprehensive check of your mental health status</p>
+            <div class="assessment-info">
+                <span class="duration">12 minutes</span>
+                <span class="questions">15 questions</span>
+            </div>
+            <button class="start-btn" onclick="startAssessment('wellbeing')">Start Assessment</button>
+        </div>
+    </div>
+</div>
+
+<!-- Resource Modal -->
+<div id="resourceModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeResourceModal()">&times;</span>
+        <div id="resourceContent">
+            <!-- Resource content will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let userBookmarks = JSON.parse(localStorage.getItem('userBookmarks') || '[]');
+
+    function showTab(tabName) {
+        // Remove active class from all tab buttons
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => btn.classList.remove('active'));
+        
+        // Add active class to clicked button
+        event.target.classList.add('active');
+        
+        // Hide all sections
+        const sections = ['learn-section', 'wellness-section', 'assessment-section'];
+        sections.forEach(sectionId => {
+            const section = document.getElementById(sectionId);
+            if (section) section.style.display = 'none';
+        });
+        
+        // Show selected section
+        const targetSection = document.getElementById(tabName + '-section');
+        if (targetSection) {
+            targetSection.style.display = 'block';
+        }
+    }
+
+    function openTopic(topicName) {
+        // Navigate to topic-specific page or show modal with topic content
+        showNotification(`Opening ${topicName} resources...`, 'info');
+        // You can implement topic-specific navigation here
+    }
+
+    function openResource(resourceId) {
+        // Load and display resource content in modal
+        const modal = document.getElementById('resourceModal');
+        const content = document.getElementById('resourceContent');
+        
+        // Sample resource content - replace with actual resource loading
+        const resourceData = {
+            'breathing-exercise': {
+                title: '5-Minute Breathing Exercise',
+                type: 'video',
+                content: `
+                    <h3>5-Minute Breathing Exercise</h3>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle"></i>
+                        <p>Video: Guided breathing exercise for instant relaxation</p>
+                    </div>
+                    <div class="resource-description">
+                        <p>This guided breathing exercise helps you relax and reduce anxiety in just 5 minutes. Perfect for use between classes or during stressful moments.</p>
+                        <h4>Benefits:</h4>
+                        <ul>
+                            <li>Reduces stress and anxiety</li>
+                            <li>Improves focus and concentration</li>
+                            <li>Promotes better sleep</li>
+                            <li>Boosts overall wellbeing</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'exam-anxiety': {
+                title: 'Managing Exam Anxiety',
+                type: 'article',
+                content: `
+                    <h3>Managing Exam Anxiety</h3>
+                    <div class="article-content">
+                        <p>Exam anxiety is a common experience that can significantly impact academic performance. Here are evidence-based strategies to help you manage it effectively.</p>
+                        
+                        <h4>Understanding Exam Anxiety</h4>
+                        <p>Exam anxiety involves feelings of worry, fear, or stress before or during exams. It can manifest as physical symptoms (rapid heartbeat, sweating), emotional symptoms (fear, worry), or cognitive symptoms (racing thoughts, difficulty concentrating).</p>
+                        
+                        <h4>Effective Strategies:</h4>
+                        <ul>
+                            <li><strong>Preparation:</strong> Create a study schedule and stick to it</li>
+                            <li><strong>Relaxation techniques:</strong> Practice deep breathing and progressive muscle relaxation</li>
+                            <li><strong>Positive self-talk:</strong> Replace negative thoughts with encouraging ones</li>
+                            <li><strong>Healthy lifestyle:</strong> Maintain good sleep, nutrition, and exercise habits</li>
+                        </ul>
+                    </div>
+                `
+            }
+        };
+        
+        const resource = resourceData[resourceId];
+        if (resource) {
+            content.innerHTML = resource.content;
+            modal.style.display = 'block';
+        }
+    }
+
+    function closeResourceModal() {
+        document.getElementById('resourceModal').style.display = 'none';
+    }
+
+    function toggleBookmark(resourceId, event) {
+        event.stopPropagation();
+        
+        const bookmarkBtn = event.target.closest('.bookmark-btn');
+        const icon = bookmarkBtn.querySelector('i');
+        
+        if (userBookmarks.includes(resourceId)) {
+            // Remove bookmark
+            userBookmarks = userBookmarks.filter(id => id !== resourceId);
+            icon.className = 'far fa-bookmark';
+            showNotification('Removed from bookmarks', 'info');
+        } else {
+            // Add bookmark
+            userBookmarks.push(resourceId);
+            icon.className = 'fas fa-bookmark';
+            showNotification('Added to bookmarks', 'success');
+        }
+        
+        localStorage.setItem('userBookmarks', JSON.stringify(userBookmarks));
+    }
+
+    function startAssessment(assessmentType) {
+        // Navigate to assessment page or show assessment modal
+        showNotification(`Starting ${assessmentType} assessment...`, 'info');
+        // You can implement assessment navigation here
+        // Example: window.location.href = `/student/assessment/${assessmentType}/`;
+    }
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        `;
+
+        document.body.appendChild(notification);
+        setTimeout(() => notification.classList.add('show'), 100);
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => document.body.removeChild(notification), 300);
+        }, 3000);
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load saved bookmarks
+        userBookmarks.forEach(resourceId => {
+            const bookmarkBtn = document.querySelector(`[onclick*="${resourceId}"] .bookmark-btn i`);
+            if (bookmarkBtn) {
+                bookmarkBtn.className = 'fas fa-bookmark';
+            }
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('resourceModal');
+            if (event.target === modal) {
+                closeResourceModal();
+            }
+        }
+    });
+</script>
+{% endblock %}

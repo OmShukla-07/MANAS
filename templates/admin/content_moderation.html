@@ -1,0 +1,509 @@
+{% extends 'admin/base_new.html' %}
+{% load static %}
+
+{% block title %}Content Moderation - MANAS Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+<style>
+/* Content Moderation Specific Styles */
+.moderation-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.moderation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.content-item {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 0;
+}
+
+.content-item:last-child {
+    border-bottom: none;
+}
+
+.flag-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.flag-high {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.flag-medium {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.flag-low {
+    background: linear-gradient(135deg, #eab308, #ca8a04);
+    color: white;
+}
+
+.content-preview {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-left: 4px solid #667eea;
+    font-style: italic;
+    color: #64748b;
+}
+
+.moderation-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filters-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin-bottom: 1.5rem;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+</style>
+{% endblock %}
+
+{% block page_title %}Content Moderation{% endblock %}
+{% block page_subtitle %}Review and moderate user-generated content{% endblock %}
+
+{% block content %}
+<!-- Moderation Statistics -->
+<div class="stats-grid fade-in">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+            <i data-feather="flag"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-number">{{ pending_reports|default:12 }}</div>
+            <div class="stat-label">Pending Reports</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+            <i data-feather="clock"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-number">{{ avg_review_time|default:'2.5h' }}</div>
+            <div class="stat-label">Avg Review Time</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+            <i data-feather="check"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-number">{{ resolved_today|default:8 }}</div>
+            <div class="stat-label">Resolved Today</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+            <i data-feather="shield"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-number">{{ auto_flagged|default:3 }}</div>
+            <div class="stat-label">Auto-Flagged</div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="filters-section fade-in">
+    <h3 style="color: #1f2937; margin-bottom: 1rem;">Content Filters</h3>
+    <form class="filter-grid">
+        <div class="form-group">
+            <label class="form-label" for="content_type">Content Type</label>
+            <select id="content_type" class="form-select">
+                <option value="">All Content</option>
+                <option value="chat">Chat Messages</option>
+                <option value="forum">Forum Posts</option>
+                <option value="profile">Profile Content</option>
+                <option value="assessment">Assessment Responses</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" for="severity">Flag Severity</label>
+            <select id="severity" class="form-select">
+                <option value="">All Severities</option>
+                <option value="high">High Priority</option>
+                <option value="medium">Medium Priority</option>
+                <option value="low">Low Priority</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" for="status">Review Status</label>
+            <select id="status" class="form-select">
+                <option value="pending">Pending Review</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="escalated">Escalated</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onclick="applyFilters()">
+                <i data-feather="filter" style="width: 16px; height: 16px;"></i>
+                Apply Filters
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Pending Content Review -->
+<div class="moderation-card fade-in">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="color: #1f2937; margin: 0;">Pending Content Review</h3>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-secondary" onclick="bulkApprove()">
+                <i data-feather="check-circle" style="width: 16px; height: 16px;"></i>
+                Bulk Approve
+            </button>
+            <button class="btn btn-primary" onclick="refreshContent()">
+                <i data-feather="refresh-cw" style="width: 16px; height: 16px;"></i>
+                Refresh
+            </button>
+        </div>
+    </div>
+    
+    <!-- Sample Content Items -->
+    <div class="content-item">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <span class="flag-badge flag-high">High Priority</span>
+                    <span style="color: #64748b; font-size: 0.9rem;">Chat Message</span>
+                    <span style="color: #64748b; font-size: 0.9rem;">2 hours ago</span>
+                </div>
+                
+                <div class="user-info" style="margin-bottom: 1rem;">
+                    <div class="user-avatar-small">JD</div>
+                    <div>
+                        <div style="font-weight: 600; color: #1f2937;">John Doe</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">john.doe@example.com</div>
+                    </div>
+                </div>
+                
+                <div class="content-preview">
+                    "I'm feeling really overwhelmed and don't know what to do anymore..."
+                </div>
+                
+                <div style="font-size: 0.8rem; color: #64748b;">
+                    <strong>Flagged for:</strong> Potential crisis indicators, emotional distress
+                </div>
+            </div>
+        </div>
+        
+        <div class="moderation-actions">
+            <button class="btn btn-success btn-sm" onclick="approveContent('msg_001')">
+                <i data-feather="check" style="width: 14px; height: 14px;"></i>
+                Approve
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="rejectContent('msg_001')">
+                <i data-feather="x" style="width: 14px; height: 14px;"></i>
+                Reject
+            </button>
+            <button class="btn btn-warning btn-sm" onclick="escalateContent('msg_001')">
+                <i data-feather="alert-triangle" style="width: 14px; height: 14px;"></i>
+                Escalate to Crisis Team
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="viewContext('msg_001')">
+                <i data-feather="eye" style="width: 14px; height: 14px;"></i>
+                View Context
+            </button>
+        </div>
+    </div>
+    
+    <div class="content-item">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <span class="flag-badge flag-medium">Medium Priority</span>
+                    <span style="color: #64748b; font-size: 0.9rem;">Forum Post</span>
+                    <span style="color: #64748b; font-size: 0.9rem;">4 hours ago</span>
+                </div>
+                
+                <div class="user-info" style="margin-bottom: 1rem;">
+                    <div class="user-avatar-small">AS</div>
+                    <div>
+                        <div style="font-weight: 600; color: #1f2937;">Alice Smith</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">alice.smith@university.edu</div>
+                    </div>
+                </div>
+                
+                <div class="content-preview">
+                    "Has anyone tried the new meditation techniques? I found some resources that might be helpful..."
+                </div>
+                
+                <div style="font-size: 0.8rem; color: #64748b;">
+                    <strong>Flagged for:</strong> External resource sharing, link verification needed
+                </div>
+            </div>
+        </div>
+        
+        <div class="moderation-actions">
+            <button class="btn btn-success btn-sm" onclick="approveContent('post_002')">
+                <i data-feather="check" style="width: 14px; height: 14px;"></i>
+                Approve
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="rejectContent('post_002')">
+                <i data-feather="x" style="width: 14px; height: 14px;"></i>
+                Reject
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="requestEdit('post_002')">
+                <i data-feather="edit" style="width: 14px; height: 14px;"></i>
+                Request Edit
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="viewContext('post_002')">
+                <i data-feather="eye" style="width: 14px; height: 14px;"></i>
+                View Full Post
+            </button>
+        </div>
+    </div>
+    
+    <div class="content-item">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <span class="flag-badge flag-low">Low Priority</span>
+                    <span style="color: #64748b; font-size: 0.9rem;">Profile Update</span>
+                    <span style="color: #64748b; font-size: 0.9rem;">1 day ago</span>
+                </div>
+                
+                <div class="user-info" style="margin-bottom: 1rem;">
+                    <div class="user-avatar-small">MJ</div>
+                    <div>
+                        <div style="font-weight: 600; color: #1f2937;">Mike Johnson</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">mike.j@student.edu</div>
+                    </div>
+                </div>
+                
+                <div class="content-preview">
+                    Profile bio update: "Computer Science student interested in AI and mental health tech..."
+                </div>
+                
+                <div style="font-size: 0.8rem; color: #64748b;">
+                    <strong>Flagged for:</strong> Routine content review, new user profile
+                </div>
+            </div>
+        </div>
+        
+        <div class="moderation-actions">
+            <button class="btn btn-success btn-sm" onclick="approveContent('profile_003')">
+                <i data-feather="check" style="width: 14px; height: 14px;"></i>
+                Approve
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="rejectContent('profile_003')">
+                <i data-feather="x" style="width: 14px; height: 14px;"></i>
+                Reject
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="viewProfile('profile_003')">
+                <i data-feather="user" style="width: 14px; height: 14px;"></i>
+                View Profile
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- AI Moderation Tools -->
+<div class="moderation-card fade-in">
+    <h3 style="color: #1f2937; margin-bottom: 1.5rem;">AI Moderation Tools</h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; text-align: center;">
+            <i data-feather="brain" style="width: 32px; height: 32px; color: #667eea; margin-bottom: 0.5rem;"></i>
+            <h4 style="color: #1f2937; margin-bottom: 0.5rem;">Sentiment Analysis</h4>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">
+                Analyze emotional tone and detect distress signals
+            </p>
+            <button class="btn btn-primary btn-sm" onclick="runSentimentAnalysis()">
+                Run Analysis
+            </button>
+        </div>
+        
+        <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; text-align: center;">
+            <i data-feather="shield" style="width: 32px; height: 32px; color: #667eea; margin-bottom: 0.5rem;"></i>
+            <h4 style="color: #1f2937; margin-bottom: 0.5rem;">Content Filter</h4>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">
+                Automatically flag inappropriate or harmful content
+            </p>
+            <button class="btn btn-primary btn-sm" onclick="updateContentFilter()">
+                Update Filters
+            </button>
+        </div>
+        
+        <div style="background: #f8fafc; border-radius: 8px; padding: 1rem; text-align: center;">
+            <i data-feather="trending-up" style="width: 32px; height: 32px; color: #667eea; margin-bottom: 0.5rem;"></i>
+            <h4 style="color: #1f2937; margin-bottom: 0.5rem;">Trend Detection</h4>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">
+                Identify emerging topics and concerning patterns
+            </p>
+            <button class="btn btn-primary btn-sm" onclick="analyzeTrends()">
+                Analyze Trends
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize page
+    feather.replace();
+    
+    // Add animation delays
+    const fadeElements = document.querySelectorAll('.fade-in');
+    fadeElements.forEach((element, index) => {
+        element.style.animationDelay = `${index * 0.1}s`;
+    });
+});
+
+function applyFilters() {
+    const contentType = document.getElementById('content_type').value;
+    const severity = document.getElementById('severity').value;
+    const status = document.getElementById('status').value;
+    
+    console.log('Applying filters:', { contentType, severity, status });
+    // In a real app, this would filter the content list
+}
+
+function refreshContent() {
+    location.reload();
+}
+
+function approveContent(contentId) {
+    if (confirm('Are you sure you want to approve this content?')) {
+        console.log('Approving content:', contentId);
+        showNotification('Content approved successfully', 'success');
+    }
+}
+
+function rejectContent(contentId) {
+    if (confirm('Are you sure you want to reject this content?')) {
+        console.log('Rejecting content:', contentId);
+        showNotification('Content rejected', 'warning');
+    }
+}
+
+function escalateContent(contentId) {
+    if (confirm('Are you sure you want to escalate this to the crisis team?')) {
+        console.log('Escalating content:', contentId);
+        showNotification('Content escalated to crisis team', 'info');
+    }
+}
+
+function viewContext(contentId) {
+    console.log('Viewing context for:', contentId);
+    alert('Content context viewer would open here');
+}
+
+function requestEdit(contentId) {
+    console.log('Requesting edit for:', contentId);
+    showNotification('Edit request sent to user', 'info');
+}
+
+function viewProfile(contentId) {
+    console.log('Viewing profile for:', contentId);
+    alert('User profile viewer would open here');
+}
+
+function bulkApprove() {
+    if (confirm('Are you sure you want to approve all visible content items?')) {
+        showNotification('Bulk approval completed', 'success');
+    }
+}
+
+function runSentimentAnalysis() {
+    showNotification('Running sentiment analysis...', 'info');
+    setTimeout(() => {
+        showNotification('Sentiment analysis completed', 'success');
+    }, 3000);
+}
+
+function updateContentFilter() {
+    showNotification('Updating content filters...', 'info');
+    setTimeout(() => {
+        showNotification('Content filters updated', 'success');
+    }, 2000);
+}
+
+function analyzeTrends() {
+    showNotification('Analyzing content trends...', 'info');
+    setTimeout(() => {
+        showNotification('Trend analysis completed', 'success');
+    }, 4000);
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        background: ${type === 'success' ? '#22c55e' : type === 'warning' ? '#f59e0b' : type === 'info' ? '#3b82f6' : '#ef4444'};
+        color: white;
+        border-radius: 8px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+</script>
+{% endblock %}

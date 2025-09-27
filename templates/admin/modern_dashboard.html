@@ -1,0 +1,234 @@
+{% extends 'admin/base_new.html' %}
+{% load static %}
+
+{% block title %}Dashboard - MANAS Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block page_title %}Admin Dashboard{% endblock %}
+{% block page_subtitle %}Overview of your MANAS platform performance and metrics{% endblock %}
+
+{% block content %}
+<!-- System Status -->
+<div class="system-status fade-in">
+    <div class="status-item">
+        <div class="status-indicator healthy"></div>
+        <div class="status-label">System</div>
+        <div class="status-value">Online</div>
+    </div>
+    <div class="status-item">
+        <div class="status-indicator healthy"></div>
+        <div class="status-label">Database</div>
+        <div class="status-value">Healthy</div>
+    </div>
+    <div class="status-item">
+        <div class="status-indicator healthy"></div>
+        <div class="status-label">Services</div>
+        <div class="status-value">Running</div>
+    </div>
+    <div class="status-item">
+        <div class="status-indicator warning"></div>
+        <div class="status-label">Alerts</div>
+        <div class="status-value">{{ active_crisis_alerts|default:0 }}</div>
+    </div>
+</div>
+
+<!-- Dashboard Stats -->
+<div class="dashboard-stats fade-in">
+    <div class="stat-card">
+        <i data-feather="users" class="stat-icon"></i>
+        <div class="stat-number">{{ total_users|default:0 }}</div>
+        <div class="stat-label">Total Users</div>
+    </div>
+    
+    <div class="stat-card">
+        <i data-feather="user-check" class="stat-icon"></i>
+        <div class="stat-number">{{ active_users|default:0 }}</div>
+        <div class="stat-label">Active Users</div>
+    </div>
+    
+    <div class="stat-card">
+        <i data-feather="calendar" class="stat-icon"></i>
+        <div class="stat-number">{{ total_appointments|default:0 }}</div>
+        <div class="stat-label">Appointments</div>
+    </div>
+    
+    <div class="stat-card">
+        <i data-feather="alert-triangle" class="stat-icon"></i>
+        <div class="stat-number">{{ high_severity_alerts|default:0 }}</div>
+        <div class="stat-label">Critical Alerts</div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions fade-in">
+    <a href="{% url 'admin_user_management' %}" class="action-card">
+        <div class="action-icon">
+            <i data-feather="users" style="width: 32px; height: 32px;"></i>
+        </div>
+        <div class="action-title">Manage Users</div>
+        <div class="action-desc">Add, edit, or remove users from the platform</div>
+    </a>
+    
+    <a href="{% url 'admin_crisis_tracking' %}" class="action-card">
+        <div class="action-icon">
+            <i data-feather="alert-triangle" style="width: 32px; height: 32px;"></i>
+        </div>
+        <div class="action-title">Crisis Tracking</div>
+        <div class="action-desc">Monitor and respond to crisis situations</div>
+    </a>
+    
+    <a href="{% url 'admin_system_settings' %}" class="action-card">
+        <div class="action-icon">
+            <i data-feather="settings" style="width: 32px; height: 32px;"></i>
+        </div>
+        <div class="action-title">System Settings</div>
+        <div class="action-desc">Configure platform settings and preferences</div>
+    </a>
+    
+    <a href="{% url 'admin_profile' %}" class="action-card">
+        <div class="action-icon">
+            <i data-feather="user" style="width: 32px; height: 32px;"></i>
+        </div>
+        <div class="action-title">Profile</div>
+        <div class="action-desc">Update your admin profile information</div>
+    </a>
+</div>
+
+<!-- Alert Panels -->
+{% if high_severity_alerts > 0 %}
+<div class="alert-panel critical fade-in">
+    <div class="alert-header">
+        <i data-feather="alert-triangle" class="alert-icon"></i>
+        <div class="alert-title">Critical Alerts Pending</div>
+    </div>
+    <div class="alert-message">
+        There are {{ high_severity_alerts }} high-severity crisis alerts that require immediate attention.
+        <a href="{% url 'admin_crisis_tracking' %}" style="color: #ef4444; font-weight: 600;">View alerts →</a>
+    </div>
+</div>
+{% endif %}
+
+{% if pending_appointments > 5 %}
+<div class="alert-panel warning fade-in">
+    <div class="alert-header">
+        <i data-feather="calendar" class="alert-icon"></i>
+        <div class="alert-title">High Appointment Volume</div>
+    </div>
+    <div class="alert-message">
+        There are {{ pending_appointments }} pending appointments. Consider increasing counselor availability.
+    </div>
+</div>
+{% endif %}
+
+<!-- Charts Container -->
+<div class="charts-container fade-in">
+    <!-- Main Chart -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <div class="chart-title">User Activity Overview</div>
+            <div class="chart-subtitle">Active users and engagement metrics over time</div>
+        </div>
+        <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #64748b;">
+            <div style="text-align: center;">
+                <i data-feather="bar-chart-2" style="width: 64px; height: 64px; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <p>Chart visualization would be integrated here<br>
+                <small>(Using Chart.js or similar library)</small></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="activity-feed">
+        <div class="activity-header">
+            <div class="activity-title">Recent Activity</div>
+        </div>
+        
+        {% if recent_users %}
+            {% for user in recent_users|slice:":5" %}
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i data-feather="user-plus" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        <strong>{{ user.get_full_name|default:user.username }}</strong> joined as {{ user.role }}
+                    </div>
+                    <div class="activity-time">{{ user.created_at|timesince }} ago</div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i data-feather="info" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-text">No recent activity to display</div>
+                    <div class="activity-time">System monitoring active</div>
+                </div>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 1rem;">
+            <a href="{% url 'admin_user_management' %}" class="btn btn-secondary">
+                View All Activity
+                <i data-feather="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Stats -->
+<div class="grid grid-3 fade-in">
+    <div class="content-card text-center">
+        <h3 style="color: #667eea; margin-bottom: 0.5rem;">{{ students_count|default:0 }}</h3>
+        <p style="color: #64748b; margin-bottom: 1rem;">Students Registered</p>
+        <div style="font-size: 0.85rem; color: #10b981;">
+            <i data-feather="trending-up" style="width: 16px; height: 16px;"></i>
+            +{{ new_users_week|default:0 }} this week
+        </div>
+    </div>
+    
+    <div class="content-card text-center">
+        <h3 style="color: #667eea; margin-bottom: 0.5rem;">{{ counselors_count|default:0 }}</h3>
+        <p style="color: #64748b; margin-bottom: 1rem;">Active Counselors</p>
+        <div style="font-size: 0.85rem; color: #64748b;">
+            <i data-feather="users" style="width: 16px; height: 16px;"></i>
+            Professional network
+        </div>
+    </div>
+    
+    <div class="content-card text-center">
+        <h3 style="color: #667eea; margin-bottom: 0.5rem;">{{ appointments_today|default:0 }}</h3>
+        <p style="color: #64748b; margin-bottom: 1rem;">Appointments Today</p>
+        <div style="font-size: 0.85rem; color: #f59e0b;">
+            <i data-feather="calendar" style="width: 16px; height: 16px;"></i>
+            {{ pending_appointments|default:0 }} pending
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation delays for fade-in elements
+    const fadeElements = document.querySelectorAll('.fade-in');
+    fadeElements.forEach((element, index) => {
+        element.style.animationDelay = `${index * 0.1}s`;
+    });
+    
+    // Real-time updates (placeholder)
+    setInterval(function() {
+        // In a real app, this would fetch updated stats via AJAX
+        console.log('Dashboard stats would update here');
+    }, 30000); // Update every 30 seconds
+    
+    // Initialize any dashboard-specific functionality
+    feather.replace();
+});
+</script>
+{% endblock %}

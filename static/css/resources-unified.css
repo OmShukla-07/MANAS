@@ -1,0 +1,360 @@
+/* Resources Page - Clean Unified Styling */
+/* This CSS works with the base dashboard sidebar - no redundant sidebar definitions */
+
+/* Tab Navigation */
+.tab-navigation {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    padding: 12px 25px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    color: #6B7280;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Manrope', sans-serif;
+}
+
+.tab-btn.active {
+    background-color: #7BA098;
+    color: white;
+    border-color: #7BA098;
+    box-shadow: 0 2px 8px rgba(123, 160, 152, 0.2);
+}
+
+.tab-btn:hover:not(.active) {
+    border-color: #7BA098;
+    background-color: #F9FAFB;
+    color: #374151;
+}
+
+/* Section Styling */
+.learn-section,
+.wellness-section,
+.assessment-section {
+    display: none;
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* Show Learn section by default since it's the active tab */
+.learn-section {
+    display: block;
+}
+
+.learn-section.active,
+.wellness-section.active,
+.assessment-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Topic Grid */
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.topic-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E9F2;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.topic-card:hover {
+    border-color: #7BA098;
+    box-shadow: 0 4px 12px rgba(123, 160, 152, 0.15);
+    transform: translateY(-2px);
+}
+
+.topic-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #7BA098;
+}
+
+.topic-icon .emoji {
+    font-size: 2.5rem;
+}
+
+.topic-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.topic-meta {
+    color: #6B7280;
+    font-size: 0.9rem;
+}
+
+/* Wellness Tools */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.tool-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E9F2;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.tool-card:hover {
+    border-color: #7BA098;
+    box-shadow: 0 4px 12px rgba(123, 160, 152, 0.15);
+}
+
+.tool-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #7BA098, #6B9289);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.tool-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 10px;
+}
+
+.tool-description {
+    color: #6B7280;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.tool-btn {
+    background: #7BA098;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Manrope', sans-serif;
+}
+
+.tool-btn:hover {
+    background: #6B9289;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(123, 160, 152, 0.3);
+}
+
+/* Assessment Section */
+.assessment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.assessment-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E9F2;
+    border-radius: 12px;
+    padding: 25px;
+    transition: all 0.3s ease;
+}
+
+.assessment-card:hover {
+    border-color: #7BA098;
+    box-shadow: 0 4px 12px rgba(123, 160, 152, 0.15);
+}
+
+.assessment-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.assessment-icon {
+    width: 50px;
+    height: 50px;
+    background: #F0F9FF;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7BA098;
+    font-size: 1.3rem;
+}
+
+.assessment-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.assessment-description {
+    color: #6B7280;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.assessment-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #9CA3AF;
+    margin-bottom: 15px;
+}
+
+.start-assessment-btn {
+    width: 100%;
+    background: #7BA098;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Manrope', sans-serif;
+}
+
+.start-assessment-btn:hover {
+    background: #6B9289;
+    transform: translateY(-1px);
+}
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: #FFFFFF;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.modal-header {
+    padding: 25px;
+    border-bottom: 1px solid #E5E9F2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6B7280;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #F3F4F6;
+    color: #374151;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tab-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .tab-btn {
+        text-align: center;
+    }
+    
+    .topic-grid,
+    .tools-grid,
+    .assessment-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .topic-card,
+    .tool-card,
+    .assessment-card {
+        padding: 20px;
+    }
+    
+    .modal-header,
+    .modal-body {
+        padding: 20px;
+    }
+}

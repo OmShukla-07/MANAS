@@ -1,0 +1,458 @@
+{% extends 'counselor/base_counselor_admin.html' %}
+
+{% block title %}Profile Management - MANAS{% endblock %}
+
+{% block content %}
+<!-- Profile Management Header -->
+<div style="background: linear-gradient(135deg, rgba(252, 198, 129, 0.1) 0%, rgba(240, 146, 146, 0.1) 100%); border: 1px solid rgba(252, 198, 129, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 style="font-size: 1.125rem; font-weight: 700; color: #d97706; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                👤 Professional Profile Management
+            </h3>
+            <p style="color: #ea580c; font-size: 0.875rem;">Manage your counselor profile • {{ total_sessions|default:"127" }} sessions completed • {{ average_rating|default:"4.8" }}★ rating</p>
+        </div>
+        <button style="background: linear-gradient(135deg, #fcc681 0%, #f09292 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem;" 
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(252, 198, 129, 0.3)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+            </svg>
+            Edit Profile
+        </button>
+    </div>
+</div>
+
+<!-- Profile Statistics Overview -->
+<div class="counselor-stats-grid">
+    <div class="counselor-stat-card">
+        <div class="counselor-stat-icon counselor-stat-icon-sessions">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+        </div>
+        <div class="counselor-stat-number">{{ total_sessions|default:"127" }}</div>
+        <div class="counselor-stat-label">Total Sessions</div>
+        <div class="counselor-stat-trend counselor-trend-up">+12% this month</div>
+    </div>
+    
+    <div class="counselor-stat-card">
+        <div class="counselor-stat-icon counselor-stat-icon-students">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+            </svg>
+        </div>
+        <div class="counselor-stat-number">{{ active_students|default:"28" }}</div>
+        <div class="counselor-stat-label">Active Students</div>
+        <div class="counselor-stat-trend counselor-trend-up">+3 new students</div>
+    </div>
+    
+    <div class="counselor-stat-card">
+        <div class="counselor-stat-icon counselor-stat-icon-rating">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+        </div>
+        <div class="counselor-stat-number">{{ average_rating|default:"4.8" }}</div>
+        <div class="counselor-stat-label">Average Rating</div>
+        <div class="counselor-stat-trend counselor-trend-up">Excellent feedback</div>
+    </div>
+    
+    <div class="counselor-stat-card">
+        <div class="counselor-stat-icon counselor-stat-icon-crisis">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" clipRule="evenodd"/>
+            </svg>
+        </div>
+        <div class="counselor-stat-number">{{ crisis_handled|default:"7" }}</div>
+        <div class="counselor-stat-label">Crisis Handled</div>
+        <div class="counselor-stat-trend counselor-trend-neutral">This month</div>
+    </div>
+</div>
+
+<!-- Personal Information Section -->
+<div class="counselor-form-section">
+    <div class="counselor-form-header">
+        <h3>👤 Personal Information</h3>
+        <button class="counselor-btn counselor-btn-primary counselor-btn-sm" onclick="toggleEditMode('personal')">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.828-2.828z"/>
+            </svg>
+            Edit
+        </button>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="counselor-form-grid">
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">First Name</label>
+                <input type="text" class="counselor-form-input" id="first_name" name="first_name" value="{{ user.first_name|default:'' }}" readonly>
+            </div>
+            
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">Last Name</label>
+                <input type="text" class="counselor-form-input" id="last_name" name="last_name" value="{{ user.last_name|default:'' }}" readonly>
+            </div>
+            
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">Email Address</label>
+                <input type="email" class="counselor-form-input" id="email" name="email" value="{{ user.email|default:'' }}" readonly>
+            </div>
+            
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">Phone Number</label>
+                <input type="tel" class="counselor-form-input" id="phone_number" name="phone_number" value="{{ user.phone_number|default:'' }}" readonly>
+            </div>
+            
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">Date of Birth</label>
+                <input type="date" class="counselor-form-input" id="date_of_birth" name="date_of_birth" value="{% if user.date_of_birth %}{{ user.date_of_birth|date:'Y-m-d' }}{% endif %}" readonly>
+            </div>
+        </div>
+        
+        <div class="counselor-form-group counselor-form-full">
+            <label class="counselor-form-label">Professional Bio</label>
+            <textarea class="counselor-form-textarea" id="bio" name="bio" readonly>{{ counselor_profile.bio|default:'' }}</textarea>
+        </div>
+        
+        <div class="counselor-form-actions" id="personal-actions" style="display: none;">
+            <button type="submit" class="counselor-btn counselor-btn-success">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                </svg>
+                Save Changes
+            </button>
+            <button type="button" class="counselor-btn counselor-btn-secondary" onclick="cancelEdit('personal')">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Professional Information Section -->
+<div class="counselor-form-section">
+    <div class="counselor-form-header">
+        <h3>🏥 Professional Information</h3>
+        <button class="counselor-btn counselor-btn-primary counselor-btn-sm" onclick="toggleEditMode('professional')">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.828-2.828z"/>
+            </svg>
+            Edit
+        </button>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="counselor-form-grid">
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">License Number</label>
+                <input type="text" class="counselor-form-input" id="license_number" name="license_number" value="{{ counselor_profile.license_number|default:'' }}" readonly>
+            </div>
+            
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">Years of Experience</label>
+                <select class="counselor-form-input" id="experience_years" name="experience_years" disabled>
+                    <option value="">Select Experience</option>
+                    <option value="0" {% if counselor_profile.experience_years == 0 %}selected{% endif %}>Less than 1 year</option>
+                    <option value="1" {% if counselor_profile.experience_years == 1 %}selected{% endif %}>1-2 years</option>
+                    <option value="2" {% if counselor_profile.experience_years == 2 %}selected{% endif %}>2-5 years</option>
+                    <option value="5" {% if counselor_profile.experience_years == 5 %}selected{% endif %}>5-10 years</option>
+                    <option value="10" {% if counselor_profile.experience_years == 10 %}selected{% endif %}>10+ years</option>
+                </select>
+            </div>
+            
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">Specializations</label>
+                <input type="text" class="counselor-form-input" id="specializations" name="specializations" 
+                       value="{% for spec in counselor_profile.specializations %}{{ spec }}{% if not forloop.last %}, {% endif %}{% endfor %}" readonly>
+            </div>
+            
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">Languages Spoken</label>
+                <input type="text" class="counselor-form-input" id="languages_spoken" name="languages_spoken" 
+                       value="{% for lang in counselor_profile.languages_spoken %}{{ lang }}{% if not forloop.last %}, {% endif %}{% endfor %}" readonly>
+            </div>
+            
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">Consultation Fee (₹ per session)</label>
+                <input type="number" class="counselor-form-input" id="consultation_fee" name="consultation_fee" 
+                       value="{{ counselor_profile.consultation_fee|default:'' }}" readonly>
+            </div>
+            
+            <div class="counselor-form-group">
+                <label class="counselor-form-label">Session Duration (minutes)</label>
+                <select class="counselor-form-input" id="session_duration_minutes" name="session_duration_minutes" disabled>
+                    <option value="">Select Duration</option>
+                    <option value="30" {% if counselor_profile.session_duration_minutes == 30 %}selected{% endif %}>30 minutes</option>
+                    <option value="45" {% if counselor_profile.session_duration_minutes == 45 %}selected{% endif %}>45 minutes</option>
+                    <option value="60" {% if counselor_profile.session_duration_minutes == 60 %}selected{% endif %}>60 minutes</option>
+                    <option value="90" {% if counselor_profile.session_duration_minutes == 90 %}selected{% endif %}>90 minutes</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="counselor-form-group counselor-form-full">
+            <label class="counselor-form-label">Education & Qualifications</label>
+            <textarea class="counselor-form-textarea" id="qualifications" name="qualifications" readonly>{{ counselor_profile.qualifications|default:'' }}</textarea>
+        </div>
+        
+        <div class="counselor-form-actions" id="professional-actions" style="display: none;">
+            <button type="submit" class="counselor-btn counselor-btn-success">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                </svg>
+                Save Changes
+            </button>
+            <button type="button" class="counselor-btn counselor-btn-secondary" onclick="cancelEdit('professional')">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Security & Privacy Section -->
+<div class="counselor-form-section">
+    <div class="counselor-form-header">
+        <h3>🔒 Security & Privacy</h3>
+    </div>
+    
+    <div class="counselor-alert counselor-alert-info counselor-mb-4">
+        <div class="counselor-flex counselor-items-center">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20" class="counselor-mr-3">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+            </svg>
+            <span>Strong passwords help protect your account and student data.</span>
+        </div>
+    </div>
+    
+    <div class="counselor-form-grid">
+        <div class="counselor-form-group">
+            <label class="counselor-form-label">Current Password</label>
+            <input type="password" class="counselor-form-input" id="current_password" placeholder="Enter current password">
+        </div>
+        
+        <div class="counselor-form-group">
+            <label class="counselor-form-label">New Password</label>
+            <input type="password" class="counselor-form-input" id="new_password" placeholder="Enter new password" onkeyup="checkPasswordStrength()">
+            <div class="counselor-password-strength" id="password-strength">
+                <div class="counselor-strength-bar" id="strength-bar"></div>
+                <span class="counselor-strength-text" id="strength-text">Password strength</span>
+            </div>
+        </div>
+        
+        <div class="counselor-form-group counselor-form-span-2">
+            <label class="counselor-form-label">Confirm New Password</label>
+            <input type="password" class="counselor-form-input" id="confirm_password" placeholder="Confirm new password">
+        </div>
+    </div>
+    
+    <div class="counselor-form-actions">
+        <button class="counselor-btn counselor-btn-warning" onclick="changePassword()">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clipRule="evenodd"/>
+            </svg>
+            Update Password
+        </button>
+    </div>
+</div>
+
+<!-- Notification Preferences Section -->
+<div class="counselor-form-section">
+    <div class="counselor-form-header">
+        <h3>🔔 Notification Preferences</h3>
+        <span class="counselor-badge counselor-badge-success">All Active</span>
+    </div>
+    
+    <div class="counselor-notification-grid">
+        <div class="counselor-notification-item">
+            <div class="counselor-notification-icon">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                </svg>
+            </div>
+            <div class="counselor-notification-content">
+                <h4>Email Notifications</h4>
+                <p>Session reminders and updates</p>
+            </div>
+            <div class="counselor-toggle">
+                <input type="checkbox" id="email-notifications" checked>
+                <label for="email-notifications"></label>
+            </div>
+        </div>
+        
+        <div class="counselor-notification-item">
+            <div class="counselor-notification-icon counselor-notification-icon-crisis">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" clipRule="evenodd"/>
+                </svg>
+            </div>
+            <div class="counselor-notification-content">
+                <h4>Crisis Alerts</h4>
+                <p>Immediate emergency notifications</p>
+            </div>
+            <div class="counselor-toggle">
+                <input type="checkbox" id="crisis-notifications" checked>
+                <label for="crisis-notifications"></label>
+            </div>
+        </div>
+        
+        <div class="counselor-notification-item">
+            <div class="counselor-notification-icon">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 2L3 7v11a2 2 0 002 2h4v-6h2v6h4a2 2 0 002-2V7l-7-5z"/>
+                </svg>
+            </div>
+            <div class="counselor-notification-content">
+                <h4>Session Reminders</h4>
+                <p>15 minutes before sessions</p>
+            </div>
+            <div class="counselor-toggle">
+                <input type="checkbox" id="session-reminders" checked>
+                <label for="session-reminders"></label>
+            </div>
+        </div>
+        
+        <div class="counselor-notification-item">
+            <div class="counselor-notification-icon">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2v1a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2V3a2 2 0 012 2v6a4 4 0 01-4 4H6a4 4 0 01-4-4V5z" clipRule="evenodd"/>
+            </svg>
+            </div>
+            <div class="counselor-notification-content">
+                <h4>Weekly Reports</h4>
+                <p>Performance and activity summary</p>
+            </div>
+            <div class="counselor-toggle">
+                <input type="checkbox" id="weekly-reports" checked>
+                <label for="weekly-reports"></label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleEditMode(section) {
+    const inputs = document.querySelectorAll(`#${section}-actions`).length ? 
+                  document.querySelector(`#${section}-actions`).closest('.counselor-form-section').querySelectorAll('input, textarea') :
+                  document.querySelectorAll('input, textarea');
+    const actions = document.getElementById(`${section}-actions`);
+    const editBtn = document.querySelector(`[onclick="toggleEditMode('${section}')"]`);
+    
+    if (actions.style.display === 'none' || !actions.style.display) {
+        // Enable edit mode
+        inputs.forEach(input => input.readOnly = false);
+        actions.style.display = 'block';
+        editBtn.innerHTML = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/></svg> Cancel';
+        editBtn.onclick = () => cancelEdit(section);
+    }
+}
+
+function cancelEdit(section) {
+    const inputs = document.getElementById(`${section}-actions`).closest('.counselor-form-section').querySelectorAll('input, textarea');
+    const actions = document.getElementById(`${section}-actions`);
+    const editBtn = document.querySelector(`[onclick="cancelEdit('${section}')"]`);
+    
+    // Disable edit mode
+    inputs.forEach(input => input.readOnly = true);
+    actions.style.display = 'none';
+    editBtn.innerHTML = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.828-2.828z"/></svg> Edit';
+    editBtn.onclick = () => toggleEditMode(section);
+}
+
+function saveProfile(section) {
+    // Show success message
+    showNotification('Profile updated successfully!', 'success');
+    cancelEdit(section);
+}
+
+function changePassword() {
+    const current = document.getElementById('current_password').value;
+    const newPass = document.getElementById('new_password').value;
+    const confirm = document.getElementById('confirm_password').value;
+    
+    if (!current || !newPass || !confirm) {
+        showNotification('Please fill in all password fields', 'error');
+        return;
+    }
+    
+    if (newPass !== confirm) {
+        showNotification('New passwords do not match', 'error');
+        return;
+    }
+    
+    // Simulate password change
+    showNotification('Password updated successfully!', 'success');
+    document.getElementById('current_password').value = '';
+    document.getElementById('new_password').value = '';
+    document.getElementById('confirm_password').value = '';
+    document.getElementById('strength-text').textContent = 'Password strength';
+    document.getElementById('strength-bar').className = 'counselor-strength-bar';
+}
+
+function checkPasswordStrength() {
+    const password = document.getElementById('new_password').value;
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthText = document.getElementById('strength-text');
+    
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (password.match(/[a-z]/)) score++;
+    if (password.match(/[A-Z]/)) score++;
+    if (password.match(/[0-9]/)) score++;
+    if (password.match(/[^a-zA-Z0-9]/)) score++;
+    
+    strengthBar.className = 'counselor-strength-bar';
+    
+    if (score === 0) {
+        strengthText.textContent = 'Password strength';
+    } else if (score <= 2) {
+        strengthBar.classList.add('weak');
+        strengthText.textContent = 'Weak password';
+    } else if (score <= 3) {
+        strengthBar.classList.add('fair');
+        strengthText.textContent = 'Fair password';
+    } else if (score <= 4) {
+        strengthBar.classList.add('good');
+        strengthText.textContent = 'Good password';
+    } else {
+        strengthBar.classList.add('strong');
+        strengthText.textContent = 'Strong password';
+    }
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `counselor-notification counselor-notification-${type}`;
+    notification.innerHTML = `
+        <div class="counselor-notification-content">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                ${type === 'success' ? 
+                '<path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>' :
+                '<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>'}
+            </svg>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Handle notification toggles
+document.querySelectorAll('.counselor-toggle input[type="checkbox"]').forEach(toggle => {
+    toggle.addEventListener('change', function() {
+        const label = this.closest('.counselor-notification-item').querySelector('h4').textContent;
+        const status = this.checked ? 'enabled' : 'disabled';
+        showNotification(`${label} ${status}`, 'success');
+    });
+});
+</script>
+
+{% endblock %}

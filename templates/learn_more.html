@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn More - MANAS Mental Health Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #7BA098;
+            --secondary-color: #A89CDF;
+            --accent-color: #5A8B7F;
+            --text-dark: #2C3E50;
+            --text-light: #6C757D;
+            --bg-gradient: linear-gradient(135deg, #7BA098 0%, #A89CDF 100%);
+            --section-padding: 5rem 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Enhanced Fixed Background with Moving Elements */
+        .background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-gradient);
+            z-index: -2;
+        }
+
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-icon {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 2rem;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .floating-icon:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 25s;
+        }
+
+        .floating-icon:nth-child(2) {
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+            animation-duration: 30s;
+        }
+
+        .floating-icon:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 10s;
+            animation-duration: 20s;
+        }
+
+        .floating-icon:nth-child(4) {
+            top: 40%;
+            right: 30%;
+            animation-delay: 15s;
+            animation-duration: 35s;
+        }
+
+        .floating-icon:nth-child(5) {
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 20s;
+            animation-duration: 28s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.1;
+            }
+            25% {
+                transform: translateY(-30px) rotate(90deg);
+                opacity: 0.2;
+            }
+            50% {
+                transform: translateY(-60px) rotate(180deg);
+                opacity: 0.1;
+            }
+            75% {
+                transform: translateY(-30px) rotate(270deg);
+                opacity: 0.2;
+            }
+        }
+
+        /* Enhanced SVG Background */
+        .enhanced-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Scrollable Content with Glass Effect */
+        .content-layer {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            min-height: 100vh;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Enhanced Header */
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Spectacular Hero Section */
+        .hero {
+            padding: 8rem 2rem 6rem;
+            text-align: center;
+            background: transparent;
+            position: relative;
+        }
+
+        .hero-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: heroGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes heroGlow {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.1;
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, white, rgba(255, 255, 255, 0.8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            animation: slideInFromTop 1s ease-out;
+        }
+
+        @keyframes slideInFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            animation: slideInFromBottom 1s ease-out 0.3s both;
+        }
+
+        @keyframes slideInFromBottom {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Enhanced Statistics Section */
+        .crisis-stats {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 30px;
+            padding: 4rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crisis-stats::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: statsGlow 6s ease-in-out infinite;
+        }
+
+        @keyframes statsGlow {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.5) rotate(180deg);
+                opacity: 0.2;
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, white, rgba(255, 255, 255, 0.8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Enhanced Content Sections */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, white, rgba(255, 255, 255, 0.8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== AI COMPANIONS SECTION - CLEAN REDESIGN ===== */
+        .companions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .companion-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .companion-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .companion-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .companion-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .companion-card:hover .companion-avatar {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
+        }
+
+        .companion-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .companion-role {
+            display: none;
+        }
+
+        .companion-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .companion-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .companion-features li {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.8rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .companion-features li:hover {
+            color: white;
+            transform: translateX(3px);
+        }
+
+        .companion-features li i {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            width: 16px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .companion-features li:hover i {
+            color: white;
+        }
+
+        .companion-role {
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .companion-description {
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .companion-features {
+            list-style: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .companion-features li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .companion-features li:hover {
+            transform: translateX(10px);
+            color: white;
+        }
+
+        .companion-features li i {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .companion-features li:hover i {
+            color: white;
+            transform: scale(1.2);
+        }
+
+        /* Enhanced CTA Section */
+        .cta-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            color: white;
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            animation: ctaGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes ctaGlow {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.5) rotate(180deg);
+                opacity: 0.1;
+            }
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+
+
+        /* Missing CSS Classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 5;
+            min-height: 100vh;
+        }
+
+        /* Crisis Stats */
+        .crisis-stats {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+            justify-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            transition: all 0.4s ease;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .crisis-description h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            color: white;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .crisis-description p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .crisis-description .solution-highlight {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(52, 152, 219, 0.15));
+            border-left: 4px solid #4a90e2;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .crisis-description .solution-highlight:hover {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(52, 152, 219, 0.2));
+            transform: translateX(5px);
+        }
+
+        .crisis-description strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
+        }
+
+        .feature-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Professional Tools */
+        .professional-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .professional-section {
+            transition: all 0.4s ease;
+        }
+
+        .professional-section:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .professional-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .professional-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .professional-section:hover .professional-icon {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
+        }
+
+        .professional-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .professional-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .professional-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .professional-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .professional-feature:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .professional-feature i {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.3rem;
+            margin-top: 0.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .professional-feature:hover i {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .professional-feature h4 {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .professional-feature p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4rem 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-section h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: white;
+            margin-bottom: 1.2rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+            transform: translateX(3px);
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(15px);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .cta-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Multi-Level Support System */
+        .support-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            justify-items: center;
+        }
+
+        .support-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .support-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            animation: rotate 10s linear infinite;
+        }
+
+        .support-card:hover::before {
+            opacity: 1;
+        }
+
+        .support-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .support-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .support-card h3 i {
+            font-size: 1.8rem;
+        }
+
+        .support-card p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .support-card ul {
+            list-style: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .support-card li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .support-card li:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .support-card li i {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .support-card li:hover i {
+            color: white;
+            transform: scale(1.2);
+        }
+
+        /* CTA Section Updates */
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer Container */
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Comprehensive Responsive Design */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                max-width: 600px;
+            }
+
+            .crisis-description {
+                padding: 2.5rem;
+            }
+
+            .crisis-header {
+                gap: 1.2rem;
+            }
+
+            .crisis-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .companions-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                max-width: 700px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 3rem 0;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .section-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero {
+                padding: 6rem 1rem 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                max-width: 350px;
+            }
+
+            .stat-item {
+                padding: 2rem 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 2.8rem;
+            }
+
+            .crisis-description {
+                padding: 2rem;
+            }
+
+            .crisis-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .crisis-description h3 {
+                font-size: 2rem;
+            }
+
+            .crisis-description p {
+                font-size: 1.1rem;
+            }
+
+            .companions-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                max-width: 400px;
+            }
+
+            .companion-card {
+                padding: 1.5rem;
+            }
+
+            .companion-avatar {
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+
+            .companion-info h3 {
+                font-size: 1.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 0;
+            }
+
+            .feature-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .professional-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .professional-section {
+                padding: 2rem;
+            }
+
+            .professional-feature {
+                padding: 1.2rem;
+            }
+
+            .support-levels {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .support-card {
+                padding: 2rem;
+                max-width: none;
+            }
+
+            .support-card h3 {
+                font-size: 1.4rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .cta-section h2 {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .floating-icon {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .professional-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .companions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .support-levels {
+                grid-template-columns: 1fr;
+            }
+
+            .support-card {
+                padding: 1.8rem;
+            }
+
+            .support-card h3 {
+                font-size: 1.3rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+
+            .cta-section h2 {
+                font-size: 2.2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        /* Smooth scrolling and navigation */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .nav-links a {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Background -->
+    <div class="background-layer"></div>
+    <div class="background-pattern">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="circles" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                    <circle cx="50" cy="50" r="20" fill="rgba(255,255,255,0.1)" opacity="0.3">
+                        <animate attributeName="r" values="15;25;15" dur="4s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="4s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="150" cy="100" r="15" fill="rgba(255,255,255,0.08)" opacity="0.4">
+                        <animate attributeName="r" values="10;20;10" dur="6s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.3;0.6;0.3" dur="6s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="100" cy="150" r="18" fill="rgba(255,255,255,0.06)" opacity="0.5">
+                        <animate attributeName="r" values="12;22;12" dur="5s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.4;0.7;0.4" dur="5s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="25" cy="175" r="12" fill="rgba(255,255,255,0.12)" opacity="0.3">
+                        <animate attributeName="r" values="8;18;8" dur="7s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="175" cy="25" r="14" fill="rgba(255,255,255,0.09)" opacity="0.4">
+                        <animate attributeName="r" values="9;19;9" dur="8s" repeatCount="indefinite"/>
+                    </circle>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#circles)"/>
+        </svg>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="floating-elements">
+        <i class="fas fa-brain floating-icon"></i>
+        <i class="fas fa-heart floating-icon"></i>
+        <i class="fas fa-hands-helping floating-icon"></i>
+        <i class="fas fa-shield-alt floating-icon"></i>
+        <i class="fas fa-graduation-cap floating-icon"></i>
+    </div>
+
+    <!-- Enhanced Background -->
+    <div class="enhanced-background">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="grad1" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:rgba(255,255,255,0);stop-opacity:0" />
+                </radialGradient>
+            </defs>
+            <circle cx="10%" cy="20%" r="100" fill="url(#grad1)">
+                <animate attributeName="cy" values="20%;80%;20%" dur="20s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="80;120;80" dur="15s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="90%" cy="70%" r="80" fill="url(#grad1)">
+                <animate attributeName="cx" values="90%;10%;90%" dur="25s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="60;100;60" dur="18s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="50%" cy="50%" r="60" fill="url(#grad1)">
+                <animate attributeName="r" values="40;80;40" dur="12s" repeatCount="indefinite"/>
+            </circle>
+        </svg>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="content-layer">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-container">
+                <a href="/" class="logo">
+                    <img src="/static/images/images/icons/brain-icon.png" alt="MANAS Logo" style="width: 40px; height: 40px; object-fit: contain; filter: brightness(0) invert(1) drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));">
+                    <h1>MANAS</h1>
+                </a>
+                <nav class="nav-menu">
+                    <div class="nav-links">
+                        <a href="#crisis-stats">Mental Health Crisis</a>
+                        <a href="#ai-companions">AI Companions</a>
+                        <a href="#features">Features</a>
+                        <a href="#professional-tools">Professional Tools</a>
+                    </div>
+                    <a href="/" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Home
+                    </a>
+                    <button class="mobile-menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-container">
+                <h1>Understanding Mental Health in Students</h1>
+                <p>Comprehensive support system for student mental wellness through AI-powered companions and professional care</p>
+            </div>
+        </section>
+
+        <!-- Crisis Statistics -->
+        <section class="section" id="crisis-stats">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">The Student Mental Health Crisis</h2>
+                    <p class="section-subtitle">Understanding the scope and impact of mental health challenges in educational environments</p>
+                </div>
+
+                <div class="crisis-stats glass-card">
+                    <div class="stats-grid">
+                        <div class="stat-item glass-card">
+                            <span class="stat-number">60%</span>
+                            <span class="stat-label">of students experience overwhelming anxiety</span>
+                        </div>
+                        <div class="stat-item glass-card">
+                            <span class="stat-number">73%</span>
+                            <span class="stat-label">experienced mental health crisis on campus</span>
+                        </div>
+                        <div class="stat-item glass-card">
+                            <span class="stat-number">85%</span>
+                            <span class="stat-label">feel emotionally exhausted by academic demands</span>
+                        </div>
+                        <div class="stat-item glass-card">
+                            <span class="stat-number">41%</span>
+                            <span class="stat-label">have considered dropping out due to mental health</span>
+                        </div>
+                    </div>
+
+                    <div class="crisis-description glass-card">
+                        <h3>The Growing Challenge</h3>
+                        <p>Student mental health has reached a <strong>critical point</strong>, with unprecedented levels of anxiety, depression, and stress affecting academic performance and overall well-being. The transition to adulthood, academic pressures, social challenges, and uncertain futures create a perfect storm of mental health challenges.</p>
+                        
+                        <p>Traditional support systems are often <strong>overwhelmed</strong>, leaving students without immediate access to care when they need it most. This gap in mental health support has led to increased dropout rates, decreased academic performance, and in severe cases, self-harm and suicide.</p>
+                        
+                        <p class="solution-highlight"><strong>MANAS bridges this gap</strong> by providing immediate, accessible, and personalized mental health support through AI-powered companions available 24/7.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Companions -->
+        <section class="section" id="ai-companions">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Your AI Mental Health Companions</h2>
+                    <p class="section-subtitle">Personalised support tailored to your unique mental health journey</p>
+                </div>
+
+                <div class="companions-grid">
+                    <div class="companion-card">
+                        <div class="companion-header">
+                            <div class="companion-avatar">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="companion-info">
+                                <h3>Arjun</h3>
+                                <span class="companion-role">Hybrid Support Companion</span>
+                            </div>
+                        </div>
+                        <p class="companion-description">
+                            Arjun combines practical academic guidance with empathetic listening, offering both strategic solutions and emotional support for your educational journey.
+                        </p>
+                        <ul class="companion-features">
+                            <li><i class="fas fa-check-circle"></i>Practical study strategies</li>
+                            <li><i class="fas fa-check-circle"></i>Empathetic academic support</li>
+                            <li><i class="fas fa-check-circle"></i>Balanced guidance approach</li>
+                        </ul>
+                    </div>
+
+                    <div class="companion-card">
+                        <div class="companion-header">
+                            <div class="companion-avatar">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="companion-info">
+                                <h3>Priya</h3>
+                                <span class="companion-role">Empathetic Listener</span>
+                            </div>
+                        </div>
+                        <p class="companion-description">
+                            Priya provides compassionate emotional support through active listening, understanding your feelings without judgment, and offering comfort during difficult times.
+                        </p>
+                        <ul class="companion-features">
+                            <li><i class="fas fa-check-circle"></i>Active listening support</li>
+                            <li><i class="fas fa-check-circle"></i>Emotional validation</li>
+                            <li><i class="fas fa-check-circle"></i>Non-judgmental understanding</li>
+                        </ul>
+                    </div>
+
+                    <div class="companion-card">
+                        <div class="companion-header">
+                            <div class="companion-avatar">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="companion-info">
+                                <h3>Vikram</h3>
+                                <span class="companion-role">Practical Advice Giver</span>
+                            </div>
+                        </div>
+                        <p class="companion-description">
+                            Vikram focuses on providing actionable solutions and practical strategies to help you tackle mental health challenges with concrete, step-by-step approaches.
+                        </p>
+                        <ul class="companion-features">
+                            <li><i class="fas fa-check-circle"></i>Strategic problem solving</li>
+                            <li><i class="fas fa-check-circle"></i>Actionable mental health tips</li>
+                            <li><i class="fas fa-check-circle"></i>Practical coping strategies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Platform Features -->
+        <section class="section" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Comprehensive Platform Features</h2>
+                    <p class="section-subtitle">Everything you need for your mental wellness journey in one integrated platform</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Real-time Chat Support</h3>
+                        <p>Instant messaging with AI companions available 24/7 for immediate support and guidance</p>
+                    </div>
+
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>AI-Powered Insights</h3>
+                        <p>Advanced AI algorithms provide personalized recommendations and mental health insights</p>
+                    </div>
+
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Progress Tracking</h3>
+                        <p>Monitor your mental wellness journey with comprehensive analytics and progress reports</p>
+                    </div>
+
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h3>Professional Counsellors</h3>
+                        <p>Connect with licensed therapists and counsellors for professional mental health support</p>
+                    </div>
+
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Peer Support Groups</h3>
+                        <p>Join supportive communities and connect with others facing similar challenges</p>
+                    </div>
+
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3>Appointment Scheduling</h3>
+                        <p>Easy booking system for counselling sessions and mental health appointments</p>
+                    </div>
+
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Crisis Intervention</h3>
+                        <p>Immediate crisis support with safety planning and emergency resource connections</p>
+                    </div>
+
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Mobile Accessibility</h3>
+                        <p>Full platform functionality available on mobile devices for support anywhere, anytime</p>
+                    </div>
+
+                    <div class="feature-card glass-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Privacy & Security</h3>
+                        <p>End-to-end encryption and HIPAA compliance ensure your data remains private and secure</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin & Counsellor Features -->
+        <section class="section" id="professional-tools">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Professional Management Tools</h2>
+                    <p class="section-subtitle">Advanced features for counsellors and administrators to provide exceptional care</p>
+                </div>
+
+                <div class="professional-grid">
+                    <!-- Counsellor Features -->
+                    <div class="professional-section glass-card">
+                        <div class="professional-header">
+                            <div class="professional-icon">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <h3>Counsellor Dashboard</h3>
+                            <p>Comprehensive tools for mental health professionals</p>
+                        </div>
+                        
+                        <div class="professional-features">
+                            <div class="professional-feature">
+                                <i class="fas fa-calendar-check"></i>
+                                <div>
+                                    <h4>Session Management</h4>
+                                    <p>Schedule, manage, and conduct counselling sessions with integrated video calling</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-user-friends"></i>
+                                <div>
+                                    <h4>Student Portfolio</h4>
+                                    <p>Comprehensive student profiles with progress tracking and session history</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <h4>Crisis Management</h4>
+                                    <p>Real-time crisis alerts and intervention tools for immediate student support</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-chart-bar"></i>
+                                <div>
+                                    <h4>Analytics & Reports</h4>
+                                    <p>Detailed analytics on student progress and counselling effectiveness</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-file-medical-alt"></i>
+                                <div>
+                                    <h4>Clinical Notes</h4>
+                                    <p>Secure note-taking system with HIPAA-compliant data storage</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-video"></i>
+                                <div>
+                                    <h4>Video Counselling</h4>
+                                    <p>Built-in secure video conferencing for remote counselling sessions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Features -->
+                    <div class="professional-section glass-card">
+                        <div class="professional-header">
+                            <div class="professional-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <h3>Administrator Panel</h3>
+                            <p>Comprehensive system management and oversight tools</p>
+                        </div>
+                        
+                        <div class="professional-features">
+                            <div class="professional-feature">
+                                <i class="fas fa-users-cog"></i>
+                                <div>
+                                    <h4>User Management</h4>
+                                    <p>Manage students, counsellors, and system users with role-based access control</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <div>
+                                    <h4>System Dashboard</h4>
+                                    <p>Real-time system metrics, usage statistics, and performance monitoring</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-bell"></i>
+                                <div>
+                                    <h4>Crisis Tracking</h4>
+                                    <p>Monitor all crisis interventions and ensure proper follow-up procedures</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-database"></i>
+                                <div>
+                                    <h4>Data Analytics</h4>
+                                    <p>Comprehensive reporting on platform usage, outcomes, and effectiveness</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-shield-check"></i>
+                                <div>
+                                    <h4>Security & Compliance</h4>
+                                    <p>HIPAA compliance monitoring, security audits, and data protection management</p>
+                                </div>
+                            </div>
+                            
+                            <div class="professional-feature">
+                                <i class="fas fa-tools"></i>
+                                <div>
+                                    <h4>System Configuration</h4>
+                                    <p>Configure platform settings, AI parameters, and customization options</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Support Levels -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Multi-Level Support System</h2>
+                    <p class="section-subtitle">Comprehensive care from immediate AI support to professional intervention</p>
+                </div>
+
+                <div class="support-levels">
+                    <div class="support-card">
+                        <h3><i class="fas fa-robot" style="color: var(--primary-color);"></i>AI Companion Support</h3>
+                        <p>First line of support available 24/7 for immediate assistance, guidance, and emotional support.</p>
+                        <ul>
+                            <li><i class="fas fa-check"></i>Instant response time</li>
+                            <li><i class="fas fa-check"></i>Personalized conversations</li>
+                            <li><i class="fas fa-check"></i>Evidence-based techniques</li>
+                            <li><i class="fas fa-check"></i>Mood tracking and analysis</li>
+                            <li><i class="fas fa-check"></i>Resource recommendations</li>
+                        </ul>
+                    </div>
+
+                    <div class="support-card professional">
+                        <h3><i class="fas fa-user-md" style="color: var(--secondary-color);"></i>Professional Counseling</h3>
+                        <p>Licensed therapists and counselors available for structured therapy sessions and professional treatment.</p>
+                        <ul>
+                            <li><i class="fas fa-check"></i>Licensed mental health professionals</li>
+                            <li><i class="fas fa-check"></i>Individual therapy sessions</li>
+                            <li><i class="fas fa-check"></i>Group therapy options</li>
+                            <li><i class="fas fa-check"></i>Specialized treatment programs</li>
+                            <li><i class="fas fa-check"></i>Professional diagnosis and treatment</li>
+                        </ul>
+                    </div>
+
+                    <div class="support-card emergency">
+                        <h3><i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i>Emergency Crisis Support</h3>
+                        <p>Immediate intervention for mental health emergencies with safety planning and professional referrals.</p>
+                        <ul>
+                            <li><i class="fas fa-check"></i>24/7 crisis hotline</li>
+                            <li><i class="fas fa-check"></i>Immediate safety assessment</li>
+                            <li><i class="fas fa-check"></i>Emergency service connections</li>
+                            <li><i class="fas fa-check"></i>Suicide prevention protocols</li>
+                            <li><i class="fas fa-check"></i>Family notification when appropriate</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="cta-container">
+                <h2>Start Your Mental Wellness Journey Today</h2>
+                <p>Join thousands of students who have found support, healing, and hope through MANAS</p>
+                <div class="cta-buttons">
+                    <a href="/choose-user/" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i>
+                        Get Started Free
+                    </a>
+                    <a href="/login/" class="btn btn-secondary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In to Continue
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <h4>MANAS Platform</h4>
+                        <p>Comprehensive mental health support platform designed specifically for students, counsellors, and administrators.</p>
+                        <div class="social-links">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>For Students</h4>
+                        <ul>
+                            <li><a href="/choose-user/">Get Started</a></li>
+                            <li><a href="/student/">Student Dashboard</a></li>
+                            <li><a href="/student/manas-ai/">AI Companions</a></li>
+                            <li><a href="/student/crisis/">Crisis Support</a></li>
+                            <li><a href="/student/appointments/">Book Counselling</a></li>
+                            <li><a href="/student/community/">Peer Support</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>For Counsellors</h4>
+                        <ul>
+                            <li><a href="/signup/counsellor/">Join as Counsellor</a></li>
+                            <li><a href="/counselor-panel/">Counsellor Dashboard</a></li>
+                            <li><a href="/counselor-panel/sessions/">Session Management</a></li>
+                            <li><a href="/counselor-panel/students/">Student Portfolio</a></li>
+                            <li><a href="/counselor-panel/crisis/">Crisis Management</a></li>
+                            <li><a href="/counselor-panel/analytics/">Analytics & Reports</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>For Administrators</h4>
+                        <ul>
+                            <li><a href="/signup/admin/">Admin Access</a></li>
+                            <li><a href="/admin-panel/">Admin Dashboard</a></li>
+                            <li><a href="/admin-panel/user-management/">User Management</a></li>
+                            <li><a href="/admin-panel/crisis-tracking/">Crisis Tracking</a></li>
+                            <li><a href="/admin-panel/system-settings/">System Settings</a></li>
+                            <li><a href="/admin/">Django Admin</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Support & Resources</h4>
+                        <ul>
+                            <li><a href="/privacy/">Privacy Policy</a></li>
+                            <li><a href="/terms/">Terms of Service</a></li>
+                            <li><a href="/api/v1/core/faqs/">FAQ</a></li>
+                            <li><a href="/api/v1/core/contact/">Contact Support</a></li>
+                            <li><a href="#crisis-helpline">Crisis Helpline</a></li>
+                            <li><a href="#documentation">Documentation</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Emergency Support</h4>
+                        <p><strong>24/7 Crisis Helpline:</strong></p>
+                        <p style="font-size: 1.2rem; color: #ff6b6b;">📞 1-800-MANAS-HELP</p>
+                        <p><strong>Emergency Services:</strong></p>
+                        <p>📞 Emergency: 911</p>
+                        <p>📞 Suicide Prevention: 988</p>
+                        <p style="font-size: 0.9rem; margin-top: 1rem;">If you're experiencing a mental health emergency, please contact emergency services immediately.</p>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 MANAS - Mental Health Platform. Empowering students, counsellors, and administrators with comprehensive mental wellness support. | HIPAA Compliant | SOC 2 Type II Certified</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and sections
+        document.querySelectorAll('.companion-card, .feature-card, .support-card, .stat-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

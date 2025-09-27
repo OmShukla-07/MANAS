@@ -1,0 +1,1686 @@
+{% extends 'student/base_student.html' %}
+{% load static %}
+
+{% block title %}MANAS AI - Chat Assistant{% endblock %}
+
+{% block extra_css %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .manas-ai-container {
+        height: calc(100vh - 120px);
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(135deg, #598980 0%, #7ba399 50%, #4ca1af 100%);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(89, 137, 128, 0.2);
+    }
+
+    .manas-header {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+        position: relative;
+    }
+
+    .manas-title {
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .companion-selector {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .companion-btn {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid transparent;
+        border-radius: 50px;
+        padding: 10px 20px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .companion-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+    .companion-btn.active {
+        background: rgba(255,255,255,0.4);
+        border-color: #4ca1af;
+        box-shadow: 0 4px 15px rgba(76, 161, 175, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .chat-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: white;
+        margin: 20px;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .chat-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #f8f9fa;
+    }
+
+    .message {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .message.user {
+        flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .message.user .message-avatar {
+        background: linear-gradient(135deg, #598980, #7ba399);
+        box-shadow: 0 2px 8px rgba(89, 137, 128, 0.3);
+    }
+
+    .message.ai .message-avatar {
+        background: linear-gradient(135deg, #4ca1af, #598980);
+        box-shadow: 0 2px 8px rgba(76, 161, 175, 0.3);
+    }
+
+    .message-bubble {
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 18px;
+        position: relative;
+    }
+
+    .message.user .message-bubble {
+        background: linear-gradient(135deg, #598980, #7ba399);
+        color: white;
+        border-bottom-right-radius: 6px;
+        box-shadow: 0 2px 8px rgba(89, 137, 128, 0.2);
+    }
+
+    .message.ai .message-bubble {
+        background: white;
+        color: #333;
+        border: 1px solid #e9ecef;
+        border-bottom-left-radius: 6px;
+    }
+
+    .message-timestamp {
+        font-size: 11px;
+        opacity: 0.7;
+        margin-top: 4px;
+    }
+
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 12px 16px;
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 18px;
+        border-bottom-left-radius: 6px;
+    }
+
+    .typing-dots {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .typing-dots span {
+        height: 8px;
+        width: 8px;
+        background-color: #4ca1af;
+        border-radius: 50%;
+        animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(1) { animation-delay: 0s; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+        0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+        30% { transform: translateY(-10px); opacity: 1; }
+    }
+
+    .chat-input-container {
+        padding: 20px;
+        background: white;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .input-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .chat-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        outline: none;
+        font-size: 14px;
+        transition: border-color 0.3s;
+    }
+
+    .chat-input:focus {
+        border-color: #598980;
+        box-shadow: 0 0 0 3px rgba(89, 137, 128, 0.1);
+    }
+
+    .send-btn {
+        width: 45px;
+        height: 45px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #598980, #4ca1af);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(89, 137, 128, 0.3);
+    }
+
+    .send-btn:hover {
+        background: linear-gradient(135deg, #4a7670, #598980);
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(89, 137, 128, 0.4);
+    }
+
+    .send-btn:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .history-panel {
+        position: fixed;
+        right: -350px;
+        top: 0;
+        width: 350px;
+        height: 100vh;
+        background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,249,250,0.95) 100%);
+        backdrop-filter: blur(15px);
+        box-shadow: -5px 0 25px rgba(89, 137, 128, 0.15);
+        transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid rgba(89, 137, 128, 0.2);
+    }
+
+    .history-panel.open {
+        right: 0;
+    }
+
+    .history-header {
+        padding: 25px 20px;
+        background: linear-gradient(135deg, #598980, #7ba399);
+        border-bottom: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .history-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .history-header h3 {
+        color: white;
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .history-header h3::before {
+        content: '💬';
+        font-size: 20px;
+    }
+
+    .history-close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        transition: all 0.3s;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .history-close-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.1);
+    }
+
+    .history-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: rgba(255,255,255,0.7);
+    }
+
+    .history-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .history-content::-webkit-scrollbar-track {
+        background: rgba(89, 137, 128, 0.1);
+        border-radius: 3px;
+    }
+
+    .history-content::-webkit-scrollbar-thumb {
+        background: rgba(89, 137, 128, 0.3);
+        border-radius: 3px;
+    }
+
+    .history-content::-webkit-scrollbar-thumb:hover {
+        background: rgba(89, 137, 128, 0.5);
+    }
+
+    .history-section {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .session-item {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+        margin-bottom: 12px;
+        transition: all 0.2s ease;
+    }
+
+    .session-item:hover {
+        border-color: #4ca1af;
+        box-shadow: 0 2px 8px rgba(76, 161, 175, 0.15);
+    }
+
+    .session-item.current-session {
+        border-color: #28a745;
+        background: #f8fff9;
+    }
+
+    .session-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 12px 16px;
+    }
+
+    .session-info {
+        flex: 1;
+        cursor: pointer;
+    }
+
+    .session-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+    }
+
+    .session-companion {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 14px;
+    }
+
+    .session-time {
+        font-size: 11px;
+        color: #6c757d;
+        font-weight: normal;
+    }
+
+    .session-preview {
+        color: #495057;
+        font-size: 13px;
+        line-height: 1.4;
+        margin-bottom: 4px;
+    }
+
+    .session-meta {
+        font-size: 11px;
+        color: #6c757d;
+    }
+
+    .history-section h4 {
+        color: #598980;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 8px;
+        border-bottom: 2px solid rgba(89, 137, 128, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .history-item {
+        padding: 15px;
+        margin-bottom: 12px;
+        background: rgba(255,255,255,0.8);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        border: 1px solid rgba(89, 137, 128, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .history-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, #598980, #4ca1af);
+        transform: scaleY(0);
+        transition: transform 0.3s;
+    }
+
+    .history-item:hover {
+        background: rgba(89, 137, 128, 0.08);
+        transform: translateX(-5px);
+        box-shadow: 0 5px 15px rgba(89, 137, 128, 0.15);
+    }
+
+    .history-item:hover::before {
+        transform: scaleY(1);
+    }
+
+    .history-message {
+        font-size: 14px;
+        line-height: 1.4;
+        margin-bottom: 8px;
+        color: #1f2937;
+    }
+
+    .history-message strong {
+        color: #598980;
+        font-weight: 600;
+    }
+
+    .history-time {
+        font-size: 12px;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .history-time::before {
+        content: '🕒';
+        font-size: 10px;
+    }
+
+    .history-empty {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6b7280;
+    }
+
+    .history-empty-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+
+    .history-toggle {
+        position: fixed;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #598980, #4ca1af);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 55px;
+        height: 55px;
+        cursor: pointer;
+        z-index: 1001;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(89, 137, 128, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .history-toggle:hover {
+        background: linear-gradient(135deg, #4a7670, #598980);
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 6px 20px rgba(89, 137, 128, 0.4);
+    }
+
+    .history-toggle:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+    /* Language Selector Styles */
+    .language-controls {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+    }
+
+    .language-selector {
+        background: rgba(255,255,255,0.9);
+        border-radius: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid rgba(255,255,255,0.3);
+        backdrop-filter: blur(10px);
+    }
+
+    .language-selector select {
+        border: none;
+        background: transparent;
+        font-size: 13px;
+        font-weight: 500;
+        color: #2c3e50;
+        cursor: pointer;
+        outline: none;
+        padding: 2px;
+    }
+
+    .language-icon {
+        font-size: 14px;
+        color: #4ca1af;
+    }
+
+    .translate-toggle {
+        background: rgba(76, 161, 175, 0.9);
+        color: white;
+        border: none;
+        border-radius: 18px;
+        padding: 6px 10px;
+        font-size: 11px;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(76, 161, 175, 0.3);
+        transition: all 0.2s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .translate-toggle:hover {
+        background: rgba(53, 122, 135, 0.9);
+        transform: translateY(-1px);
+    }
+
+    .translate-toggle.active {
+        background: rgba(40, 167, 69, 0.9);
+    }
+
+    /* Responsive adjustments for language controls */
+    @media (max-width: 768px) {
+        .language-controls {
+            position: static;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .language-selector {
+            font-size: 12px;
+        }
+        
+        .translate-toggle {
+            font-size: 10px;
+            padding: 5px 8px;
+        }
+    }
+
+    .message-translation {
+        margin-top: 8px;
+        padding: 8px 12px;
+        background: rgba(76, 161, 175, 0.1);
+        border-radius: 8px;
+        font-size: 13px;
+        font-style: italic;
+        border-left: 3px solid #4ca1af;
+    }
+
+    .translation-badge {
+        display: inline-block;
+        background: #4ca1af;
+        color: white;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 10px;
+        margin-right: 6px;
+        font-weight: 500;
+    }
+
+    [dir="rtl"] {
+        text-align: right;
+    }
+
+    [dir="rtl"] .message-bubble {
+        text-align: right;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="manas-ai-container">
+        <!-- Header -->
+        <div class="manas-header">
+            <!-- Language Controls -->
+            <div class="language-controls">
+                <div class="language-selector">
+                    <span class="language-icon">🌐</span>
+                    <select id="languageSelector" onchange="changeLanguage()">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="bn">বাংলা</option>
+                        <option value="te">తెలుగు</option>
+                        <option value="mr">मराठी</option>
+                        <option value="ta">தமிழ்</option>
+                        <option value="gu">ગુજરાતી</option>
+                        <option value="kn">ಕನ್ನಡ</option>
+                        <option value="ml">മലയാളം</option>
+                        <option value="pa">ਪੰਜਾਬੀ</option>
+                        <option value="ur">اردو</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="ja">日本語</option>
+                        <option value="ko">한국어</option>
+                        <option value="zh">中文</option>
+                        <option value="ar">العربية</option>
+                    </select>
+                </div>
+                <button class="translate-toggle" id="translateToggle" onclick="toggleTranslation()">
+                    <i class="fas fa-language"></i> <span id="translateToggleText">Translate</span>
+                </button>
+            </div>
+
+            <h1 class="manas-title" id="appTitle">MANAS AI Companion</h1>
+            <div class="companion-selector">
+                <button class="companion-btn active" data-companion="arjun">
+                    <span>🧠</span> Arjun - <span id="academicSupport">Academic Support</span>
+                </button>
+                <button class="companion-btn" data-companion="priya">
+                    <span>💝</span> Priya - <span id="emotionalSupport">Emotional Support</span>
+                </button>
+                <button class="companion-btn" data-companion="vikram">
+                    <span>⚡</span> Vikram - <span id="crisisSupport">Crisis Support</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome message -->
+                <div class="message ai">
+                    <div class="message-avatar">🧠</div>
+                    <div class="message-bubble">
+                        <div>Hello! I'm Arjun, your academic support companion. How can I help you today?</div>
+                        <div class="message-timestamp" id="welcomeTime"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="input-group">
+                    <input type="text" class="chat-input" id="messageInput" placeholder="Type your message here..." maxlength="500">
+                    <button class="send-btn" id="sendBtn" title="Send">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- History Panel -->
+<div class="history-panel" id="historyPanel">
+    <div class="history-header">
+        <h3 id="chatHistoryTitle">Chat History</h3>
+        <div style="display: flex; align-items: center;">
+            <button class="new-chat-btn" onclick="startNewChat()">
+                <i class="fas fa-plus"></i> <span id="newChatText">New Chat</span>
+            </button>
+            <button class="history-close-btn" onclick="closeHistory()">×</button>
+        </div>
+    </div>
+    <div class="history-content" id="historyContent">
+        <!-- History items will be loaded here -->
+    </div>
+</div>
+
+<!-- History Toggle Button -->
+<button class="history-toggle" onclick="toggleHistory()">
+    <i class="fas fa-history"></i>
+</button>
+
+<script>
+// Global variables
+let currentCompanion = 'arjun';
+let chatHistory = []; // Legacy support
+let chatSessions = []; // New session-based storage
+let isTyping = false;
+let currentSessionId = null;
+let currentChatSessionId = null; // For UI session tracking
+
+// Translation variables
+let currentLanguage = 'en';
+let translationEnabled = false;
+let uiTranslations = {};
+let supportedLanguages = {};
+
+// Companion configurations
+const companions = {
+    arjun: {
+        name: 'Arjun',
+        emoji: '🧠',
+        role: 'Academic Support',
+        color: '#28a745',
+        welcome: "Hello! I'm Arjun, your academic support companion. How can I help you today?"
+    },
+    priya: {
+        name: 'Priya',
+        emoji: '💝',
+        role: 'Emotional Support',
+        color: '#dc3545',
+        welcome: "Hi there! I'm Priya, here to provide emotional support. What's on your mind?"
+    },
+    vikram: {
+        name: 'Vikram',
+        emoji: '⚡',
+        role: 'Crisis Support',
+        color: '#fd7e14',
+        welcome: "I'm Vikram, your crisis support companion. I'm here to help you through difficult times."
+    }
+};
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', async function() {
+    await initializeApp();
+});
+
+async function initializeApp() {
+    // Set welcome timestamp
+    document.getElementById('welcomeTime').textContent = getCurrentTime();
+    
+    // Load translation system
+    await loadSupportedLanguages();
+    
+    // Load saved language preference
+    const savedLanguage = localStorage.getItem('manasLanguage') || 'en';
+    if (savedLanguage !== 'en') {
+        document.getElementById('languageSelector').value = savedLanguage;
+        currentLanguage = savedLanguage;
+        await loadUITranslations(currentLanguage);
+    }
+    
+    // Load chat history (legacy)
+    loadChatHistory();
+    
+    // Load chat sessions (new system)
+    loadChatSessions();
+    
+    // Create initial session if none exists
+    if (chatSessions.length === 0) {
+        createNewChatSession();
+    }
+    
+    // Set up event listeners
+    setupEventListeners();
+    
+    // Load saved companion preference
+    const savedCompanion = localStorage.getItem('manasCompanion');
+    if (savedCompanion && companions[savedCompanion]) {
+        await switchCompanion(savedCompanion);
+    } else {
+        await switchCompanion('arjun'); // Default companion
+    }
+}
+
+function setupEventListeners() {
+    // Companion buttons
+    document.querySelectorAll('.companion-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            const companion = this.dataset.companion;
+            await switchCompanion(companion);
+        });
+    });
+
+    // Message input
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    sendBtn.addEventListener('click', sendMessage);
+
+    // Auto-resize input
+    messageInput.addEventListener('input', function() {
+        sendBtn.disabled = this.value.trim() === '';
+    });
+}
+
+async function switchCompanion(companionId) {
+    if (!companions[companionId]) return;
+
+    currentCompanion = companionId;
+    const companion = companions[companionId];
+
+    // Update active button
+    document.querySelectorAll('.companion-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.companion === companionId) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Clear chat and show welcome message
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.innerHTML = '';
+
+    // Reset session for new companion
+    currentSessionId = null;
+
+    // Start new session and get welcome message
+    try {
+        console.log(`Starting session with ${companion.name}`);
+        const session = await startAISession(companionId);
+        
+        // Add welcome message from session response
+        if (session && session.companion) {
+            addAIMessage(companion.welcome, session.companion.name, session.companion.emoji, session.companion.color);
+        } else {
+            addAIMessage(companion.welcome, companion.name, companion.emoji, companion.color);
+        }
+    } catch (error) {
+        console.error(`Failed to start session with ${companion.name}:`, error);
+        // Fallback to static welcome message
+        addAIMessage(companion.welcome, companion.name, companion.emoji, companion.color);
+    }
+
+    // Save preference
+    localStorage.setItem('manasCompanion', companionId);
+
+    console.log(`Switched to ${companion.name}`);
+}
+
+function sendMessage() {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value.trim();
+
+    if (!message || isTyping) return;
+
+    // Add user message
+    addUserMessage(message);
+
+    // Clear input
+    messageInput.value = '';
+    document.getElementById('sendBtn').disabled = true;
+
+    // Generate AI response with typing indicator
+    generateAIResponse(message);
+}
+
+function addUserMessage(text) {
+    const chatMessages = document.getElementById('chatMessages');
+    const timestamp = getCurrentTime();
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message user';
+    messageDiv.innerHTML = `
+        <div class="message-avatar">👤</div>
+        <div class="message-bubble">
+            <div>${escapeHtml(text)}</div>
+            <div class="message-timestamp">${timestamp}</div>
+        </div>
+    `;
+
+    chatMessages.appendChild(messageDiv);
+    scrollToBottom();
+
+    // Add to history (legacy)
+    chatHistory.push({
+        type: 'user',
+        text: text,
+        timestamp: timestamp,
+        companion: currentCompanion
+    });
+    
+    // Add to session-based history
+    addToCurrentSession({
+        type: 'user',
+        text: text,
+        timestamp: timestamp,
+        companion: currentCompanion
+    });
+    
+    saveChatHistory();
+    saveChatSessions();
+}
+
+function addAIMessage(text, name, emoji, color) {
+    const chatMessages = document.getElementById('chatMessages');
+    const timestamp = getCurrentTime();
+    const companion = companions[currentCompanion];
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message ai';
+    messageDiv.innerHTML = `
+        <div class="message-avatar" style="background-color: ${color || companion.color}">
+            ${emoji || companion.emoji}
+        </div>
+        <div class="message-bubble">
+            <div>${escapeHtml(text)}</div>
+            <div class="message-timestamp">${timestamp}</div>
+        </div>
+    `;
+
+    chatMessages.appendChild(messageDiv);
+    scrollToBottom();
+    
+    // Auto-translate if translation is enabled
+    if (translationEnabled && currentLanguage !== 'en') {
+        const messageTextDiv = messageDiv.querySelector('.message-bubble > div:first-child');
+        translateText(text, currentLanguage).then(translatedText => {
+            if (translatedText !== text) {
+                const translationDiv = document.createElement('div');
+                translationDiv.className = 'message-translation';
+                translationDiv.innerHTML = `<span class="translation-badge">${supportedLanguages[currentLanguage] || currentLanguage}</span>${escapeHtml(translatedText)}`;
+                messageTextDiv.parentNode.insertBefore(translationDiv, messageTextDiv.nextSibling);
+            }
+        });
+    }
+
+    // Add to history (legacy)
+    chatHistory.push({
+        type: 'ai',
+        text: text,
+        timestamp: timestamp,
+        companion: currentCompanion,
+        companionName: name || companion.name
+    });
+    
+    // Add to session-based history
+    addToCurrentSession({
+        type: 'ai',
+        text: text,
+        timestamp: timestamp,
+        companion: currentCompanion,
+        companionName: name || companion.name
+    });
+    
+    saveChatHistory();
+    saveChatSessions();
+    
+    // Re-enable send button
+    document.getElementById('sendBtn').disabled = false;
+}
+
+function showTypingIndicator() {
+    if (isTyping) return;
+    
+    isTyping = true;
+    const chatMessages = document.getElementById('chatMessages');
+    const companion = companions[currentCompanion];
+
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message ai typing-message';
+    typingDiv.id = 'typingIndicator';
+    typingDiv.innerHTML = `
+        <div class="message-avatar" style="background-color: ${companion.color}">
+            ${companion.emoji}
+        </div>
+        <div class="typing-indicator">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    `;
+
+    chatMessages.appendChild(typingDiv);
+    scrollToBottom();
+}
+
+function hideTypingIndicator() {
+    isTyping = false;
+    const typingIndicator = document.getElementById('typingIndicator');
+    if (typingIndicator) {
+        typingIndicator.remove();
+    }
+}
+
+function generateAIResponse(userMessage) {
+    const companion = companions[currentCompanion];
+    
+    // Show typing indicator while waiting for AI response
+    showTypingIndicator();
+    
+    // Add minimum delay to ensure typing animation is visible
+    setTimeout(() => {
+        // Call actual AI API
+        callAIAPI(userMessage, currentCompanion)
+            .then(response => {
+                hideTypingIndicator();
+                addAIMessage(response, companion.name, companion.emoji, companion.color);
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                console.error('AI API Error:', error);
+                addAIMessage(
+                    "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
+                    companion.name,
+                    companion.emoji,
+                    companion.color
+                );
+            });
+    }, 800); // Minimum 800ms delay to show typing animation
+}
+
+// Start a new AI session
+async function startAISession(companion) {
+    try {
+        console.log(`Starting new AI session with ${companion}`);
+        const response = await fetch('/api/v1/chat/manas/sessions/start/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrf-token]').content
+            },
+            body: JSON.stringify({
+                companion: companion
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.session) {
+            currentSessionId = data.session.id;
+            console.log(`Session started successfully with ID: ${currentSessionId}`);
+            return data.session;
+        }
+        
+        throw new Error('Failed to start session');
+    } catch (error) {
+        console.error('Failed to start AI session:', error);
+        throw error;
+    }
+}
+
+// Send message to existing AI session
+async function sendMessageToSession(message) {
+    try {
+        if (!currentSessionId) {
+            // Start a new session if none exists
+            await startAISession(currentCompanion);
+        }
+
+        console.log(`Sending message to session ${currentSessionId}: ${message.substring(0, 50)}...`);
+        
+        const response = await fetch(`/api/v1/chat/manas/sessions/${currentSessionId}/message/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrf-token]').content
+            },
+            body: JSON.stringify({
+                message: message
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.ai_response) {
+            console.log('AI response received successfully');
+            return data.ai_response.content;
+        }
+        
+        throw new Error('Invalid response format');
+    } catch (error) {
+        console.error('API call failed:', error);
+        throw error;
+    }
+}
+
+// AI API call function (updated to use session-based approach)
+async function callAIAPI(message, companion) {
+    try {
+        // If companion changed, start a new session
+        if (companion !== currentCompanion) {
+            currentSessionId = null; // Reset session
+        }
+        
+        return await sendMessageToSession(message);
+    } catch (error) {
+        console.error('AI API call failed:', error);
+        
+        // Fallback responses
+        const fallbackResponses = {
+            arjun: [
+                "I understand you need academic support. Can you tell me more about what you're working on?",
+                "That's an interesting question. Let me help you break it down step by step.",
+                "I'm here to help with your studies. What specific area are you finding challenging?"
+            ],
+            priya: [
+                "I hear you, and I want you to know that your feelings are valid. Tell me more about what's on your mind.",
+                "It sounds like you're going through something difficult. I'm here to listen and support you.",
+                "Thank you for sharing with me. How are you feeling right now about this situation?"
+            ],
+            vikram: [
+                "I'm here for you right now. Your safety and well-being are my priority. How can I help?",
+                "It takes courage to reach out. I want you to know that you're not alone in this.",
+                "I'm concerned about what you're going through. Can you tell me more about how you're feeling?"
+            ]
+        };
+
+        const responses = fallbackResponses[companion] || fallbackResponses.arjun;
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+}
+
+// History functions
+function toggleHistory() {
+    const historyPanel = document.getElementById('historyPanel');
+    historyPanel.classList.toggle('open');
+    
+    if (historyPanel.classList.contains('open')) {
+        loadHistoryPanel();
+    }
+}
+
+function closeHistory() {
+    document.getElementById('historyPanel').classList.remove('open');
+}
+
+function loadHistoryPanel() {
+    const historyContent = document.getElementById('historyContent');
+    
+    if (chatSessions.length === 0) {
+        historyContent.innerHTML = `
+            <div class="history-empty">
+                <div class="history-empty-icon">💬</div>
+                <p>No chat sessions yet.</p>
+                <p style="font-size: 12px; margin-top: 5px;">Start a conversation with your MANAS companion!</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Sort sessions by last message time (newest first)
+    const sortedSessions = [...chatSessions].sort((a, b) => {
+        const aTime = new Date(a.lastMessageTime || a.startTime);
+        const bTime = new Date(b.lastMessageTime || b.startTime);
+        return bTime - aTime;
+    });
+
+    let historyHTML = '';
+    sortedSessions.forEach(session => {
+        const companion = companions[session.companion];
+        const messageCount = session.messages.length;
+        const lastMessage = session.messages[messageCount - 1];
+        const sessionTitle = getSessionTitle(session);
+        const isCurrentSession = session.id === currentChatSessionId;
+        
+        historyHTML += `
+            <div class="history-section session-item ${isCurrentSession ? 'current-session' : ''}" data-session-id="${session.id}">
+                <div class="session-header">
+                    <div class="session-info" onclick="loadChatSession('${session.id}')">
+                        <div class="session-title">
+                            <span class="session-companion">${companion.emoji} ${companion.name}</span>
+                            <span class="session-time">${formatSessionTime(session.startTime)}</span>
+                        </div>
+                        <div class="session-preview">
+                            ${escapeHtml(sessionTitle)}
+                        </div>
+                        <div class="session-meta">
+                            <span>${messageCount} messages</span>
+                            ${lastMessage ? `• Last: ${formatSessionTime(lastMessage.timestamp)}` : ''}
+                        </div>
+                    </div>
+                    <button class="delete-chat-btn" onclick="deleteChatSession('${session.id}')" title="Delete this conversation">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    historyContent.innerHTML = historyHTML;
+}
+
+// Utility functions
+function getCurrentTime() {
+    return new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+}
+
+function scrollToBottom() {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Translation functions
+async function loadSupportedLanguages() {
+    try {
+        const response = await fetch('/api/v1/chat/translation/languages/');
+        const data = await response.json();
+        if (data.success) {
+            supportedLanguages = data.languages;
+        }
+    } catch (error) {
+        console.error('Failed to load supported languages:', error);
+    }
+}
+
+async function loadUITranslations(language) {
+    try {
+        const response = await fetch('/api/v1/chat/translation/ui/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrf-token]').content
+            },
+            body: JSON.stringify({ language: language })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            uiTranslations = data.translations;
+            updateUITexts();
+        }
+    } catch (error) {
+        console.error('Failed to load UI translations:', error);
+    }
+}
+
+function updateUITexts() {
+    // Update UI elements with translations
+    const elements = {
+        'appTitle': 'app_title',
+        'academicSupport': 'academic_support',
+        'emotionalSupport': 'emotional_support',
+        'crisisSupport': 'crisis_support',
+        'chatHistoryTitle': 'chat_history',
+        'newChatText': 'new_chat',
+        'translateToggleText': translationEnabled ? 'original_language' : 'translate_messages'
+    };
+    
+    Object.entries(elements).forEach(([elementId, translationKey]) => {
+        const element = document.getElementById(elementId);
+        if (element && uiTranslations[translationKey]) {
+            element.textContent = uiTranslations[translationKey];
+        }
+    });
+    
+    // Update input placeholder
+    const messageInput = document.getElementById('messageInput');
+    if (messageInput && uiTranslations.type_message) {
+        messageInput.placeholder = uiTranslations.type_message;
+    }
+    
+    // Update document direction for RTL languages
+    const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
+    document.dir = rtlLanguages.includes(currentLanguage) ? 'rtl' : 'ltr';
+}
+
+async function translateText(text, targetLanguage, sourceLanguage = 'auto') {
+    try {
+        const response = await fetch('/api/v1/chat/translation/translate/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrf-token]').content
+            },
+            body: JSON.stringify({
+                text: text,
+                target_language: targetLanguage,
+                source_language: sourceLanguage
+            })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            return data.translated_text;
+        }
+        return text;
+    } catch (error) {
+        console.error('Translation failed:', error);
+        return text;
+    }
+}
+
+async function getTranslatedWelcomeMessage(companion, language) {
+    try {
+        const response = await fetch('/api/v1/chat/translation/companion-welcome/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrf-token]').content
+            },
+            body: JSON.stringify({
+                companion: companion,
+                language: language
+            })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            return data.welcome_message;
+        }
+        return companions[companion].welcome;
+    } catch (error) {
+        console.error('Failed to get translated welcome message:', error);
+        return companions[companion].welcome;
+    }
+}
+
+async function changeLanguage() {
+    const selector = document.getElementById('languageSelector');
+    const newLanguage = selector.value;
+    
+    if (newLanguage === currentLanguage) return;
+    
+    currentLanguage = newLanguage;
+    localStorage.setItem('manasLanguage', currentLanguage);
+    
+    // Load UI translations
+    await loadUITranslations(currentLanguage);
+    
+    // Update welcome message if needed
+    if (currentLanguage !== 'en') {
+        await updateWelcomeMessage();
+    }
+    
+    // Translate existing messages if translation is enabled
+    if (translationEnabled) {
+        await translateAllMessages();
+    }
+}
+
+async function toggleTranslation() {
+    translationEnabled = !translationEnabled;
+    const toggleBtn = document.getElementById('translateToggle');
+    const toggleText = document.getElementById('translateToggleText');
+    
+    if (translationEnabled) {
+        toggleBtn.classList.add('active');
+        toggleText.textContent = uiTranslations.original_language || 'Original';
+        await translateAllMessages();
+    } else {
+        toggleBtn.classList.remove('active');
+        toggleText.textContent = uiTranslations.translate_messages || 'Translate';
+        removeAllTranslations();
+    }
+}
+
+async function translateAllMessages() {
+    if (!translationEnabled || currentLanguage === 'en') return;
+    
+    const messages = document.querySelectorAll('.message-bubble > div:first-child');
+    for (const messageDiv of messages) {
+        const originalText = messageDiv.textContent;
+        if (originalText && !messageDiv.querySelector('.message-translation')) {
+            const translatedText = await translateText(originalText, currentLanguage);
+            if (translatedText !== originalText) {
+                const translationDiv = document.createElement('div');
+                translationDiv.className = 'message-translation';
+                translationDiv.innerHTML = `<span class="translation-badge">${supportedLanguages[currentLanguage] || currentLanguage}</span>${escapeHtml(translatedText)}`;
+                messageDiv.parentNode.insertBefore(translationDiv, messageDiv.nextSibling);
+            }
+        }
+    }
+}
+
+function removeAllTranslations() {
+    const translations = document.querySelectorAll('.message-translation');
+    translations.forEach(translation => translation.remove());
+}
+
+async function updateWelcomeMessage() {
+    const welcomeMessage = document.querySelector('.message.ai .message-bubble > div:first-child');
+    if (welcomeMessage) {
+        const translatedWelcome = await getTranslatedWelcomeMessage(currentCompanion, currentLanguage);
+        welcomeMessage.textContent = translatedWelcome;
+    }
+}
+
+// Session management functions
+function createNewChatSession() {
+    const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    const newSession = {
+        id: sessionId,
+        companion: currentCompanion,
+        startTime: new Date().toISOString(),
+        lastMessageTime: null,
+        messages: []
+    };
+    
+    chatSessions.push(newSession);
+    currentChatSessionId = sessionId;
+    saveChatSessions();
+    
+    return newSession;
+}
+
+function addToCurrentSession(message) {
+    if (!currentChatSessionId) {
+        createNewChatSession();
+    }
+    
+    const session = chatSessions.find(s => s.id === currentChatSessionId);
+    if (session) {
+        session.messages.push(message);
+        session.lastMessageTime = new Date().toISOString();
+    }
+}
+
+function getSessionTitle(session) {
+    if (session.messages.length === 0) return 'New conversation';
+    
+    // Find first user message
+    const firstUserMessage = session.messages.find(m => m.type === 'user');
+    if (firstUserMessage) {
+        return firstUserMessage.text.length > 50 
+            ? firstUserMessage.text.substring(0, 50) + '...' 
+            : firstUserMessage.text;
+    }
+    
+    return 'Conversation with ' + companions[session.companion].name;
+}
+
+function formatSessionTime(isoString) {
+    const date = new Date(isoString);
+    const now = new Date();
+    const diffHours = (now - date) / (1000 * 60 * 60);
+    
+    if (diffHours < 1) {
+        return 'Just now';
+    } else if (diffHours < 24) {
+        return Math.floor(diffHours) + 'h ago';
+    } else if (diffHours < 168) { // 7 days
+        return Math.floor(diffHours / 24) + 'd ago';
+    } else {
+        return date.toLocaleDateString([], {month: 'short', day: 'numeric'});
+    }
+}
+
+function loadChatSession(sessionId) {
+    const session = chatSessions.find(s => s.id === sessionId);
+    if (!session) return;
+    
+    // Switch to session's companion if different
+    if (session.companion !== currentCompanion) {
+        switchCompanion(session.companion);
+    }
+    
+    // Clear current chat
+    const chatMessages = document.getElementById('chatMessages');
+    const companion = companions[session.companion];
+    
+    // Add welcome message
+    let chatHTML = `
+        <div class="message ai">
+            <div class="message-avatar" style="background-color: ${companion.color}">${companion.emoji}</div>
+            <div class="message-bubble">
+                <div>${companion.welcome}</div>
+                <div class="message-timestamp">${formatSessionTime(session.startTime)}</div>
+            </div>
+        </div>
+    `;
+    
+    // Add session messages
+    session.messages.forEach(msg => {
+        if (msg.type === 'user') {
+            chatHTML += `
+                <div class="message user">
+                    <div class="message-avatar">👤</div>
+                    <div class="message-bubble">
+                        <div>${escapeHtml(msg.text)}</div>
+                        <div class="message-timestamp">${msg.timestamp}</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            chatHTML += `
+                <div class="message ai">
+                    <div class="message-avatar" style="background-color: ${companion.color}">${companion.emoji}</div>
+                    <div class="message-bubble">
+                        <div>${escapeHtml(msg.text)}</div>
+                        <div class="message-timestamp">${msg.timestamp}</div>
+                    </div>
+                </div>
+            `;
+        }
+    });
+    
+    chatMessages.innerHTML = chatHTML;
+    scrollToBottom();
+    
+    // Set current session
+    currentChatSessionId = sessionId;
+    
+    // Close history panel
+    closeHistory();
+    
+    console.log('Loaded chat session:', sessionId);
+}
+
+function saveChatSessions() {
+    try {
+        localStorage.setItem('manasChatSessions', JSON.stringify(chatSessions));
+    } catch (error) {
+        console.error('Failed to save chat sessions:', error);
+    }
+}
+
+function loadChatSessions() {
+    try {
+        const saved = localStorage.getItem('manasChatSessions');
+        if (saved) {
+            chatSessions = JSON.parse(saved);
+            // Set current session to the most recent one
+            if (chatSessions.length > 0) {
+                const mostRecent = chatSessions.sort((a, b) => {
+                    const aTime = new Date(a.lastMessageTime || a.startTime);
+                    const bTime = new Date(b.lastMessageTime || b.startTime);
+                    return bTime - aTime;
+                })[0];
+                currentChatSessionId = mostRecent.id;
+            }
+        }
+    } catch (error) {
+        console.error('Failed to load chat sessions:', error);
+        chatSessions = [];
+    }
+}
+
+// New Chat functionality
+function startNewChat() {
+    // Clear current chat
+    const chatMessages = document.getElementById('chatMessages');
+    
+    // Keep only the welcome message
+    const companion = companions[currentCompanion];
+    chatMessages.innerHTML = `
+        <div class="message ai">
+            <div class="message-avatar" style="background-color: ${companion.color}">${companion.emoji}</div>
+            <div class="message-bubble">
+                <div>${companion.welcome}</div>
+                <div class="message-timestamp" id="welcomeTime">${getCurrentTime()}</div>
+            </div>
+        </div>
+    `;
+    
+    // Create new session
+    createNewChatSession();
+    
+    // Reset API session
+    currentSessionId = null;
+    
+    // Close history panel
+    closeHistory();
+    
+    // Show confirmation
+    console.log('New chat session started with', companion.name);
+}
+
+// Delete specific chat session
+function deleteChatSession(sessionId) {
+    const session = chatSessions.find(s => s.id === sessionId);
+    if (!session) return;
+    
+    const companion = companions[session.companion];
+    const sessionTitle = getSessionTitle(session);
+    
+    if (confirm(`Are you sure you want to delete this conversation?\n\n"${sessionTitle}"\n\nThis action cannot be undone.`)) {
+        // Remove session from array
+        chatSessions = chatSessions.filter(s => s.id !== sessionId);
+        
+        // Save updated sessions
+        saveChatSessions();
+        
+        // If we deleted the current session, start a new one
+        if (sessionId === currentChatSessionId) {
+            startNewChat();
+            return;
+        }
+        
+        // Reload history panel to reflect changes
+        loadHistoryPanel();
+        
+        console.log(`Deleted chat session: ${sessionTitle}`);
+    }
+}
+
+function saveChatHistory() {
+    try {
+        localStorage.setItem('manasChatHistory', JSON.stringify(chatHistory));
+    } catch (error) {
+        console.error('Failed to save chat history:', error);
+    }
+}
+
+function loadChatHistory() {
+    try {
+        const saved = localStorage.getItem('manasChatHistory');
+        if (saved) {
+            chatHistory = JSON.parse(saved);
+        }
+    } catch (error) {
+        console.error('Failed to load chat history:', error);
+        chatHistory = [];
+    }
+}
+
+// Clear history function
+function clearHistory() {
+    if (confirm('Are you sure you want to clear all chat history?')) {
+        chatHistory = [];
+        localStorage.removeItem('manasChatHistory');
+        document.getElementById('chatMessages').innerHTML = '';
+        
+        // Show welcome message for current companion
+        const companion = companions[currentCompanion];
+        addAIMessage(companion.welcome, companion.name, companion.emoji, companion.color);
+        
+        closeHistory();
+    }
+}
+
+console.log('MANAS AI initialized successfully');
+</script>
+{% endblock %}

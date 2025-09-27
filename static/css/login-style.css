@@ -1,0 +1,377 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Manrope', sans-serif;
+    background-color: #F5F7FA;
+    color: #333;
+    line-height: 1.5;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Top Logo */
+.top-logo {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 100;
+}
+
+.top-logo .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.top-logo .brain-icon {
+    width: 60px;
+    height: 60px;
+}
+
+.top-logo .logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #7BA098;
+    letter-spacing: -0.5px;
+}
+
+/* Login Container */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    width: 100%;
+}
+
+/* Header with Logo */
+.login-header {
+    margin-bottom: 80px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brain-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-text {
+    font-size: 2.7rem;
+    font-weight: 600;
+    color: #7BA098;
+    letter-spacing: 0.05em;
+}
+
+/* Login Form Container */
+.login-form-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #E5E7EB;
+}
+
+.login-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+/* Form Styles */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #7BA098;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Manrope', sans-serif;
+    background-color: white;
+    box-sizing: border-box;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.form-group input::placeholder {
+    color: #9CA3AF;
+    font-weight: 400;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #7BA098;
+    box-shadow: 0 0 0 3px rgba(123, 160, 152, 0.1);
+}
+
+.form-group input:hover {
+    border-color: #9CA3AF;
+}
+
+/* Login Button */
+.login-button {
+    width: 100%;
+    padding: 14px 20px;
+    background-color: #7BA098;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Manrope', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+}
+
+.login-button:hover {
+    background-color: #5A8B7A;
+    transform: translateY(-1px);
+}
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+/* Sign Up Link */
+.signup-link {
+    text-align: center;
+    margin-top: 32px;
+}
+
+.signup-link p {
+    font-size: 14px;
+    color: #6B7280;
+    margin: 0;
+}
+
+.signup-link a {
+    color: #7BA098;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Form label */
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #7BA098;
+    margin-bottom: 8px;
+}
+
+/* Form input */
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Manrope', sans-serif;
+    background-color: white;
+    box-sizing: border-box;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.form-input::placeholder {
+    color: #9CA3AF;
+    font-weight: 400;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #7BA098;
+    box-shadow: 0 0 0 3px rgba(123, 160, 152, 0.1);
+}
+
+.form-input:hover {
+    border-color: #9CA3AF;
+}
+
+/* Signup specific styles */
+.signup-link-text {
+    color: #7BA098;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signup-link-text:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design for Login Page */
+@media (max-width: 768px) {
+    .top-logo {
+        top: 20px;
+        left: 20px;
+    }
+    
+    .top-logo .logo-text {
+        font-size: 20px;
+    }
+    
+    .login-container {
+        padding: 20px 16px;
+    }
+    
+    .login-card {
+        padding: 32px 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-logo {
+        top: 16px;
+        left: 16px;
+    }
+    
+    .top-logo .brain-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .top-logo .logo-text {
+        font-size: 18px;
+    }
+    
+    .login-card {
+        padding: 24px 20px;
+    }
+    
+    .login-title {
+        font-size: 20px;
+    }
+}
+
+/* Form Validation States */
+.form-input:invalid:not(:placeholder-shown) {
+    border-color: #EF4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-input:valid:not(:placeholder-shown) {
+    border-color: #10B981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Animation for form elements */
+.login-card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo-container {
+    animation: fadeInDown 0.5s ease forwards;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.signup-link {
+    animation: fadeIn 0.8s ease 0.3s forwards;
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Focus states for accessibility */
+.login-button:focus,
+.form-input:focus,
+.signup-link-text:focus {
+    outline: 2px solid #7BA098;
+    outline-offset: 2px;
+}
+
+/* Loading state for button */
+.login-button.loading {
+    position: relative;
+    color: transparent;
+}
+
+.login-button.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}

@@ -1,0 +1,1052 @@
+{% extends 'base.html' %}
+
+{% block title %}Counselor Dashboard - Manas Mental Health Platform{% endblock %}
+{% block page_title %}Counselor Dashboard{% endblock %}
+
+{% block content %}
+<!-- Enhanced Welcome Section for Counselors -->
+<div class="card card-gradient mb-6">
+    <div class="flex-between">
+        <div>
+            <h1 class="text-2xl font-bold text-primary mb-2">Welcome, Dr. <span id="counselor-name">{{ user.first_name|default:"Counselor" }}</span></h1>
+            <p class="text-secondary">Monitor your students' progress and manage your counseling practice effectively.</p>
+            <div class="mt-3">
+                <span id="active-students" class="badge badge-info">Loading...</span>
+                <span id="today-appointments" class="badge badge-success ml-2">Loading...</span>
+                <span id="pending-alerts" class="badge badge-warning ml-2">Loading...</span>
+            </div>
+        </div>
+        <div class="text-center">
+            <div class="text-3xl mb-2">🧑‍⚕️</div>
+            <span class="badge badge-success">Online</span>
+            <div class="mt-2">
+                <button onclick="toggleAvailability()" class="btn btn-sm btn-secondary">Update Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Critical Alerts Section -->
+<div id="crisis-alerts-section" class="mb-6" style="display: none;">
+    <div class="card bg-error-light border-error">
+        <div class="flex-between mb-4">
+            <h3 class="text-xl font-semibold text-error">🚨 Crisis Alerts</h3>
+            <button onclick="toggleCrisisAlertsSection()" class="btn btn-sm btn-ghost">Hide</button>
+        </div>
+        <div id="crisis-alerts-container">
+            <div class="loading-state">Loading crisis alerts...</div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Quick Stats for Counselors -->
+<div class="stats-grid mb-6">
+    <div class="card stat-card hover-lift" onclick="navigateToStudents()">
+        <span class="stat-number text-primary" id="total-students">-</span>
+        <span class="stat-label">Active Students</span>
+        <div class="progress-bar mt-3">
+            <div class="progress-fill" id="students-progress" style="width: 0%;"></div>
+        </div>
+    </div>
+    <div class="card stat-card hover-lift" onclick="navigateToAppointments()">
+        <span class="stat-number text-success" id="todays-sessions">-</span>
+        <span class="stat-label">Today's Sessions</span>
+        <div class="progress-bar mt-3">
+            <div class="progress-fill" id="sessions-progress" style="width: 0%;"></div>
+        </div>
+    </div>
+    <div class="card stat-card hover-lift" onclick="navigateToCrisisManagement()">
+        <span class="stat-number text-error" id="crisis-cases">-</span>
+        <span class="stat-label">Crisis Cases</span>
+        <div class="progress-bar mt-3">
+            <div class="progress-fill" id="crisis-progress" style="width: 0%;"></div>
+        </div>
+    </div>
+    <div class="card stat-card hover-lift" onclick="navigateToAnalytics()">
+        <span class="stat-number text-warning" id="pending-reviews">-</span>
+        <span class="stat-label">Pending Reviews</span>
+        <div class="progress-bar mt-3">
+            <div class="progress-fill" id="reviews-progress" style="width: 0%;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Counselor Quick Actions -->
+<div class="grid grid-2 mb-6">
+    <div class="card hover-lift">
+        <h3 class="text-xl font-semibold mb-4 text-primary">Quick Actions</h3>
+        <div class="flex flex-col gap-3">
+            <button onclick="openNewSessionModal()" class="btn btn-primary btn-md">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M8 7V3a1 1 0 012 0v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H4a1 1 0 110-2h4z"/>
+                </svg>
+                Schedule Session
+            </button>
+            <button onclick="openStudentSearchModal()" class="btn btn-secondary btn-md">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+                </svg>
+                Find Student
+            </button>
+            <button onclick="navigateToCrisisManagement()" class="btn btn-error btn-md">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"/>
+                </svg>
+                Crisis Management
+            </button>
+            <button onclick="openReportsModal()" class="btn btn-ghost btn-md">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z M4 5a2 2 0 012-2v1a1 1 0 00-1 1v1H4V5z"/>
+                </svg>
+                Generate Reports
+            </button>
+        </div>
+    </div>
+
+    <div class="card hover-lift">
+        <h3 class="text-xl font-semibold mb-4 text-primary">Today's Overview</h3>
+        <div id="today-overview-container">
+            <div class="loading-state">Loading today's overview...</div>
+        </div>
+    </div>
+</div>
+
+<!-- Student Monitoring & Analytics -->
+<div class="grid grid-3 mb-6">
+    <div class="card hover-lift">
+        <h4 class="text-lg font-semibold mb-3 text-primary">Recent Student Activity</h4>
+        <div id="student-activity-container">
+            <div class="loading-state">Loading student activity...</div>
+        </div>
+        <button onclick="navigateToStudentMonitoring()" class="btn btn-secondary btn-sm mt-3" style="width: 100%;">
+            View All Activity
+        </button>
+    </div>
+
+    <div class="card hover-lift">
+        <h4 class="text-lg font-semibold mb-3 text-primary">Assessment Results</h4>
+        <div id="assessment-results-container">
+            <div class="loading-state">Loading assessment results...</div>
+        </div>
+        <button onclick="navigateToAssessmentAnalytics()" class="btn btn-accent btn-sm mt-3" style="width: 100%;">
+            View Analytics
+        </button>
+    </div>
+
+    <div class="card hover-lift">
+        <h4 class="text-lg font-semibold mb-3 text-primary">Wellness Insights</h4>
+        <div id="wellness-insights-container">
+            <div class="loading-state">Loading wellness insights...</div>
+        </div>
+        <button onclick="navigateToWellnessAnalytics()" class="btn btn-ghost btn-sm mt-3" style="width: 100%;">
+            View Insights
+        </button>
+    </div>
+</div>
+
+<!-- Today's Schedule & Upcoming Alerts -->
+<div class="grid grid-2">
+    <div class="card">
+        <h3 class="text-xl font-semibold mb-4 text-primary">Today's Schedule</h3>
+        <div id="todays-schedule-container">
+            <div class="loading-state">Loading today's schedule...</div>
+        </div>
+        <button onclick="navigateToFullSchedule()" class="btn btn-secondary btn-sm mt-4" style="width: 100%;">
+            View Full Schedule
+        </button>
+    </div>
+
+    <div class="card">
+        <h3 class="text-xl font-semibold mb-4 text-primary">Priority Students</h3>
+        <div id="priority-students-container">
+            <div class="loading-state">Loading priority students...</div>
+        </div>
+        <button onclick="navigateToStudentManagement()" class="btn btn-warning btn-sm mt-4" style="width: 100%;">
+            Manage Students
+        </button>
+    </div>
+</div>
+
+<!-- Modals -->
+
+<!-- New Session Modal -->
+<div id="new-session-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Schedule New Session</h3>
+            <button onclick="closeNewSessionModal()" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="new-session-form">
+                <div class="form-group mb-4">
+                    <label for="session-student">Select Student</label>
+                    <select id="session-student" class="form-control" required>
+                        <option value="">Choose a student...</option>
+                    </select>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="session-date">Date</label>
+                    <input type="date" id="session-date" class="form-control" required>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="session-time">Time</label>
+                    <input type="time" id="session-time" class="form-control" required>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="session-type">Session Type</label>
+                    <select id="session-type" class="form-control" required>
+                        <option value="individual">Individual Counseling</option>
+                        <option value="group">Group Session</option>
+                        <option value="crisis">Crisis Intervention</option>
+                        <option value="assessment">Assessment</option>
+                        <option value="follow_up">Follow-up</option>
+                    </select>
+                </div>
+                <div class="form-group mb-4">
+                    <label for="session-notes">Notes (optional)</label>
+                    <textarea id="session-notes" class="form-control" rows="3" placeholder="Session preparation notes..."></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeNewSessionModal()" class="btn btn-ghost">Cancel</button>
+            <button onclick="scheduleSession()" class="btn btn-primary">Schedule Session</button>
+        </div>
+    </div>
+</div>
+
+<!-- Student Search Modal -->
+<div id="student-search-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Find Student</h3>
+            <button onclick="closeStudentSearchModal()" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group mb-4">
+                <input type="text" id="student-search-input" class="form-control" placeholder="Search by name, ID, or email..." onkeyup="searchStudents()">
+            </div>
+            <div id="student-search-results">
+                <p class="text-secondary">Type to search for students...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reports Modal -->
+<div id="reports-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Generate Reports</h3>
+            <button onclick="closeReportsModal()" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="grid grid-2 gap-4">
+                <button onclick="generateReport('student_progress')" class="btn btn-outline-primary btn-lg">
+                    Student Progress Report
+                </button>
+                <button onclick="generateReport('session_summary')" class="btn btn-outline-secondary btn-lg">
+                    Session Summary
+                </button>
+                <button onclick="generateReport('crisis_incidents')" class="btn btn-outline-error btn-lg">
+                    Crisis Incidents Report
+                </button>
+                <button onclick="generateReport('wellness_analytics')" class="btn btn-outline-success btn-lg">
+                    Wellness Analytics
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Dashboard initialization
+document.addEventListener('DOMContentLoaded', async function() {
+    await initializeCounselorDashboard();
+});
+
+async function initializeCounselorDashboard() {
+    try {
+        if (!window.manasAPI) {
+            setTimeout(initializeCounselorDashboard, 500);
+            return;
+        }
+
+        // Load all counselor dashboard data
+        await Promise.all([
+            loadCounselorStats(),
+            loadTodaysOverview(),
+            loadStudentActivity(),
+            loadAssessmentResults(),
+            loadWellnessInsights(),
+            loadTodaysSchedule(),
+            loadPriorityStudents(),
+            loadCrisisAlerts(),
+            loadStudentsForDropdown()
+        ]);
+
+        console.log('Counselor dashboard initialized successfully');
+    } catch (error) {
+        console.error('Error initializing counselor dashboard:', error);
+        showError('Failed to load dashboard data. Please refresh the page.');
+    }
+}
+
+async function loadCounselorStats() {
+    try {
+        const dashboardData = await manasAPI.getCounselorDashboard();
+        
+        // Update stats
+        updateStatCard('total-students', dashboardData.student_count || 0);
+        updateStatCard('todays-sessions', dashboardData.todays_sessions || 0);
+        updateStatCard('crisis-cases', dashboardData.active_crisis_cases || 0);
+        updateStatCard('pending-reviews', dashboardData.pending_assessments || 0);
+
+        // Update progress bars
+        updateProgressBar('students-progress', Math.min((dashboardData.student_count || 0) * 5, 100));
+        updateProgressBar('sessions-progress', Math.min((dashboardData.todays_sessions || 0) * 20, 100));
+        updateProgressBar('crisis-progress', Math.min((dashboardData.active_crisis_cases || 0) * 25, 100));
+        updateProgressBar('reviews-progress', Math.min((dashboardData.pending_assessments || 0) * 10, 100));
+
+        // Update badges
+        document.getElementById('active-students').textContent = `${dashboardData.student_count || 0} active students`;
+        document.getElementById('today-appointments').textContent = `${dashboardData.todays_sessions || 0} sessions today`;
+        document.getElementById('pending-alerts').textContent = `${dashboardData.pending_alerts || 0} alerts`;
+
+    } catch (error) {
+        console.error('Error loading counselor stats:', error);
+    }
+}
+
+async function loadTodaysOverview() {
+    try {
+        const overview = await manasAPI.getCounselorDashboard();
+        const container = document.getElementById('today-overview-container');
+        
+        const currentTime = new Date();
+        const nextSession = overview.next_session;
+        
+        container.innerHTML = `
+            <div class="today-overview">
+                <div class="overview-item mb-3">
+                    <div class="flex-between">
+                        <span class="font-medium">Next Session</span>
+                        <span class="text-sm text-secondary">${nextSession ? manasAPI.formatTime(nextSession.appointment_date) : 'No sessions scheduled'}</span>
+                    </div>
+                    ${nextSession ? `
+                        <p class="text-sm text-secondary mt-1">${nextSession.student_name} - ${nextSession.appointment_type}</p>
+                    ` : ''}
+                </div>
+                <div class="overview-item mb-3">
+                    <div class="flex-between">
+                        <span class="font-medium">Completed Today</span>
+                        <span class="badge badge-success">${overview.completed_sessions_today || 0}</span>
+                    </div>
+                </div>
+                <div class="overview-item mb-3">
+                    <div class="flex-between">
+                        <span class="font-medium">New Alerts</span>
+                        <span class="badge badge-warning">${overview.new_alerts || 0}</span>
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="flex-between">
+                        <span class="font-medium">Weekly Hours</span>
+                        <span class="text-sm">${overview.weekly_hours || 0}/40</span>
+                    </div>
+                    <div class="progress-bar mt-2">
+                        <div class="progress-fill" style="width: ${Math.min((overview.weekly_hours || 0) / 40 * 100, 100)}%;"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Error loading today\'s overview:', error);
+        document.getElementById('today-overview-container').innerHTML = '<p class="text-error">Failed to load overview.</p>';
+    }
+}
+
+async function loadStudentActivity() {
+    try {
+        const activities = await manasAPI.getCounselorStudentActivity();
+        const container = document.getElementById('student-activity-container');
+        
+        if (activities.results && activities.results.length > 0) {
+            container.innerHTML = activities.results.slice(0, 5).map(activity => `
+                <div class="activity-item mb-2" onclick="viewStudentDetail('${activity.student_id}')">
+                    <div class="flex-between">
+                        <div>
+                            <p class="font-medium text-sm">${activity.student_name}</p>
+                            <p class="text-xs text-secondary">${activity.activity_type} - ${activity.description}</p>
+                        </div>
+                        <div class="text-xs text-secondary">
+                            ${manasAPI.timeAgo(activity.timestamp)}
+                        </div>
+                    </div>
+                    ${activity.requires_attention ? '<div class="attention-indicator">⚠️</div>' : ''}
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p class="text-secondary text-sm">No recent student activity.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading student activity:', error);
+        document.getElementById('student-activity-container').innerHTML = '<p class="text-error text-sm">Failed to load activity.</p>';
+    }
+}
+
+async function loadAssessmentResults() {
+    try {
+        const assessments = await manasAPI.getCounselorAssessmentResults();
+        const container = document.getElementById('assessment-results-container');
+        
+        if (assessments.results && assessments.results.length > 0) {
+            container.innerHTML = assessments.results.slice(0, 3).map(assessment => `
+                <div class="assessment-result mb-2" onclick="viewAssessmentDetail('${assessment.id}')">
+                    <div class="flex-between">
+                        <span class="font-medium text-sm">${assessment.student_name}</span>
+                        <span class="badge badge-sm ${getScoreBadgeClass(assessment.score)}">${assessment.score}%</span>
+                    </div>
+                    <p class="text-xs text-secondary">${assessment.category} - ${manasAPI.timeAgo(assessment.completed_at)}</p>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p class="text-secondary text-sm">No recent assessment results.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading assessment results:', error);
+        document.getElementById('assessment-results-container').innerHTML = '<p class="text-error text-sm">Failed to load results.</p>';
+    }
+}
+
+async function loadWellnessInsights() {
+    try {
+        const insights = await manasAPI.getCounselorWellnessInsights();
+        const container = document.getElementById('wellness-insights-container');
+        
+        container.innerHTML = `
+            <div class="wellness-insights">
+                <div class="insight-item mb-2">
+                    <span class="text-sm font-medium">Average Mood Score</span>
+                    <div class="flex-between mt-1">
+                        <div class="progress-bar flex-1 mr-2">
+                            <div class="progress-fill" style="width: ${insights.average_mood_score || 0}%;"></div>
+                        </div>
+                        <span class="text-sm">${insights.average_mood_score || 0}%</span>
+                    </div>
+                </div>
+                <div class="insight-item mb-2">
+                    <span class="text-sm font-medium">Students in Crisis</span>
+                    <div class="flex-between mt-1">
+                        <span class="badge badge-error badge-sm">${insights.students_in_crisis || 0}</span>
+                        <span class="text-xs text-secondary">Immediate attention needed</span>
+                    </div>
+                </div>
+                <div class="insight-item">
+                    <span class="text-sm font-medium">Wellness Goals Progress</span>
+                    <div class="flex-between mt-1">
+                        <div class="progress-bar flex-1 mr-2">
+                            <div class="progress-fill" style="width: ${insights.goals_completion_rate || 0}%;"></div>
+                        </div>
+                        <span class="text-sm">${insights.goals_completion_rate || 0}%</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Error loading wellness insights:', error);
+        document.getElementById('wellness-insights-container').innerHTML = '<p class="text-error text-sm">Failed to load insights.</p>';
+    }
+}
+
+async function loadTodaysSchedule() {
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const appointments = await manasAPI.getAppointments({
+            date: today,
+            counselor_id: 'current'
+        });
+        
+        const container = document.getElementById('todays-schedule-container');
+        
+        if (appointments.results && appointments.results.length > 0) {
+            container.innerHTML = appointments.results.map(appointment => `
+                <div class="schedule-item mb-3 ${getAppointmentStatusClass(appointment.status)}" onclick="viewAppointmentDetail('${appointment.id}')">
+                    <div class="flex-between mb-2">
+                        <span class="font-medium">${appointment.student_name}</span>
+                        <span class="badge badge-sm badge-primary">${manasAPI.formatTime(appointment.appointment_date)}</span>
+                    </div>
+                    <div class="flex-between">
+                        <span class="text-sm text-secondary">${appointment.appointment_type}</span>
+                        <span class="badge badge-xs ${getStatusBadgeClass(appointment.status)}">${appointment.status}</span>
+                    </div>
+                    ${appointment.notes ? `<p class="text-xs text-light mt-1">${appointment.notes}</p>` : ''}
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p class="text-secondary">No appointments scheduled for today.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading today\'s schedule:', error);
+        document.getElementById('todays-schedule-container').innerHTML = '<p class="text-error">Failed to load schedule.</p>';
+    }
+}
+
+async function loadPriorityStudents() {
+    try {
+        const priorityStudents = await manasAPI.getPriorityStudents();
+        const container = document.getElementById('priority-students-container');
+        
+        if (priorityStudents.results && priorityStudents.results.length > 0) {
+            container.innerHTML = priorityStudents.results.map(student => `
+                <div class="priority-student mb-3 ${getPriorityClass(student.priority_level)}" onclick="viewStudentDetail('${student.id}')">
+                    <div class="flex-between mb-2">
+                        <span class="font-medium">${student.name}</span>
+                        <span class="badge badge-sm ${getPriorityBadgeClass(student.priority_level)}">${student.priority_level}</span>
+                    </div>
+                    <p class="text-sm text-secondary">${student.reason}</p>
+                    <div class="flex gap-2 mt-2">
+                        <span class="text-xs text-light">Last contact: ${manasAPI.timeAgo(student.last_contact)}</span>
+                        ${student.has_alerts ? '<span class="text-xs text-error">⚠️ Has alerts</span>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p class="text-secondary">No priority students at this time.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading priority students:', error);
+        document.getElementById('priority-students-container').innerHTML = '<p class="text-error">Failed to load priority students.</p>';
+    }
+}
+
+async function loadCrisisAlerts() {
+    try {
+        const alerts = await manasAPI.getCrisisAlerts({ status: 'active' });
+        
+        if (alerts.results && alerts.results.length > 0) {
+            document.getElementById('crisis-alerts-section').style.display = 'block';
+            const container = document.getElementById('crisis-alerts-container');
+            
+            container.innerHTML = alerts.results.map(alert => `
+                <div class="crisis-alert mb-3" onclick="handleCrisisAlert('${alert.id}')">
+                    <div class="flex-between mb-2">
+                        <span class="font-medium text-error">${alert.student_name}</span>
+                        <span class="badge badge-error">${alert.severity}</span>
+                    </div>
+                    <p class="text-sm">${alert.description}</p>
+                    <div class="flex-between mt-2">
+                        <span class="text-xs text-secondary">${manasAPI.timeAgo(alert.created_at)}</span>
+                        <div class="flex gap-2">
+                            <button onclick="acknowledgeCrisisAlert('${alert.id}', event)" class="btn btn-xs btn-warning">Acknowledge</button>
+                            <button onclick="resolveCrisisAlert('${alert.id}', event)" class="btn btn-xs btn-success">Resolve</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error('Error loading crisis alerts:', error);
+    }
+}
+
+async function loadStudentsForDropdown() {
+    try {
+        const students = await manasAPI.getCounselorStudents();
+        const dropdown = document.getElementById('session-student');
+        
+        dropdown.innerHTML = '<option value="">Choose a student...</option>' +
+            students.results.map(student => `
+                <option value="${student.id}">${student.name} - ${student.student_id}</option>
+            `).join('');
+    } catch (error) {
+        console.error('Error loading students for dropdown:', error);
+    }
+}
+
+// Modal Functions
+function openNewSessionModal() {
+    document.getElementById('new-session-modal').style.display = 'flex';
+    // Set default date to today
+    document.getElementById('session-date').value = new Date().toISOString().split('T')[0];
+}
+
+function closeNewSessionModal() {
+    document.getElementById('new-session-modal').style.display = 'none';
+    document.getElementById('new-session-form').reset();
+}
+
+function openStudentSearchModal() {
+    document.getElementById('student-search-modal').style.display = 'flex';
+}
+
+function closeStudentSearchModal() {
+    document.getElementById('student-search-modal').style.display = 'none';
+    document.getElementById('student-search-input').value = '';
+    document.getElementById('student-search-results').innerHTML = '<p class="text-secondary">Type to search for students...</p>';
+}
+
+function openReportsModal() {
+    document.getElementById('reports-modal').style.display = 'flex';
+}
+
+function closeReportsModal() {
+    document.getElementById('reports-modal').style.display = 'none';
+}
+
+// Action Functions
+async function scheduleSession() {
+    try {
+        const formData = {
+            student_id: document.getElementById('session-student').value,
+            appointment_date: `${document.getElementById('session-date').value}T${document.getElementById('session-time').value}`,
+            appointment_type: document.getElementById('session-type').value,
+            notes: document.getElementById('session-notes').value
+        };
+
+        if (!formData.student_id || !formData.appointment_date || !formData.appointment_type) {
+            manasAPI.showError('Please fill in all required fields.');
+            return;
+        }
+
+        await manasAPI.createAppointment(formData);
+        manasAPI.showSuccess('Session scheduled successfully!');
+        closeNewSessionModal();
+        loadTodaysSchedule(); // Refresh schedule
+        loadCounselorStats(); // Refresh stats
+    } catch (error) {
+        console.error('Error scheduling session:', error);
+        manasAPI.showError('Failed to schedule session. Please try again.');
+    }
+}
+
+async function searchStudents() {
+    const query = document.getElementById('student-search-input').value.trim();
+    if (query.length < 2) {
+        document.getElementById('student-search-results').innerHTML = '<p class="text-secondary">Type at least 2 characters to search...</p>';
+        return;
+    }
+
+    try {
+        const students = await manasAPI.searchStudents(query);
+        const container = document.getElementById('student-search-results');
+        
+        if (students.results && students.results.length > 0) {
+            container.innerHTML = students.results.map(student => `
+                <div class="student-result p-3 border rounded mb-2 cursor-pointer" onclick="viewStudentDetail('${student.id}')">
+                    <div class="flex-between">
+                        <div>
+                            <p class="font-medium">${student.name}</p>
+                            <p class="text-sm text-secondary">${student.student_id} • ${student.email}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="badge badge-sm ${student.status === 'active' ? 'badge-success' : 'badge-secondary'}">${student.status}</span>
+                            ${student.priority_level ? `<br><span class="badge badge-xs ${getPriorityBadgeClass(student.priority_level)} mt-1">${student.priority_level}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p class="text-secondary">No students found matching your search.</p>';
+        }
+    } catch (error) {
+        console.error('Error searching students:', error);
+        document.getElementById('student-search-results').innerHTML = '<p class="text-error">Error searching students.</p>';
+    }
+}
+
+async function generateReport(reportType) {
+    try {
+        manasAPI.showInfo('Generating report... This may take a moment.');
+        
+        const report = await manasAPI.generateCounselorReport(reportType);
+        
+        // Create download link
+        const blob = new Blob([report.content], { type: report.content_type });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = report.filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        manasAPI.showSuccess('Report generated and downloaded successfully!');
+        closeReportsModal();
+    } catch (error) {
+        console.error('Error generating report:', error);
+        manasAPI.showError('Failed to generate report. Please try again.');
+    }
+}
+
+// Crisis Management Functions
+async function handleCrisisAlert(alertId) {
+    try {
+        const alert = await manasAPI.getCrisisAlert(alertId);
+        // Navigate to detailed crisis management page
+        window.location.href = `/counselor/crisis/alert/${alertId}/`;
+    } catch (error) {
+        console.error('Error handling crisis alert:', error);
+    }
+}
+
+async function acknowledgeCrisisAlert(alertId, event) {
+    event.stopPropagation();
+    try {
+        await manasAPI.updateCrisisAlert(alertId, { status: 'acknowledged' });
+        manasAPI.showSuccess('Crisis alert acknowledged.');
+        loadCrisisAlerts(); // Refresh alerts
+    } catch (error) {
+        console.error('Error acknowledging crisis alert:', error);
+        manasAPI.showError('Failed to acknowledge alert.');
+    }
+}
+
+async function resolveCrisisAlert(alertId, event) {
+    event.stopPropagation();
+    try {
+        await manasAPI.updateCrisisAlert(alertId, { status: 'resolved' });
+        manasAPI.showSuccess('Crisis alert resolved.');
+        loadCrisisAlerts(); // Refresh alerts
+    } catch (error) {
+        console.error('Error resolving crisis alert:', error);
+        manasAPI.showError('Failed to resolve alert.');
+    }
+}
+
+// Navigation Functions
+function navigateToStudents() {
+    window.location.href = '/counselor/students/';
+}
+
+function navigateToAppointments() {
+    window.location.href = '/counselor/appointments/';
+}
+
+function navigateToCrisisManagement() {
+    window.location.href = '/counselor/crisis/';
+}
+
+function navigateToAnalytics() {
+    window.location.href = '/counselor/analytics/';
+}
+
+function navigateToStudentMonitoring() {
+    window.location.href = '/counselor/students/monitoring/';
+}
+
+function navigateToAssessmentAnalytics() {
+    window.location.href = '/counselor/assessments/analytics/';
+}
+
+function navigateToWellnessAnalytics() {
+    window.location.href = '/counselor/wellness/analytics/';
+}
+
+function navigateToFullSchedule() {
+    window.location.href = '/counselor/schedule/';
+}
+
+function navigateToStudentManagement() {
+    window.location.href = '/counselor/students/management/';
+}
+
+function viewStudentDetail(studentId) {
+    window.location.href = `/counselor/students/${studentId}/`;
+}
+
+function viewAppointmentDetail(appointmentId) {
+    window.location.href = `/counselor/appointments/${appointmentId}/`;
+}
+
+function viewAssessmentDetail(assessmentId) {
+    window.location.href = `/counselor/assessments/${assessmentId}/`;
+}
+
+// UI Helper Functions
+function updateStatCard(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = value;
+    }
+}
+
+function updateProgressBar(elementId, percentage) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.style.width = `${Math.max(0, Math.min(100, percentage))}%`;
+    }
+}
+
+function getScoreBadgeClass(score) {
+    if (score >= 80) return 'badge-success';
+    if (score >= 60) return 'badge-warning';
+    return 'badge-error';
+}
+
+function getAppointmentStatusClass(status) {
+    return {
+        'confirmed': 'border-success',
+        'pending': 'border-warning',
+        'cancelled': 'border-error',
+        'completed': 'border-info'
+    }[status] || '';
+}
+
+function getStatusBadgeClass(status) {
+    return {
+        'confirmed': 'badge-success',
+        'pending': 'badge-warning',
+        'cancelled': 'badge-error',
+        'completed': 'badge-info'
+    }[status] || 'badge-secondary';
+}
+
+function getPriorityClass(level) {
+    return {
+        'high': 'border-error',
+        'medium': 'border-warning',
+        'low': 'border-info'
+    }[level] || '';
+}
+
+function getPriorityBadgeClass(level) {
+    return {
+        'high': 'badge-error',
+        'medium': 'badge-warning',
+        'low': 'badge-info'
+    }[level] || 'badge-secondary';
+}
+
+function toggleCrisisAlertsSection() {
+    document.getElementById('crisis-alerts-section').style.display = 'none';
+}
+
+async function toggleAvailability() {
+    try {
+        // Implementation for toggling counselor availability status
+        manasAPI.showInfo('Availability status updated.');
+    } catch (error) {
+        console.error('Error toggling availability:', error);
+    }
+}
+
+function showError(message) {
+    if (window.manasAPI) {
+        manasAPI.showError(message);
+    } else {
+        alert(message);
+    }
+}
+</script>
+
+<style>
+/* Additional styles for counselor dashboard */
+.crisis-alert {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.crisis-alert:hover {
+    background: #fee2e2;
+    border-color: #f87171;
+}
+
+.priority-student {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.priority-student:hover {
+    background: var(--bg-primary);
+}
+
+.priority-student.border-error {
+    border-color: var(--error-color);
+    background: #fef2f2;
+}
+
+.priority-student.border-warning {
+    border-color: var(--warning-color);
+    background: #fffbeb;
+}
+
+.priority-student.border-info {
+    border-color: var(--info-color);
+    background: #f0f9ff;
+}
+
+.schedule-item {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.schedule-item:hover {
+    background: var(--bg-primary);
+}
+
+.schedule-item.border-success {
+    border-left: 4px solid var(--success-color);
+}
+
+.schedule-item.border-warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.schedule-item.border-error {
+    border-left: 4px solid var(--error-color);
+}
+
+.activity-item {
+    padding: 0.75rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.activity-item:hover {
+    background: var(--bg-secondary);
+}
+
+.attention-indicator {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.assessment-result {
+    padding: 0.75rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.assessment-result:hover {
+    background: var(--bg-secondary);
+}
+
+.student-result {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.student-result:hover {
+    background: var(--bg-primary);
+}
+
+.today-overview {
+    font-size: 0.875rem;
+}
+
+.overview-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.overview-item:last-child {
+    border-bottom: none;
+}
+
+.insight-item {
+    padding: 0.5rem 0;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--radius-lg);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 1.5rem 1.5rem 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+@media (max-width: 768px) {
+    .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
+}
+</style>
+{% endblock %}

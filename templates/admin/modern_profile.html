@@ -1,0 +1,313 @@
+{% extends 'admin/base_new.html' %}
+{% load static %}
+
+{% block title %}Profile - MANAS Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_profile.css' %}">
+{% endblock %}
+
+{% block page_title %}Admin Profile{% endblock %}
+{% block page_subtitle %}Manage your account settings and personal information{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Profile Card -->
+    <div class="profile-card slide-in">
+        <div class="profile-avatar">
+            {{ user.first_name.0|default:'A' }}{{ user.last_name.0|default:'' }}
+        </div>
+        
+        <div class="profile-name">{{ user.get_full_name|default:user.username }}</div>
+        <div class="profile-role">{{ user.role|capfirst }} Administrator</div>
+        <div class="profile-email">{{ user.email }}</div>
+        
+        <div class="profile-badges">
+            {% if user.is_verified %}
+            <span class="badge verified">
+                <i data-feather="check-circle" style="width: 12px; height: 12px;"></i>
+                Verified
+            </span>
+            {% endif %}
+            <span class="badge admin">
+                <i data-feather="shield" style="width: 12px; height: 12px;"></i>
+                Admin Access
+            </span>
+            {% if user.is_superuser %}
+            <span class="badge">
+                <i data-feather="star" style="width: 12px; height: 12px;"></i>
+                Super Admin
+            </span>
+            {% endif %}
+        </div>
+        
+        <div class="profile-stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ user.date_joined|timesince|floatformat:0 }}</div>
+                <div class="stat-label">Days Active</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ user.last_login|timesince|floatformat:0 }}</div>
+                <div class="stat-label">Last Login</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Form -->
+    <div class="profile-form-card slide-in">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Personal Information -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i data-feather="user" style="width: 20px; height: 20px; margin-right: 0.5rem;"></i>
+                    Personal Information
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" class="form-input" 
+                               value="{{ user.first_name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" class="form-input" 
+                               value="{{ user.last_name }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-input" 
+                               value="{{ user.email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone_number">Phone Number</label>
+                        <input type="tel" id="phone_number" name="phone_number" class="form-input" 
+                               value="{{ user.phone_number|default:'' }}" placeholder="e.g., +91 9876543210">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="date_of_birth">Date of Birth</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-input" 
+                           value="{% if user.date_of_birth %}{{ user.date_of_birth|date:'Y-m-d' }}{% endif %}">
+                </div>
+            </div>
+            
+            <!-- Administrative Information -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i data-feather="briefcase" style="width: 20px; height: 20px; margin-right: 0.5rem;"></i>
+                    Administrative Details
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="department">Department</label>
+                        <select id="department" name="department" class="form-input">
+                            <option value="">Select Department</option>
+                            <option value="mental_health" {% if admin_profile.department == 'mental_health' %}selected{% endif %}>Mental Health Services</option>
+                            <option value="student_affairs" {% if admin_profile.department == 'student_affairs' %}selected{% endif %}>Student Affairs</option>
+                            <option value="counseling_services" {% if admin_profile.department == 'counseling_services' %}selected{% endif %}>Counseling Services</option>
+                            <option value="crisis_management" {% if admin_profile.department == 'crisis_management' %}selected{% endif %}>Crisis Management</option>
+                            <option value="it_support" {% if admin_profile.department == 'it_support' %}selected{% endif %}>IT Support</option>
+                            <option value="administration" {% if admin_profile.department == 'administration' %}selected{% endif %}>Administration</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="access_level">Access Level</label>
+                        <select id="access_level" name="access_level" class="form-input">
+                            <option value="">Select Access Level</option>
+                            <option value="junior" {% if admin_profile.access_level == 'junior' %}selected{% endif %}>Junior Admin</option>
+                            <option value="senior" {% if admin_profile.access_level == 'senior' %}selected{% endif %}>Senior Admin</option>
+                            <option value="supervisor" {% if admin_profile.access_level == 'supervisor' %}selected{% endif %}>Supervisor</option>
+                            <option value="manager" {% if admin_profile.access_level == 'manager' %}selected{% endif %}>Manager</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Permissions -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i data-feather="shield" style="width: 20px; height: 20px; margin-right: 0.5rem;"></i>
+                    Administrative Permissions
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" name="can_manage_users" {% if admin_profile.can_manage_users %}checked{% endif %}>
+                            Can Manage Users
+                        </label>
+                        <small style="color: #64748b;">Create, edit, and deactivate user accounts</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" name="can_manage_content" {% if admin_profile.can_manage_content %}checked{% endif %}>
+                            Can Manage Content
+                        </label>
+                        <small style="color: #64748b;">Moderate and manage platform content</small>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" name="can_view_analytics" {% if admin_profile.can_view_analytics %}checked{% endif %}>
+                        Can View Analytics
+                    </label>
+                    <small style="color: #64748b;">Access system analytics and reports</small>
+                </div>
+            </div>
+            
+            <!-- Save Actions -->
+            <div class="save-actions">
+                <button type="button" class="btn btn-secondary" onclick="window.location.reload()">
+                    <i data-feather="x" style="width: 16px; height: 16px;"></i>
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i data-feather="save" style="width: 16px; height: 16px;"></i>
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Security Settings -->
+<div class="security-card slide-in">
+    <h3 class="section-title">
+        <i data-feather="shield" style="width: 20px; height: 20px; margin-right: 0.5rem;"></i>
+        Security Settings
+    </h3>
+    
+    <div class="security-item">
+        <div class="security-info">
+            <div class="security-title">Change Password</div>
+            <div class="security-desc">Update your account password for better security</div>
+        </div>
+        <div class="security-action">
+            <button type="button" class="btn btn-secondary" onclick="openPasswordModal()">
+                <i data-feather="lock" style="width: 16px; height: 16px;"></i>
+                Change Password
+            </button>
+        </div>
+    </div>
+    
+    <div class="security-item">
+        <div class="security-info">
+            <div class="security-title">Two-Factor Authentication</div>
+            <div class="security-desc">Add an extra layer of security to your account</div>
+        </div>
+        <div class="security-action">
+            <button type="button" class="btn btn-primary">
+                <i data-feather="smartphone" style="width: 16px; height: 16px;"></i>
+                Enable 2FA
+            </button>
+        </div>
+    </div>
+    
+    <div class="security-item">
+        <div class="security-info">
+            <div class="security-title">Active Sessions</div>
+            <div class="security-desc">Manage your active login sessions across devices</div>
+        </div>
+        <div class="security-action">
+            <button type="button" class="btn btn-secondary">
+                <i data-feather="monitor" style="width: 16px; height: 16px;"></i>
+                View Sessions
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Activity Log -->
+<div class="activity-log slide-in">
+    <h3 class="section-title">
+        <i data-feather="activity" style="width: 20px; height: 20px; margin-right: 0.5rem;"></i>
+        Recent Activity
+    </h3>
+    
+    <div class="activity-item">
+        <div class="activity-icon">
+            <i data-feather="log-in" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div class="activity-content">
+            <div class="activity-title">Successful Login</div>
+            <div class="activity-desc">Logged in from {{ request.META.HTTP_USER_AGENT|default:"Unknown Device" }}</div>
+            <div class="activity-time">{{ user.last_login|timesince }} ago</div>
+        </div>
+    </div>
+    
+    <div class="activity-item">
+        <div class="activity-icon">
+            <i data-feather="settings" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div class="activity-content">
+            <div class="activity-title">Profile Updated</div>
+            <div class="activity-desc">Modified profile information and preferences</div>
+            <div class="activity-time">2 days ago</div>
+        </div>
+    </div>
+    
+    <div class="activity-item">
+        <div class="activity-icon">
+            <i data-feather="users" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div class="activity-content">
+            <div class="activity-title">User Management</div>
+            <div class="activity-desc">Performed bulk operations on user accounts</div>
+            <div class="activity-time">1 week ago</div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add form submission handling
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Add loading state
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i data-feather="loader" style="width: 16px; height: 16px; animation: spin 1s linear infinite;"></i> Saving...';
+            submitBtn.disabled = true;
+            
+            // Allow normal form submission
+            // The loading state will be reset on page reload after submission
+        });
+    }
+    
+    // Add slide-in animation delays
+    const slideElements = document.querySelectorAll('.slide-in');
+    slideElements.forEach((element, index) => {
+        element.style.animationDelay = `${index * 0.2}s`;
+    });
+    
+    feather.replace();
+});
+
+function openPasswordModal() {
+    // In a real app, this would open a modal for password change
+    alert('Password change modal would open here');
+}
+</script>
+
+<style>
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}

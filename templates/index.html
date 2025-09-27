@@ -1,0 +1,235 @@
+{% extends 'auth/landing.html' %}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .card a {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: transform 0.3s ease;
+            font-weight: 500;
+        }
+        .card a:hover {
+            transform: scale(1.05);
+        }
+        .status {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .endpoints {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        .endpoints h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .endpoints ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .endpoints li {
+            margin: 5px 0;
+            color: #666;
+        }
+        .endpoints code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 MANAS</h1>
+            <p>Mental Health Platform - Backend API Server</p>
+        </div>
+        
+        <div class="status">
+            ✅ Django Server is Running Successfully on Port 8002
+        </div>
+        
+        <div class="cards">
+            <div class="card">
+                <h3>🔒 Authentication API</h3>
+                <p>JWT-based authentication system with role-based access control for Students, Counselors, and Administrators.</p>
+                <div class="endpoints">
+                    <h4>Key Endpoints:</h4>
+                    <ul>
+                        <li><code>POST /api/auth/token/</code> - Login</li>
+                        <li><code>POST /api/auth/token/refresh/</code> - Refresh Token</li>
+                        <li><code>GET /api/v1/accounts/profile/</code> - User Profile</li>
+                    </ul>
+                </div>
+                <a href="/api/v1/accounts/">Explore Authentication</a>
+            </div>
+            
+            <div class="card">
+                <h3>💬 Real-time Chat System</h3>
+                <p>WebSocket-powered chat with AI integration, crisis detection, and real-time notifications.</p>
+                <div class="endpoints">
+                    <h4>Features:</h4>
+                    <ul>
+                        <li>Real-time messaging with WebSockets</li>
+                        <li>Crisis detection and alerts</li>
+                        <li>AI-powered responses</li>
+                        <li>Admin monitoring</li>
+                    </ul>
+                </div>
+                <a href="/api/v1/chat/test/">Test WebSocket Chat</a>
+            </div>
+            
+            <div class="card">
+                <h3>📊 Mental Health Assessments</h3>
+                <p>Comprehensive psychological assessments with scoring algorithms and personalized recommendations.</p>
+                <div class="endpoints">
+                    <h4>Assessment Types:</h4>
+                    <ul>
+                        <li>Depression (PHQ-9)</li>
+                        <li>Anxiety (GAD-7)</li>
+                        <li>Stress Assessment</li>
+                        <li>Custom Questionnaires</li>
+                    </ul>
+                </div>
+                <a href="/api/v1/assessments/">View Assessments</a>
+            </div>
+            
+            <div class="card">
+                <h3>📅 Appointment System</h3>
+                <p>Comprehensive booking system for counseling sessions with availability management.</p>
+                <div class="endpoints">
+                    <h4>Features:</h4>
+                    <ul>
+                        <li>Real-time availability</li>
+                        <li>Automated notifications</li>
+                        <li>Session management</li>
+                        <li>Feedback collection</li>
+                    </ul>
+                </div>
+                <a href="/api/v1/appointments/">Manage Appointments</a>
+            </div>
+            
+            <div class="card">
+                <h3>🌱 Wellness Tracking</h3>
+                <p>Daily mood tracking, habit monitoring, and personalized wellness insights.</p>
+                <div class="endpoints">
+                    <h4>Tracking Features:</h4>
+                    <ul>
+                        <li>Daily mood logs</li>
+                        <li>Habit tracking</li>
+                        <li>Goal setting</li>
+                        <li>Progress analytics</li>
+                    </ul>
+                </div>
+                <a href="/api/v1/wellness/">Track Wellness</a>
+            </div>
+            
+            <div class="card">
+                <h3>🚨 Crisis Management</h3>
+                <p>24/7 crisis intervention system with emergency protocols and real-time alerts.</p>
+                <div class="endpoints">
+                    <h4>Crisis Features:</h4>
+                    <ul>
+                        <li>Emergency contacts</li>
+                        <li>Crisis intervention</li>
+                        <li>Real-time alerts</li>
+                        <li>Professional response</li>
+                    </ul>
+                </div>
+                <a href="/api/v1/crisis/">Crisis Support</a>
+            </div>
+            
+            <div class="card">
+                <h3>👥 Community Features</h3>
+                <p>Peer support groups, forums, and community-driven mental health resources.</p>
+                <div class="endpoints">
+                    <h4>Community Tools:</h4>
+                    <ul>
+                        <li>Support groups</li>
+                        <li>Discussion forums</li>
+                        <li>Peer connections</li>
+                        <li>Shared experiences</li>
+                    </ul>
+                </div>
+                <a href="/api/v1/community/">Join Community</a>
+            </div>
+            
+            <div class="card">
+                <h3>📚 Resources Library</h3>
+                <p>Curated mental health resources including articles, videos, and self-help materials.</p>
+                <div class="endpoints">
+                    <h4>Resource Types:</h4>
+                    <ul>
+                        <li>Educational articles</li>
+                        <li>Video content</li>
+                        <li>Self-help guides</li>
+                        <li>Professional resources</li>
+                    </ul>
+                </div>
+                <a href="/api/v1/resources/">Browse Resources</a>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 60px; color: white; opacity: 0.8;">
+            <p>MANAS Mental Health Platform Backend v1.0</p>
+            <p>Built with Django 5.0.7 | Django REST Framework | WebSockets</p>
+        </div>
+    </div>
+</body>
+</html>

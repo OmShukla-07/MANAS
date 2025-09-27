@@ -1,0 +1,340 @@
+{% extends 'student/base_student.html' %}
+{% load static %}
+
+{% block title %}Profile - MANAS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile-enhanced.css' %}">
+{% endblock %}
+
+{% block header_title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="content-body fade-in">
+    <div class="profile-sections">
+        <!-- Profile Card - Full Width -->
+        <div class="profile-card">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-card-content">
+                <div class="profile-info-left">
+                    <h3>{{ user.get_full_name|default:user.username }}</h3>
+                    <p>{{ user.email }}</p>
+                    <div class="availability-badge">Member since {{ user.date_joined|date:"M Y" }}</div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="activities-grid">
+                    <div class="activity-card">
+                        <div class="activity-icon breathe">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="activity-title">Wellness Score</div>
+                        <div class="activity-description">8.5/10 - Great!</div>
+                    </div>
+                    
+                    <div class="activity-card">
+                        <div class="activity-icon journal">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="activity-title">Sessions</div>
+                        <div class="activity-description">12 completed</div>
+                    </div>
+                    
+                    <div class="activity-card">
+                        <div class="activity-icon relax">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="activity-title">Achievements</div>
+                        <div class="activity-description">7 badges earned</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Information -->
+        <div class="profile-info">
+            <div class="tab-navigation">
+                <button class="tab-btn active" onclick="showProfileTab('personal')">Personal Info</button>
+                <button class="tab-btn" onclick="showProfileTab('preferences')">Preferences</button>
+                <button class="tab-btn" onclick="showProfileTab('privacy')">Privacy</button>
+            </div>
+
+            <!-- Personal Information Tab -->
+            <div id="personal-tab" class="profile-tab">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Basic Information Section -->
+                    <h4 style="margin-bottom: 1rem; color: #2d3748; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">
+                        <i class="fas fa-user"></i> Basic Information
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" class="form-input" value="{{ user.first_name }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" class="form-input" value="{{ user.last_name }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-input" value="{{ user.email }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone_number">Phone Number</label>
+                        <input type="tel" id="phone_number" name="phone_number" class="form-input" value="{{ user.phone_number|default:'' }}" placeholder="Enter your phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date_of_birth">Date of Birth</label>
+                        <input type="date" id="date_of_birth" name="date_of_birth" class="form-input" value="{% if user.date_of_birth %}{{ user.date_of_birth|date:'Y-m-d' }}{% endif %}">
+                    </div>
+
+                    <!-- Academic Information Section -->
+                    <h4 style="margin: 2rem 0 1rem 0; color: #2d3748; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">
+                        <i class="fas fa-graduation-cap"></i> Academic Information
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="institution">Institution/University</label>
+                        <input type="text" id="institution" name="institution" class="form-input" value="{{ profile.institution|default:'' }}" placeholder="e.g., Delhi University">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course">Course/Program</label>
+                        <input type="text" id="course" name="course" class="form-input" value="{{ profile.course|default:'' }}" placeholder="e.g., B.Tech Computer Science">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="year_of_study">Year of Study</label>
+                        <select id="year_of_study" name="year_of_study" class="form-input">
+                            <option value="">Select Year</option>
+                            <option value="1" {% if profile.year_of_study == 1 %}selected{% endif %}>1st Year</option>
+                            <option value="2" {% if profile.year_of_study == 2 %}selected{% endif %}>2nd Year</option>
+                            <option value="3" {% if profile.year_of_study == 3 %}selected{% endif %}>3rd Year</option>
+                            <option value="4" {% if profile.year_of_study == 4 %}selected{% endif %}>4th Year</option>
+                            <option value="5" {% if profile.year_of_study == 5 %}selected{% endif %}>5th Year</option>
+                            <option value="6" {% if profile.year_of_study == 6 %}selected{% endif %}>6th Year</option>
+                        </select>
+                    </div>
+
+                    <!-- Emergency Contact Section -->
+                    <h4 style="margin: 2rem 0 1rem 0; color: #2d3748; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">
+                        <i class="fas fa-phone"></i> Emergency Contact
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="emergency_contact_name">Emergency Contact Name</label>
+                        <input type="text" id="emergency_contact_name" name="emergency_contact_name" class="form-input" value="{{ profile.emergency_contact_name|default:'' }}" placeholder="e.g., Parent/Guardian Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="emergency_contact_phone">Emergency Contact Phone</label>
+                        <input type="tel" id="emergency_contact_phone" name="emergency_contact_phone" class="form-input" value="{{ profile.emergency_contact_phone|default:'' }}" placeholder="e.g., +91 9876543210">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="emergency_contact_relationship">Relationship</label>
+                        <select id="emergency_contact_relationship" name="emergency_contact_relationship" class="form-input">
+                            <option value="">Select Relationship</option>
+                            <option value="father" {% if profile.emergency_contact_relationship == 'father' %}selected{% endif %}>Father</option>
+                            <option value="mother" {% if profile.emergency_contact_relationship == 'mother' %}selected{% endif %}>Mother</option>
+                            <option value="guardian" {% if profile.emergency_contact_relationship == 'guardian' %}selected{% endif %}>Guardian</option>
+                            <option value="sibling" {% if profile.emergency_contact_relationship == 'sibling' %}selected{% endif %}>Sibling</option>
+                            <option value="spouse" {% if profile.emergency_contact_relationship == 'spouse' %}selected{% endif %}>Spouse</option>
+                            <option value="friend" {% if profile.emergency_contact_relationship == 'friend' %}selected{% endif %}>Friend</option>
+                            <option value="other" {% if profile.emergency_contact_relationship == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Profile
+                    </button>
+                </form>
+            </div>
+
+            <!-- Preferences Tab -->
+            <div id="preferences-tab" class="profile-tab" style="display: none;">
+                <form onsubmit="updatePreferences(event)">
+                    <div class="form-group">
+                        <label for="notifications">Email Notifications</label>
+                        <select id="notifications" class="form-input">
+                            <option value="all">All notifications</option>
+                            <option value="important">Important only</option>
+                            <option value="none">None</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reminderTime">Daily Wellness Reminder</label>
+                        <input type="time" id="reminderTime" class="form-input" value="09:00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="theme">Theme Preference</label>
+                        <select id="theme" class="form-input">
+                            <option value="light">Light Mode</option>
+                            <option value="dark">Dark Mode</option>
+                            <option value="auto">Auto (System)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="language">Language</label>
+                        <select id="language" class="form-input">
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="es">Spanish</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Preferences</button>
+                </form>
+            </div>
+
+            <!-- Privacy Tab -->
+            <div id="privacy-tab" class="profile-tab" style="display: none;">
+                <form onsubmit="updatePrivacy(event)">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="profileVisible" checked> 
+                            Make my profile visible to other students
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="shareProgress" checked> 
+                            Allow sharing wellness progress with counselors
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="anonymousData"> 
+                            Contribute anonymous data for research
+                        </label>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+                        <h4 style="margin-bottom: 1rem; color: #dc2626;">Data Management</h4>
+                        <button type="button" class="btn btn-secondary" onclick="exportData()">
+                            <i class="fas fa-download"></i> Export My Data
+                        </button>
+                        <button type="button" class="btn" style="background: #dc2626; color: white; margin-left: 0.5rem;" onclick="deleteAccount()">
+                            <i class="fas fa-trash"></i> Delete Account
+                        </button>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Privacy Settings</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div style="margin-top: 2rem;">
+        <h3 style="margin-bottom: 1rem; color: #2d3748;">Recent Activity</h3>
+        <div class="support-grid">
+            <div class="support-card">
+                <div class="support-icon breathe">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h4>Chat with MANAS AI</h4>
+                <p>Had a helpful conversation about stress management</p>
+                <small style="color: #64748b;">2 hours ago</small>
+            </div>
+            
+            <div class="support-card">
+                <div class="support-icon journal">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h4>Read Article</h4>
+                <p>Managing Exam Anxiety - 7 minute read</p>
+                <small style="color: #64748b;">Yesterday</small>
+            </div>
+            
+            <div class="support-card">
+                <div class="support-icon relax">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h4>Played Wellness Game</h4>
+                <p>Completed Breathing Bubble exercise</p>
+                <small style="color: #64748b;">2 days ago</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showProfileTab(tabName) {
+        // Remove active class from all tab buttons
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => btn.classList.remove('active'));
+        
+        // Add active class to clicked button
+        event.target.classList.add('active');
+        
+        // Hide all tabs
+        const tabs = document.querySelectorAll('.profile-tab');
+        tabs.forEach(tab => tab.style.display = 'none');
+        
+        // Show selected tab
+        const targetTab = document.getElementById(tabName + '-tab');
+        if (targetTab) {
+            targetTab.style.display = 'block';
+        }
+    }
+
+    function updateProfile(event) {
+        event.preventDefault();
+        showNotification('Profile updated successfully!', 'success');
+    }
+
+    function updatePreferences(event) {
+        event.preventDefault();
+        showNotification('Preferences saved!', 'success');
+    }
+
+    function updatePrivacy(event) {
+        event.preventDefault();
+        showNotification('Privacy settings updated!', 'success');
+    }
+
+    function exportData() {
+        showNotification('Preparing your data export...', 'info');
+        setTimeout(() => {
+            showNotification('Data export ready! Check your email.', 'success');
+        }, 2000);
+    }
+
+    function deleteAccount() {
+        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+            showNotification('Account deletion initiated. You will receive a confirmation email.', 'info');
+        }
+    }
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.classList.add('show'), 100);
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => document.body.removeChild(notification), 300);
+        }, 3000);
+    }
+</script>
+{% endblock %}

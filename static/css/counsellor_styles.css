@@ -1,0 +1,1118 @@
+/* MANAS Counsellor Interface - Centralized CSS */
+
+/* CSS Variables - Counsellor Theme */
+:root {
+    --counsellor-primary: #C85C5C;
+    --counsellor-secondary: #B54848;
+    --counsellor-tertiary: #A03F3F;
+    --counsellor-light: #F5E6E6;
+    --counsellor-bg: #FDF2F2;
+    --counsellor-bg-secondary: #FEF7F7;
+    
+    /* Status Colors */
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --error-color: #dc3545;
+    --info-color: #17a2b8;
+    
+    /* Typography */
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    
+    /* Spacing */
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+    --spacing-5: 1.25rem;
+    --spacing-6: 1.5rem;
+    --spacing-8: 2rem;
+    --spacing-12: 3rem;
+    
+    /* Borders & Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background: linear-gradient(135deg, var(--counsellor-bg) 0%, var(--counsellor-bg-secondary) 100%);
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header Styles */
+.counsellor-header {
+    background: linear-gradient(135deg, var(--counsellor-light) 0%, var(--counsellor-bg-secondary) 100%);
+    padding: var(--spacing-6) var(--spacing-8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.counsellor-header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.counsellor-logo-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.counsellor-logo {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--counsellor-primary), var(--counsellor-secondary));
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    box-shadow: 0 2px 8px rgba(200, 92, 92, 0.3);
+}
+
+.counsellor-brand-name {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--counsellor-primary);
+    letter-spacing: -0.025em;
+}
+
+.counsellor-user-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+}
+
+.counsellor-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    border: 2px solid var(--counsellor-primary);
+}
+
+/* Navigation Styles */
+.counsellor-nav {
+    background: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 0 var(--spacing-8);
+}
+
+.counsellor-nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    gap: var(--spacing-1);
+}
+
+.counsellor-nav-tab {
+    padding: var(--spacing-4) var(--spacing-6);
+    text-decoration: none;
+    color: #666;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.counsellor-nav-tab:hover {
+    color: var(--counsellor-primary);
+    background-color: var(--counsellor-bg);
+}
+
+.counsellor-nav-tab.active {
+    color: var(--counsellor-primary);
+    border-bottom-color: var(--counsellor-primary);
+    background-color: var(--counsellor-bg);
+}
+
+/* Main Content Layout */
+.counsellor-main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-8);
+}
+
+/* Page Headers */
+.counsellor-page-header {
+    margin-bottom: var(--spacing-8);
+}
+
+.counsellor-page-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--counsellor-primary);
+    margin-bottom: var(--spacing-2);
+}
+
+.counsellor-page-subtitle {
+    font-size: var(--font-size-lg);
+    color: #666;
+}
+
+/* Grid System */
+.counsellor-grid {
+    display: grid;
+    gap: var(--spacing-6);
+}
+
+.counsellor-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.counsellor-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.counsellor-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 768px) {
+    .counsellor-grid-2,
+    .counsellor-grid-3,
+    .counsellor-grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Card Components */
+.counsellor-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.counsellor-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.counsellor-card-sm {
+    padding: var(--spacing-4);
+    border-radius: var(--radius-md);
+}
+
+.counsellor-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-4);
+}
+
+.counsellor-card-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--counsellor-primary);
+}
+
+/* Crisis Alert Components */
+.counsellor-crisis-banner {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    padding: var(--spacing-6);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-6);
+    box-shadow: var(--shadow-lg);
+}
+
+.counsellor-crisis-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.counsellor-crisis-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    margin-bottom: var(--spacing-2);
+}
+
+.counsellor-crisis-description {
+    font-size: var(--font-size-base);
+    opacity: 0.9;
+}
+
+/* Statistics Cards */
+.counsellor-stat-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.counsellor-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.counsellor-stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-4);
+}
+
+.counsellor-stat-label {
+    font-size: var(--font-size-sm);
+    color: #666;
+    font-weight: 500;
+}
+
+.counsellor-stat-icon {
+    width: 24px;
+    height: 24px;
+    fill: var(--counsellor-primary);
+}
+
+.counsellor-stat-value {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--counsellor-primary);
+    margin-bottom: var(--spacing-2);
+}
+
+.counsellor-stat-description {
+    font-size: var(--font-size-sm);
+    color: #666;
+}
+
+/* Progress Bar */
+.counsellor-progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-top: var(--spacing-2);
+}
+
+.counsellor-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--counsellor-primary), var(--counsellor-secondary));
+    border-radius: var(--radius-full);
+    transition: width 0.8s ease;
+}
+
+/* Button Components */
+.counsellor-btn {
+    padding: var(--spacing-3) var(--spacing-5);
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.counsellor-btn-primary {
+    background: var(--counsellor-primary);
+    color: white;
+}
+
+.counsellor-btn-primary:hover {
+    background: var(--counsellor-secondary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.counsellor-btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.counsellor-btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.counsellor-btn-success {
+    background: var(--success-color);
+    color: white;
+}
+
+.counsellor-btn-success:hover {
+    background: #218838;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.counsellor-btn-warning {
+    background: var(--warning-color);
+    color: #333;
+}
+
+.counsellor-btn-warning:hover {
+    background: #e0a800;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.counsellor-btn-error {
+    background: var(--error-color);
+    color: white;
+}
+
+.counsellor-btn-error:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.counsellor-btn-ghost {
+    background: transparent;
+    color: var(--counsellor-primary);
+    border: 1px solid var(--counsellor-primary);
+}
+
+.counsellor-btn-ghost:hover {
+    background: var(--counsellor-primary);
+    color: white;
+}
+
+.counsellor-btn-sm {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-xs);
+}
+
+.counsellor-btn-md {
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-sm);
+}
+
+.counsellor-btn-lg {
+    padding: var(--spacing-4) var(--spacing-6);
+    font-size: var(--font-size-base);
+}
+
+/* Badge Components */
+.counsellor-badge {
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.counsellor-badge-critical {
+    background: #dc3545;
+    color: white;
+}
+
+.counsellor-badge-high {
+    background: #fd7e14;
+    color: white;
+}
+
+.counsellor-badge-medium {
+    background: #ffc107;
+    color: #333;
+}
+
+.counsellor-badge-low {
+    background: #28a745;
+    color: white;
+}
+
+.counsellor-badge-active {
+    background: #28a745;
+    color: white;
+}
+
+.counsellor-badge-pending {
+    background: #ffc107;
+    color: #333;
+}
+
+.counsellor-badge-cancelled {
+    background: #6c757d;
+    color: white;
+}
+
+/* Alert Components */
+.counsellor-alert {
+    padding: var(--spacing-4);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-4);
+    border-left: 4px solid;
+}
+
+.counsellor-alert-success {
+    background: #d4edda;
+    color: #155724;
+    border-left-color: #28a745;
+}
+
+.counsellor-alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border-left-color: #ffc107;
+}
+
+.counsellor-alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left-color: #dc3545;
+}
+
+.counsellor-alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-left-color: #17a2b8;
+}
+
+/* Tab Navigation */
+.counsellor-content-nav {
+    display: flex;
+    gap: var(--spacing-1);
+    margin-bottom: var(--spacing-6);
+    border-bottom: 1px solid #e9ecef;
+}
+
+.counsellor-content-tab {
+    padding: var(--spacing-3) var(--spacing-5);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #666;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.counsellor-content-tab:hover {
+    color: var(--counsellor-primary);
+    background-color: var(--counsellor-bg);
+}
+
+.counsellor-content-tab.active {
+    color: var(--counsellor-primary);
+    border-bottom-color: var(--counsellor-primary);
+    background-color: var(--counsellor-bg);
+}
+
+/* Schedule Components */
+.counsellor-schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
+.counsellor-schedule-item {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-5);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    transition: all 0.2s ease;
+}
+
+.counsellor-schedule-item:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.counsellor-time-badge {
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+}
+
+.counsellor-time-badge.morning {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.counsellor-time-badge.afternoon {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.counsellor-time-badge.evening {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.counsellor-schedule-details {
+    flex: 1;
+}
+
+.counsellor-schedule-time {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--counsellor-primary);
+    margin-bottom: var(--spacing-1);
+}
+
+.counsellor-schedule-type {
+    font-weight: 600;
+    margin-bottom: var(--spacing-1);
+}
+
+.counsellor-schedule-desc {
+    color: #666;
+    font-size: var(--font-size-sm);
+}
+
+/* Activity Feed */
+.counsellor-activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
+.counsellor-activity-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.counsellor-activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.counsellor-activity-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+.counsellor-activity-icon.completed {
+    background: var(--success-color);
+}
+
+.counsellor-activity-icon.follow-up {
+    background: var(--warning-color);
+}
+
+.counsellor-activity-icon.referral {
+    background: var(--info-color);
+}
+
+.counsellor-activity-content {
+    flex: 1;
+}
+
+.counsellor-activity-text {
+    font-weight: 500;
+    margin-bottom: var(--spacing-1);
+}
+
+.counsellor-activity-time {
+    color: #666;
+    font-size: var(--font-size-sm);
+}
+
+/* Crisis Alert Cards */
+.counsellor-alert-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
+.counsellor-alert-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-5);
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid;
+    transition: all 0.2s ease;
+}
+
+.counsellor-alert-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.counsellor-alert-card.critical-priority {
+    border-left-color: #dc3545;
+    background: linear-gradient(135deg, #fff, #fff5f5);
+}
+
+.counsellor-alert-card.high-priority {
+    border-left-color: #fd7e14;
+    background: linear-gradient(135deg, #fff, #fff8f3);
+}
+
+.counsellor-alert-card.medium-priority {
+    border-left-color: #ffc107;
+    background: linear-gradient(135deg, #fff, #fffef3);
+}
+
+.counsellor-alert-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-3);
+}
+
+.counsellor-alert-tags {
+    display: flex;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-3);
+}
+
+.counsellor-alert-tag {
+    padding: var(--spacing-1) var(--spacing-2);
+    background: #f8f9fa;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    color: #666;
+}
+
+.counsellor-alert-tag.critical {
+    background: #dc3545;
+    color: white;
+}
+
+.counsellor-alert-message {
+    margin-bottom: var(--spacing-4);
+    line-height: 1.6;
+}
+
+.counsellor-alert-actions {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+}
+
+/* Form Components */
+.counsellor-form-group {
+    margin-bottom: var(--spacing-4);
+}
+
+.counsellor-form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: var(--spacing-2);
+    color: var(--counsellor-primary);
+}
+
+.counsellor-form-input {
+    width: 100%;
+    padding: var(--spacing-3);
+    border: 1px solid #e9ecef;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    transition: border-color 0.2s ease;
+}
+
+.counsellor-form-input:focus {
+    outline: none;
+    border-color: var(--counsellor-primary);
+    box-shadow: 0 0 0 3px rgba(200, 92, 92, 0.1);
+}
+
+.counsellor-form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* Toggle Switch */
+.counsellor-toggle {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.counsellor-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.counsellor-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: var(--radius-full);
+}
+
+.counsellor-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: var(--radius-full);
+}
+
+.counsellor-toggle input:checked + .counsellor-toggle-slider {
+    background-color: var(--counsellor-primary);
+}
+
+.counsellor-toggle input:checked + .counsellor-toggle-slider:before {
+    transform: translateX(26px);
+}
+
+/* Credential Cards */
+.counsellor-credential-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-5);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.counsellor-credential-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.counsellor-credential-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-3);
+}
+
+.counsellor-credential-name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--counsellor-primary);
+}
+
+.counsellor-credential-status {
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.counsellor-credential-status.active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.counsellor-credential-status.expires-soon {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.counsellor-credential-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.counsellor-credential-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+}
+
+.counsellor-credential-label {
+    font-weight: 500;
+    color: #333;
+}
+
+.counsellor-credential-id {
+    color: #666;
+    font-size: var(--font-size-sm);
+}
+
+.counsellor-credential-dates {
+    color: #666;
+    font-size: var(--font-size-sm);
+}
+
+.counsellor-credential-actions {
+    display: flex;
+    gap: var(--spacing-2);
+    flex-wrap: wrap;
+}
+
+/* Availability Components */
+.counsellor-availability-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-6);
+}
+
+.counsellor-schedule-config {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-md);
+}
+
+.counsellor-schedule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-3) 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.counsellor-schedule-item:last-child {
+    border-bottom: none;
+}
+
+.counsellor-schedule-label {
+    font-weight: 500;
+    color: var(--counsellor-primary);
+}
+
+.counsellor-day-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-3) 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.counsellor-day-item:last-child {
+    border-bottom: none;
+}
+
+.counsellor-day-name {
+    font-weight: 500;
+}
+
+.counsellor-crisis-availability {
+    background: #fff5f5;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-4);
+    margin-top: var(--spacing-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.counsellor-crisis-label {
+    font-weight: 600;
+    color: #dc2626;
+}
+
+.counsellor-crisis-description {
+    font-size: var(--font-size-sm);
+    color: #dc2626;
+    opacity: 0.8;
+}
+
+/* Time Slots */
+.counsellor-time-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-4);
+}
+
+.counsellor-time-slot {
+    padding: var(--spacing-3);
+    text-align: center;
+    border: 2px solid #e9ecef;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.counsellor-time-slot:hover {
+    border-color: var(--counsellor-primary);
+    background-color: var(--counsellor-bg);
+}
+
+.counsellor-time-slot.selected {
+    background-color: var(--counsellor-primary);
+    color: white;
+    border-color: var(--counsellor-primary);
+}
+
+.counsellor-time-slot.unavailable {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Specialization Tags */
+.counsellor-specializations {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow-md);
+}
+
+.counsellor-spec-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-4);
+}
+
+.counsellor-spec-tag {
+    padding: var(--spacing-2) var(--spacing-4);
+    background: linear-gradient(135deg, var(--counsellor-primary), var(--counsellor-secondary));
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+/* Utility Classes */
+.counsellor-text-center { text-align: center; }
+.counsellor-text-left { text-align: left; }
+.counsellor-text-right { text-align: right; }
+
+.counsellor-font-bold { font-weight: 700; }
+.counsellor-font-semibold { font-weight: 600; }
+.counsellor-font-medium { font-weight: 500; }
+
+.counsellor-text-primary { color: var(--counsellor-primary); }
+.counsellor-text-secondary { color: #666; }
+.counsellor-text-tertiary { color: #999; }
+
+.counsellor-bg-primary { background-color: var(--counsellor-primary); }
+.counsellor-bg-light { background-color: var(--counsellor-light); }
+
+.counsellor-mb-2 { margin-bottom: var(--spacing-2); }
+.counsellor-mb-3 { margin-bottom: var(--spacing-3); }
+.counsellor-mb-4 { margin-bottom: var(--spacing-4); }
+.counsellor-mb-6 { margin-bottom: var(--spacing-6); }
+.counsellor-mb-8 { margin-bottom: var(--spacing-8); }
+
+.counsellor-mt-2 { margin-top: var(--spacing-2); }
+.counsellor-mt-3 { margin-top: var(--spacing-3); }
+.counsellor-mt-4 { margin-top: var(--spacing-4); }
+.counsellor-mt-6 { margin-top: var(--spacing-6); }
+
+.counsellor-p-4 { padding: var(--spacing-4); }
+.counsellor-p-6 { padding: var(--spacing-6); }
+
+.counsellor-flex { display: flex; }
+.counsellor-flex-between { justify-content: space-between; }
+.counsellor-flex-center { justify-content: center; }
+.counsellor-flex-col { flex-direction: column; }
+.counsellor-items-center { align-items: center; }
+.counsellor-gap-2 { gap: var(--spacing-2); }
+.counsellor-gap-3 { gap: var(--spacing-3); }
+.counsellor-gap-4 { gap: var(--spacing-4); }
+
+.counsellor-hidden { display: none; }
+.counsellor-block { display: block; }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .counsellor-main-content {
+        padding: var(--spacing-6);
+    }
+    
+    .counsellor-availability-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .counsellor-header {
+        padding: var(--spacing-4);
+    }
+    
+    .counsellor-header-content {
+        flex-direction: column;
+        gap: var(--spacing-4);
+    }
+    
+    .counsellor-nav {
+        padding: 0 var(--spacing-4);
+    }
+    
+    .counsellor-nav-container {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .counsellor-main-content {
+        padding: var(--spacing-4);
+    }
+    
+    .counsellor-crisis-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-4);
+    }
+    
+    .counsellor-schedule-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-3);
+    }
+    
+    .counsellor-time-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .counsellor-alert-actions {
+        flex-direction: column;
+    }
+    
+    .counsellor-credential-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-3);
+    }
+}

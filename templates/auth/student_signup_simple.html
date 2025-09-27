@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - MANAS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+        }
+
+        /* Floating elements */
+        .floating-icon {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.2);
+            animation: floatIcon 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        .icon-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .icon-2 { top: 20%; right: 15%; animation-delay: 2s; }
+        .icon-3 { bottom: 20%; left: 15%; animation-delay: 4s; }
+        .icon-4 { bottom: 30%; right: 10%; animation-delay: 6s; }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            animation: slideInUp 0.8s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-container i {
+            font-size: 32px;
+            color: white;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInDown 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header p {
+            color: #4a5568;
+            font-size: 1.1rem;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .section-title {
+            grid-column: 1 / -1;
+            color: #667eea;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+            position: relative;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation: expandWidth 1s ease-out;
+        }
+
+        @keyframes expandWidth {
+            from { width: 0; }
+            to { width: 50px; }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], input[type="date"], select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            position: relative;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="date"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+            background: white;
+        }
+
+        input[type="text"]:focus + label, input[type="email"]:focus + label {
+            color: #667eea;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 18px;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+
+        .input-group input:focus ~ .input-icon {
+            color: #667eea;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 1s ease-out 0.8s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .links a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .links a:hover {
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .role-badge i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+                margin: 10px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Loading Animation for Form Submission */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading .submit-btn {
+            background: #a0aec0;
+        }
+
+        /* Custom Select Styling */
+        select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+            appearance: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Elements -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; top: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; top: 60%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 80%; top: 40%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 70%; top: 80%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 90%; top: 10%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 30%; top: 90%; animation-delay: 5s;"></div>
+    </div>
+
+    <!-- Floating Icons -->
+    <div class="floating-icon icon-1"><i class="fas fa-graduation-cap"></i></div>
+    <div class="floating-icon icon-2"><i class="fas fa-heart"></i></div>
+    <div class="floating-icon icon-3"><i class="fas fa-brain"></i></div>
+    <div class="floating-icon icon-4"><i class="fas fa-users"></i></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="role-badge">
+                <i class="fas fa-user-graduate"></i>
+                Student Registration
+            </div>
+            <h1>Join MANAS</h1>
+            <p>Create your student account for comprehensive mental health support</p>
+        </div>
+
+        <form method="post" id="studentSignupForm">
+            {% csrf_token %}
+            <input type="hidden" name="role" value="student">
+            
+            <div class="form-grid">
+                <!-- Basic Information Section -->
+                <h3 class="section-title">
+                    <i class="fas fa-user"></i> Basic Information
+                </h3>
+                
+                <div class="form-group">
+                    <label for="first_name">First Name *</label>
+                    <div class="input-group">
+                        <input type="text" id="first_name" name="first_name" required>
+                        <i class="input-icon fas fa-user"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name *</label>
+                    <div class="input-group">
+                        <input type="text" id="last_name" name="last_name" required>
+                        <i class="input-icon fas fa-user"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username *</label>
+                    <div class="input-group">
+                        <input type="text" id="username" name="username" required>
+                        <i class="input-icon fas fa-at"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <div class="input-group">
+                        <input type="email" id="email" name="email" required>
+                        <i class="input-icon fas fa-envelope"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <div class="input-group">
+                        <input type="text" id="phone_number" name="phone_number" placeholder="e.g., +91 9876543210">
+                        <i class="input-icon fas fa-phone"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth</label>
+                    <div class="input-group">
+                        <input type="date" id="date_of_birth" name="date_of_birth">
+                        <i class="input-icon fas fa-calendar"></i>
+                    </div>
+                </div>
+
+                <!-- Academic Information Section -->
+                <h3 class="section-title">
+                    <i class="fas fa-university"></i> Academic Information
+                </h3>
+
+                <div class="form-group">
+                    <label for="institution">Institution/University *</label>
+                    <div class="input-group">
+                        <input type="text" id="institution" name="institution" placeholder="e.g., Delhi University" required>
+                        <i class="input-icon fas fa-building"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="course">Course/Program *</label>
+                    <div class="input-group">
+                        <input type="text" id="course" name="course" placeholder="e.g., B.Tech Computer Science" required>
+                        <i class="input-icon fas fa-book"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="year_of_study">Year of Study *</label>
+                    <select id="year_of_study" name="year_of_study" required>
+                        <option value="">Select Year</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                        <option value="5">5th Year</option>
+                        <option value="6">6th Year</option>
+                    </select>
+                </div>
+
+                <!-- Emergency Contact Section -->
+                <h3 class="section-title">
+                    <i class="fas fa-phone-alt"></i> Emergency Contact
+                </h3>
+
+                <div class="form-group">
+                    <label for="emergency_contact_name">Emergency Contact Name *</label>
+                    <div class="input-group">
+                        <input type="text" id="emergency_contact_name" name="emergency_contact_name" placeholder="e.g., Parent/Guardian Name" required>
+                        <i class="input-icon fas fa-user-shield"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="emergency_contact_phone">Emergency Contact Phone *</label>
+                    <div class="input-group">
+                        <input type="text" id="emergency_contact_phone" name="emergency_contact_phone" placeholder="e.g., +91 9876543210" required>
+                        <i class="input-icon fas fa-mobile-alt"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="emergency_contact_relationship">Relationship *</label>
+                    <select id="emergency_contact_relationship" name="emergency_contact_relationship" required>
+                        <option value="">Select Relationship</option>
+                        <option value="father">Father</option>
+                        <option value="mother">Mother</option>
+                        <option value="guardian">Guardian</option>
+                        <option value="sibling">Sibling</option>
+                        <option value="spouse">Spouse</option>
+                        <option value="friend">Friend</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Password Section -->
+                <h3 class="section-title">
+                    <i class="fas fa-lock"></i> Security
+                </h3>
+
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <div class="input-group">
+                        <input type="password" id="password" name="password" required>
+                        <i class="input-icon fas fa-key"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password *</label>
+                    <div class="input-group">
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                        <i class="input-icon fas fa-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-user-plus"></i> Create Student Account
+            </button>
+        </form>
+
+        <div class="links">
+            <a href="/choose-user/"><i class="fas fa-arrow-left"></i> Back to Role Selection</a>
+            <a href="/login/"><i class="fas fa-sign-in-alt"></i> Already have an account?</a>
+        </div>
+    </div>
+
+    <script>
+        // Form animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Form validation and submission
+        document.getElementById('studentSignupForm').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            // Add loading state
+            this.classList.add('loading');
+        });
+
+        // Input focus animations
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

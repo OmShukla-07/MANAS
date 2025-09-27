@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - MANAS Mental Health Platform</title>
+    <link rel="stylesheet" href="{% static 'auth_styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Header -->
+        <header class="auth-header">
+            <div class="auth-header-content">
+                <a href="{% url 'home' %}" class="auth-logo-section">
+                    <div class="auth-logo">M</div>
+                    <span class="auth-brand-name">MANAS</span>
+                </a>
+                
+                <nav class="auth-nav-links">
+                    <a href="{% url 'home' %}" class="auth-nav-link">Home</a>
+                    <a href="{% url 'login' %}" class="auth-nav-link">Sign In</a>
+                    <a href="{% url 'signup' %}" class="auth-nav-link">Sign Up</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="auth-main-content" style="max-width: 800px; margin: 0 auto; padding: var(--space-8) var(--space-6);">
+            <div class="auth-card">
+                <div class="auth-card-header">
+                    <h1 class="auth-card-title">Terms of Service</h1>
+                    <p class="auth-card-subtitle">Last updated: September 21, 2025</p>
+                </div>
+
+                <div style="line-height: 1.6; color: var(--gray-700);">
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Acceptance of Terms</h2>
+                    <p>By accessing and using the MANAS Mental Health Platform, you accept and agree to be bound by the terms and provision of this agreement.</p>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Use License</h2>
+                    <p>Permission is granted to temporarily use MANAS for personal, non-commercial mental health support purposes. This license shall automatically terminate if you violate any of these restrictions.</p>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">User Responsibilities</h2>
+                    <p>As a user of MANAS, you agree to:</p>
+                    <ul style="margin: var(--space-3) 0; padding-left: var(--space-6);">
+                        <li>Provide accurate and truthful information</li>
+                        <li>Use the platform responsibly and ethically</li>
+                        <li>Respect other users and counselors</li>
+                        <li>Not share your account credentials</li>
+                        <li>Report any security vulnerabilities</li>
+                    </ul>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Mental Health Disclaimer</h2>
+                    <p><strong>Important:</strong> MANAS is a support platform and does not replace professional medical advice, diagnosis, or treatment. Always seek the advice of qualified health providers with questions regarding mental health conditions.</p>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Crisis Situations</h2>
+                    <p>If you are experiencing a mental health emergency, please contact emergency services immediately or call a crisis hotline. MANAS provides crisis support but is not a substitute for emergency intervention.</p>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Prohibited Uses</h2>
+                    <p>You may not use MANAS to:</p>
+                    <ul style="margin: var(--space-3) 0; padding-left: var(--space-6);">
+                        <li>Violate any applicable laws or regulations</li>
+                        <li>Transmit harmful or offensive content</li>
+                        <li>Impersonate other users or professionals</li>
+                        <li>Interfere with platform security</li>
+                        <li>Use the platform for commercial purposes without permission</li>
+                    </ul>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Limitation of Liability</h2>
+                    <p>MANAS shall not be liable for any damages arising from the use or inability to use the platform, including but not limited to direct, indirect, incidental, punitive, and consequential damages.</p>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Changes to Terms</h2>
+                    <p>We reserve the right to modify these terms at any time. Users will be notified of significant changes, and continued use constitutes acceptance of the modified terms.</p>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Contact Information</h2>
+                    <p>For questions about these Terms of Service, please contact us at legal@manas-platform.com</p>
+                </div>
+
+                <div style="margin-top: var(--space-8); text-align: center;">
+                    <a href="{% url 'home' %}" class="auth-btn auth-btn-primary">Back to Home</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - MANAS Mental Health Platform</title>
+    <link rel="stylesheet" href="{% static 'auth_styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Header -->
+        <header class="auth-header">
+            <div class="auth-header-content">
+                <a href="{% url 'home' %}" class="auth-logo-section">
+                    <div class="auth-logo">M</div>
+                    <span class="auth-brand-name">MANAS</span>
+                </a>
+                
+                <nav class="auth-nav-links">
+                    <a href="{% url 'home' %}" class="auth-nav-link">Home</a>
+                    <a href="{% url 'login' %}" class="auth-nav-link">Sign In</a>
+                    <a href="{% url 'signup' %}" class="auth-nav-link">Sign Up</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="auth-main-content" style="max-width: 800px; margin: 0 auto; padding: var(--space-8) var(--space-6);">
+            <div class="auth-card">
+                <div class="auth-card-header">
+                    <h1 class="auth-card-title">Privacy Policy</h1>
+                    <p class="auth-card-subtitle">Last updated: September 21, 2025</p>
+                </div>
+
+                <div style="line-height: 1.6; color: var(--gray-700);">
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Information We Collect</h2>
+                    <p>MANAS collects information to provide better mental health services to our users. This includes:</p>
+                    <ul style="margin: var(--space-3) 0; padding-left: var(--space-6);">
+                        <li>Personal information (name, email, contact details)</li>
+                        <li>Mental health assessment data</li>
+                        <li>Session notes and progress tracking</li>
+                        <li>Usage data and platform interactions</li>
+                    </ul>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">How We Use Your Information</h2>
+                    <p>Your information is used to:</p>
+                    <ul style="margin: var(--space-3) 0; padding-left: var(--space-6);">
+                        <li>Provide personalized mental health support</li>
+                        <li>Connect you with appropriate counselors</li>
+                        <li>Track your wellness progress</li>
+                        <li>Improve our platform and services</li>
+                        <li>Ensure crisis intervention when needed</li>
+                    </ul>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Data Security</h2>
+                    <p>We implement robust security measures to protect your sensitive mental health information:</p>
+                    <ul style="margin: var(--space-3) 0; padding-left: var(--space-6);">
+                        <li>HIPAA-compliant data handling</li>
+                        <li>End-to-end encryption for sensitive communications</li>
+                        <li>Secure data storage and backup systems</li>
+                        <li>Regular security audits and updates</li>
+                    </ul>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Your Rights</h2>
+                    <p>You have the right to:</p>
+                    <ul style="margin: var(--space-3) 0; padding-left: var(--space-6);">
+                        <li>Access your personal data</li>
+                        <li>Request data correction or deletion</li>
+                        <li>Control data sharing preferences</li>
+                        <li>Withdraw consent at any time</li>
+                    </ul>
+
+                    <h2 style="color: var(--gray-900); margin-top: var(--space-6); margin-bottom: var(--space-3);">Contact Us</h2>
+                    <p>If you have questions about this Privacy Policy, please contact us at privacy@manas-platform.com</p>
+                </div>
+
+                <div style="margin-top: var(--space-8); text-align: center;">
+                    <a href="{% url 'home' %}" class="auth-btn auth-btn-primary">Back to Home</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

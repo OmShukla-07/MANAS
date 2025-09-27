@@ -1,0 +1,446 @@
+{% extends 'admin/base_new.html' %}
+{% load static %}
+
+{% block title %}System Settings - MANAS Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+<style>
+/* System Settings Specific Styles */
+.settings-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin-bottom: 1.5rem;
+}
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-row:last-child {
+    border-bottom: none;
+}
+
+.setting-info {
+    flex: 1;
+}
+
+.setting-title {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.setting-description {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.setting-control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    background: #cbd5e1;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-switch.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.toggle-switch.active::after {
+    transform: translateX(24px);
+}
+
+.backup-card {
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.backup-status {
+    color: #22c55e;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.maintenance-alert {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 1px solid #f59e0b;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: #92400e;
+}
+</style>
+{% endblock %}
+
+{% block page_title %}System Settings{% endblock %}
+{% block page_subtitle %}Configure system preferences and maintenance options{% endblock %}
+
+{% block content %}
+<!-- System Status -->
+<div class="stats-grid fade-in" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+            <i data-feather="server"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-number">Online</div>
+            <div class="stat-label">System Status</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+            <i data-feather="database"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-number">98.7%</div>
+            <div class="stat-label">Database Health</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+            <i data-feather="cpu"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-number">45%</div>
+            <div class="stat-label">CPU Usage</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+            <i data-feather="hard-drive"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-number">12GB</div>
+            <div class="stat-label">Available Storage</div>
+        </div>
+    </div>
+</div>
+
+<!-- Maintenance Alert -->
+{% if maintenance_mode %}
+<div class="maintenance-alert fade-in">
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <i data-feather="alert-triangle"></i>
+        <strong>Maintenance Mode Active</strong>
+    </div>
+    <p style="margin: 0.5rem 0 0 0;">The system is currently in maintenance mode. Regular users cannot access the platform.</p>
+</div>
+{% endif %}
+
+<!-- General Settings -->
+<div class="settings-section fade-in">
+    <h3 style="color: #1f2937; margin-bottom: 1.5rem;">General Settings</h3>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">Site Maintenance Mode</div>
+            <div class="setting-description">Enable maintenance mode to prevent user access during updates</div>
+        </div>
+        <div class="setting-control">
+            <div class="toggle-switch" onclick="toggleSetting(this, 'maintenance_mode')"></div>
+        </div>
+    </div>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">User Registration</div>
+            <div class="setting-description">Allow new users to register accounts</div>
+        </div>
+        <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSetting(this, 'user_registration')"></div>
+        </div>
+    </div>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">Email Notifications</div>
+            <div class="setting-description">Send automated email notifications to users</div>
+        </div>
+        <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSetting(this, 'email_notifications')"></div>
+        </div>
+    </div>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">Crisis Detection</div>
+            <div class="setting-description">Enable automatic crisis detection algorithms</div>
+        </div>
+        <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSetting(this, 'crisis_detection')"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Security Settings -->
+<div class="settings-section fade-in">
+    <h3 style="color: #1f2937; margin-bottom: 1.5rem;">Security Settings</h3>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">Two-Factor Authentication</div>
+            <div class="setting-description">Require 2FA for all administrator accounts</div>
+        </div>
+        <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSetting(this, 'require_2fa')"></div>
+        </div>
+    </div>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">Session Timeout</div>
+            <div class="setting-description">Automatically log out inactive users</div>
+        </div>
+        <div class="setting-control">
+            <select class="form-select" style="width: auto;">
+                <option value="30">30 minutes</option>
+                <option value="60" selected>1 hour</option>
+                <option value="120">2 hours</option>
+                <option value="240">4 hours</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">Login Attempt Limit</div>
+            <div class="setting-description">Maximum failed login attempts before account lockout</div>
+        </div>
+        <div class="setting-control">
+            <select class="form-select" style="width: auto;">
+                <option value="3">3 attempts</option>
+                <option value="5" selected>5 attempts</option>
+                <option value="10">10 attempts</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Data & Privacy -->
+<div class="settings-section fade-in">
+    <h3 style="color: #1f2937; margin-bottom: 1.5rem;">Data & Privacy</h3>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">Data Retention Period</div>
+            <div class="setting-description">How long to keep user data after account deletion</div>
+        </div>
+        <div class="setting-control">
+            <select class="form-select" style="width: auto;">
+                <option value="30">30 days</option>
+                <option value="90" selected>90 days</option>
+                <option value="365">1 year</option>
+                <option value="0">Immediate deletion</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">Analytics Collection</div>
+            <div class="setting-description">Collect anonymous usage analytics</div>
+        </div>
+        <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSetting(this, 'analytics_collection')"></div>
+        </div>
+    </div>
+    
+    <div class="settings-row">
+        <div class="setting-info">
+            <div class="setting-title">Data Encryption</div>
+            <div class="setting-description">Encrypt sensitive data at rest</div>
+        </div>
+        <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSetting(this, 'data_encryption')"></div>
+        </div>
+    </div>
+</div>
+
+<!-- System Backup & Maintenance -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <div class="settings-section fade-in">
+        <h3 style="color: #1f2937; margin-bottom: 1.5rem;">Database Backup</h3>
+        
+        <div class="backup-card">
+            <div class="backup-status">
+                <i data-feather="check-circle" style="width: 20px; height: 20px;"></i>
+                Last backup: 2 hours ago
+            </div>
+            <p style="color: #64748b; margin-bottom: 1rem;">
+                Automatic backups are running successfully
+            </p>
+            <button class="btn btn-primary" onclick="createBackup()">
+                <i data-feather="download" style="width: 16px; height: 16px;"></i>
+                Create Backup Now
+            </button>
+        </div>
+        
+        <div style="margin-top: 1rem;">
+            <div class="settings-row">
+                <div class="setting-info">
+                    <div class="setting-title">Automatic Backups</div>
+                    <div class="setting-description">Schedule regular database backups</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle-switch active" onclick="toggleSetting(this, 'auto_backup')"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="settings-section fade-in">
+        <h3 style="color: #1f2937; margin-bottom: 1.5rem;">System Maintenance</h3>
+        
+        <div style="space-y: 1rem;">
+            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" onclick="clearCache()">
+                <i data-feather="trash-2" style="width: 16px; height: 16px;"></i>
+                Clear System Cache
+            </button>
+            
+            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" onclick="optimizeDatabase()">
+                <i data-feather="database" style="width: 16px; height: 16px;"></i>
+                Optimize Database
+            </button>
+            
+            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" onclick="updateSystem()">
+                <i data-feather="refresh-cw" style="width: 16px; height: 16px;"></i>
+                Check for Updates
+            </button>
+            
+            <button class="btn btn-danger" style="width: 100%;" onclick="restartSystem()">
+                <i data-feather="power" style="width: 16px; height: 16px;"></i>
+                Restart System
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize page
+    feather.replace();
+    
+    // Add animation delays
+    const fadeElements = document.querySelectorAll('.fade-in');
+    fadeElements.forEach((element, index) => {
+        element.style.animationDelay = `${index * 0.1}s`;
+    });
+});
+
+function toggleSetting(element, settingName) {
+    element.classList.toggle('active');
+    const isActive = element.classList.contains('active');
+    
+    // In a real app, this would make an AJAX request to save the setting
+    console.log(`Setting ${settingName} to ${isActive}`);
+    
+    // Show feedback
+    const status = isActive ? 'enabled' : 'disabled';
+    showNotification(`${settingName.replace('_', ' ')} ${status}`, 'success');
+}
+
+function createBackup() {
+    if (confirm('Are you sure you want to create a database backup now?')) {
+        showNotification('Creating database backup...', 'info');
+        // In a real app, this would trigger the backup process
+        setTimeout(() => {
+            showNotification('Database backup created successfully', 'success');
+        }, 3000);
+    }
+}
+
+function clearCache() {
+    if (confirm('Are you sure you want to clear the system cache?')) {
+        showNotification('Clearing system cache...', 'info');
+        setTimeout(() => {
+            showNotification('System cache cleared successfully', 'success');
+        }, 2000);
+    }
+}
+
+function optimizeDatabase() {
+    if (confirm('Are you sure you want to optimize the database? This may take several minutes.')) {
+        showNotification('Optimizing database...', 'info');
+        setTimeout(() => {
+            showNotification('Database optimization completed', 'success');
+        }, 5000);
+    }
+}
+
+function updateSystem() {
+    showNotification('Checking for system updates...', 'info');
+    setTimeout(() => {
+        showNotification('System is up to date', 'success');
+    }, 3000);
+}
+
+function restartSystem() {
+    if (confirm('Are you sure you want to restart the system? All users will be disconnected.')) {
+        if (confirm('This action cannot be undone. Please confirm restart.')) {
+            showNotification('System restart initiated...', 'warning');
+            // In a real app, this would trigger a system restart
+        }
+    }
+}
+
+function showNotification(message, type) {
+    // Simple notification system
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        background: ${type === 'success' ? '#22c55e' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+        color: white;
+        border-radius: 8px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,883 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MANAS Counselor Dashboard{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    /* Complete Counselor Panel Styling */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+        color: #0f172a;
+        line-height: 1.6;
+    }
+    
+    /* Header Styling */
+    .counselor-header {
+        background: linear-gradient(135deg, #787bda 0%, #8ee0fe 50%, #ffe9b4 100%);
+        color: white;
+        padding: 0.5rem 0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    
+    .counselor-header-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .counselor-brand h1 {
+        color: white;
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .counselor-brand-subtitle {
+        color: rgba(255,255,255,0.9);
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-top: 0.1rem;
+    }
+    
+    /* Navigation */
+    .counselor-nav {
+        flex: 1;
+        max-width: 500px;
+        margin: 0 1.5rem;
+    }
+    
+    .counselor-nav-list {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        list-style: none;
+    }
+    
+    .counselor-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem 0.8rem;
+        color: #5d4037 !important;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid rgba(93, 64, 55, 0.2);
+        min-width: 120px;
+        white-space: nowrap;
+    }
+    
+    .counselor-nav-link:hover, .counselor-nav-link.active {
+        background: rgba(255,255,255,1);
+        color: #3e2723 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(93, 64, 55, 0.3);
+        border-color: rgba(93, 64, 55, 0.4);
+    }
+    
+    .counselor-nav-icon {
+        width: 16px;
+        height: 16px;
+        color: inherit;
+        flex-shrink: 0;
+    }
+    
+    /* User Dropdown */
+    .counselor-user-menu {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .counselor-user-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,0.15);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .counselor-user-toggle:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-1px);
+    }
+    
+    .counselor-user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.2) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+    
+    .counselor-user-dropdown {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        border: 1px solid #e2e8f0;
+        min-width: 220px;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+    }
+    
+    .counselor-user-dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    
+    .counselor-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: #374151;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border-radius: 0.5rem;
+        margin: 0.25rem 0.5rem;
+    }
+    
+    .counselor-dropdown-item:hover {
+        background: #f8fafc;
+        color: #787bda;
+    }
+    
+    .counselor-dropdown-item:first-child {
+        margin-top: 0.5rem;
+    }
+    
+    .counselor-dropdown-item:last-child {
+        margin-bottom: 0.5rem;
+    }
+    
+    .counselor-dropdown-divider {
+        height: 1px;
+        background: #e2e8f0;
+        margin: 0.5rem;
+    }
+    
+    /* Main Content */
+    .counselor-main-content {
+        padding: 2rem 0;
+        min-height: calc(100vh - 100px);
+    }
+    
+    .counselor-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    
+    /* Form Styling */
+    .counselor-form-section {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+    }
+    
+    .counselor-form-section h3 {
+        color: #787bda;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    
+    /* Form Fields */
+    input[type="text"], input[type="email"], input[type="password"], 
+    input[type="number"], textarea, select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.2s ease;
+        background: white;
+        color: #0f172a;
+        margin-bottom: 1rem;
+    }
+    
+    input[type="text"]:focus, input[type="email"]:focus, 
+    input[type="password"]:focus, input[type="number"]:focus, 
+    textarea:focus, select:focus {
+        outline: none;
+        border-color: #787bda;
+        box-shadow: 0 0 0 3px rgba(120, 123, 218, 0.1);
+        background: #f8fafc;
+    }
+    
+    /* Labels */
+    label {
+        display: block;
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Buttons */
+    button, .btn, input[type="submit"] {
+        background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        font-family: 'Inter', sans-serif;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    button:hover, .btn:hover, input[type="submit"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(120, 123, 218, 0.4);
+        background: linear-gradient(135deg, #6d70c7 0%, #7bcce8 100%);
+    }
+    
+    /* Form Groups */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .form-row label {
+        min-width: 150px;
+        margin-bottom: 0;
+        font-weight: 500;
+    }
+    
+    .form-row input, .form-row select, .form-row textarea {
+        flex: 1;
+        margin-bottom: 0;
+    }
+    
+    /* Performance Statistics */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+    
+    .stat-card {
+        background: linear-gradient(135deg, rgba(120, 123, 218, 0.1) 0%, rgba(142, 224, 254, 0.1) 100%);
+        border: 1px solid rgba(120, 123, 218, 0.2);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #787bda;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        color: #475569;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    /* Page-specific CSS for all counselor pages */
+    
+    /* Statistics Grid - Used across all pages */
+    .counselor-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .counselor-stat-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .counselor-stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%);
+    }
+    
+    .counselor-stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(120, 123, 218, 0.15);
+    }
+    
+    .counselor-stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: white;
+    }
+    
+    .counselor-stat-icon-students {
+        background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%);
+    }
+    
+    .counselor-stat-icon-sessions {
+        background: linear-gradient(135deg, #8ee0fe 0%, #ffe9b4 100%);
+    }
+    
+    .counselor-stat-icon-rating {
+        background: linear-gradient(135deg, #ffe9b4 0%, #fcc681 100%);
+    }
+    
+    .counselor-stat-icon-crisis {
+        background: linear-gradient(135deg, #fcc681 0%, #f09292 100%);
+    }
+    
+    .counselor-stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .counselor-stat-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .counselor-stat-trend {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        display: inline-block;
+    }
+    
+    .counselor-trend-up {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+    }
+    
+    .counselor-trend-urgent {
+        background: rgba(240, 146, 146, 0.1);
+        color: #dc2626;
+    }
+    
+    /* Students Page Specific */
+    .counselor-students-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .counselor-students-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .counselor-students-search {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .counselor-search-input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: border-color 0.2s ease;
+    }
+    
+    .counselor-search-input:focus {
+        outline: none;
+        border-color: #787bda;
+    }
+    
+    .counselor-students-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .counselor-student-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    
+    .counselor-student-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(120, 123, 218, 0.1);
+    }
+    
+    .counselor-student-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .counselor-student-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: white;
+        font-size: 1.125rem;
+    }
+    
+    .counselor-student-info h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+    
+    .counselor-student-info p {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin: 0;
+    }
+    
+    .counselor-student-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .counselor-status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .counselor-status-active {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+    }
+    
+    .counselor-status-inactive {
+        background: rgba(107, 114, 128, 0.1);
+        color: #6b7280;
+    }
+    
+    .counselor-status-urgent {
+        background: rgba(240, 146, 146, 0.1);
+        color: #dc2626;
+    }
+    
+    .counselor-student-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    /* Sessions Page Specific */
+    .counselor-sessions-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .counselor-sessions-grid {
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .counselor-session-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    
+    .counselor-session-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(120, 123, 218, 0.1);
+    }
+    
+    .counselor-session-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .counselor-session-time {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+    
+    /* Profile Page Specific */
+    .counselor-profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .counselor-profile-form {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .counselor-form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .counselor-form-group label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    
+    .counselor-form-group input,
+    .counselor-form-group textarea,
+    .counselor-form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: border-color 0.2s ease;
+    }
+    
+    .counselor-form-group input:focus,
+    .counselor-form-group textarea:focus,
+    .counselor-form-group select:focus {
+        outline: none;
+        border-color: #787bda;
+    }
+    
+    /* Analytics Page Specific */
+    .counselor-analytics-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .counselor-chart-container {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 2rem;
+    }
+    
+    .counselor-chart-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1rem;
+    }
+    
+    /* Responsive Navigation Fixes */
+    @media (max-width: 1024px) {
+        .counselor-nav-list {
+            gap: 0.25rem;
+        }
+        
+        .counselor-nav-link {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+            min-width: 100px;
+        }
+        
+        .counselor-nav-icon {
+            width: 14px;
+            height: 14px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .counselor-header-container {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .counselor-nav {
+            order: 3;
+            flex: 100%;
+            max-width: none;
+            margin: 0;
+        }
+        
+        .counselor-nav-list {
+            justify-content: flex-start;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .counselor-nav-link {
+            min-width: auto;
+            padding: 0.5rem 0.75rem;
+        }
+    }
+    
+    /* Force visibility for navigation text */
+    .counselor-nav-link span,
+    .counselor-nav-link {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+    </style>
+</head>
+<body>
+    <!-- Counselor Header (instead of sidebar) -->
+    <header class="counselor-header">
+        <div class="counselor-header-container">
+            <!-- Brand -->
+            <div class="counselor-brand">
+                <h1>MANAS</h1>
+                <span class="counselor-brand-subtitle">Counselor Panel</span>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="counselor-nav">
+                <ul class="counselor-nav-list">
+                    <li>
+                        <a href="{% url 'counselor_dashboard' %}" class="counselor-nav-link {% if request.resolver_match.url_name == 'counselor_dashboard' %}active{% endif %}">
+                            <svg class="counselor-nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'core:counselor_sessions' %}" class="counselor-nav-link {% if request.resolver_match.url_name == 'counselor_sessions' %}active{% endif %}">
+                            <svg class="counselor-nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
+                            </svg>
+                            Session Management
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'counselor_students' %}" class="counselor-nav-link {% if request.resolver_match.url_name == 'counselor_students' %}active{% endif %}">
+                            <svg class="counselor-nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                            </svg>
+                            Students
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'counselor_crisis_reports' %}" class="counselor-nav-link {% if request.resolver_match.url_name == 'counselor_crisis_reports' %}active{% endif %}">
+                            <svg class="counselor-nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                            </svg>
+                            Crisis & Reports
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- User Menu -->
+            <div class="counselor-user-menu">
+                <button class="counselor-user-toggle" onclick="toggleUserDropdown()">
+                    <div class="counselor-user-avatar">
+                        {{ user.first_name|first|default:"C" }}{{ user.last_name|first|default:"" }}
+                    </div>
+                    <span class="counselor-user-name">{{ user.first_name|default:"Counselor" }}</span>
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/>
+                    </svg>
+                </button>
+                
+                <div class="counselor-user-dropdown" id="userDropdown">
+                    <a href="{% url 'counselor_profile' %}" class="counselor-dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"/>
+                        </svg>
+                        My Profile
+                    </a>
+                    
+                    <a href="{% url 'counselor_analytics' %}" class="counselor-dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                        </svg>
+                        Analytics
+                    </a>
+                    
+                    <div class="counselor-dropdown-divider"></div>
+                    
+                    <a href="{% url 'logout' %}" class="counselor-dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"/>
+                        </svg>
+                        Sign Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="counselor-main-content">
+        <!-- Content Area -->
+        <div class="counselor-container">
+            {% block content %}
+            <!-- Page content will be inserted here -->
+            {% endblock %}
+        </div>
+    </main>
+
+    <script>
+        // User dropdown toggle
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('active');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.counselor-user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (dropdown && userMenu && !userMenu.contains(event.target) && dropdown.classList.contains('active')) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Mobile nav toggle
+        function toggleNav() {
+            const nav = document.querySelector('.counselor-nav');
+            nav.classList.toggle('open');
+        }
+
+        // Add mobile menu button if needed
+        if (window.innerWidth <= 768) {
+            const header = document.querySelector('.counselor-header-container');
+            const menuButton = document.createElement('button');
+            menuButton.className = 'counselor-mobile-menu-btn';
+            menuButton.innerHTML = `
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
+                </svg>
+            `;
+            menuButton.onclick = toggleNav;
+            header.insertBefore(menuButton, header.firstChild);
+        }
+
+        // Auto-hide nav on mobile when clicking outside
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                const nav = document.querySelector('.counselor-nav');
+                const isClickInsideNav = nav.contains(event.target);
+                const isMenuButton = event.target.closest('button')?.onclick === toggleNav;
+                
+                if (!isClickInsideNav && !isMenuButton && nav.classList.contains('open')) {
+                    nav.classList.remove('open');
+                }
+            }
+        });
+
+        // Animate cards on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.counselor-content-card, .counselor-stat-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('counselor-animate-fadeIn');
+            });
+        });
+    </script>
+    
+    <!-- Load Counselor Admin JavaScript -->
+    <script src="{% static 'js/counselor_admin.js' %}"></script>
+    
+    <!-- Additional page-specific JavaScript -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

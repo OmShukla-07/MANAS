@@ -1,0 +1,38 @@
+﻿{% extends 'admin/base_new.html' %}
+{% load static %}
+
+{% block title %}Analytics Reports - MANAS Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block page_title %}Analytics Reports{% endblock %}
+{% block page_subtitle %}Comprehensive insights and metrics{% endblock %}
+
+{% block content %}
+<div class="stats-grid fade-in">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+            <i data-feather="bar-chart-2"></i>
+        </div>
+        <div class="stat-content">
+            <div class="stat-number">1,247</div>
+            <div class="stat-label">Total Reports</div>
+        </div>
+    </div>
+</div>
+
+<div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.3); margin-top: 1rem;">
+    <h3 style="color: #1f2937; margin-bottom: 1.5rem;">Analytics Reports Interface</h3>
+    <p style="color: #64748b;">Reports and analytics functionality will be implemented here.</p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    feather.replace();
+});
+</script>
+{% endblock %}

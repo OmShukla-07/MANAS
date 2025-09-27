@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - MANAS Mental Wellness Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+        }
+
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            margin: 2rem;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #598980, #4ca1af);
+            color: white;
+            padding: 3rem 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .login-form {
+            padding: 3rem 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #598980;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(89, 137, 128, 0.1);
+        }
+
+        .login-button {
+            width: 100%;
+            background: linear-gradient(135deg, #598980, #4a7670);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(89, 137, 128, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(89, 137, 128, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .auth-links {
+            text-align: center;
+        }
+
+        .auth-link {
+            color: #598980;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .auth-link:hover {
+            background: rgba(89, 137, 128, 0.1);
+            text-decoration: none;
+        }
+
+        .auth-link.primary {
+            background: linear-gradient(135deg, rgba(89, 137, 128, 0.1), rgba(76, 161, 175, 0.1));
+            border: 2px solid rgba(89, 137, 128, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .auth-link.primary:hover {
+            background: rgba(89, 137, 128, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .back-link {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .back-link a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #598980;
+        }
+
+        /* Error/Success Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .message.error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .message.success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 1rem;
+                border-radius: 16px;
+            }
+
+            .login-header {
+                padding: 2rem 1.5rem 1.5rem;
+            }
+
+            .login-form {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .form-input {
+                padding: 0.875rem 1rem;
+            }
+        }
+
+        /* Loading State */
+        .login-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        .login-container {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <img src="/static/images/images/icons/brain-icon.png" alt="MANAS Logo">
+                </div>
+            </div>
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Sign in to continue your mental wellness journey</p>
+        </div>
+
+        <div class="login-form">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">
+                        {% if message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% else %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i>
+                        Username or Email
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-input" 
+                        required 
+                        autocomplete="username"
+                        placeholder="Enter your username or email"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        required 
+                        autocomplete="current-password"
+                        placeholder="Enter your password"
+                    >
+                </div>
+                
+                <button type="submit" class="login-button" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In to MANAS
+                </button>
+            </form>
+            
+            <div class="divider">
+                <span>New to MANAS?</span>
+            </div>
+            
+            <div class="auth-links">
+                <a href="{% url 'choose_user' %}" class="auth-link primary">
+                    <i class="fas fa-user-plus"></i>
+                    Create Your Account
+                </a>
+            </div>
+            
+            <div class="back-link">
+                <a href="{% url 'landing' %}">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const originalBtnText = loginBtn.innerHTML;
+
+            loginForm.addEventListener('submit', function(e) {
+                // Show loading state
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<div class="loading-spinner"></div> Signing In...';
+                
+                // Re-enable button after 3 seconds if form hasn't redirected
+                setTimeout(() => {
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = originalBtnText;
+                }, 3000);
+            });
+
+            // Focus animation
+            const inputs = document.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    window.location.href = "{% url 'landing' %}";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

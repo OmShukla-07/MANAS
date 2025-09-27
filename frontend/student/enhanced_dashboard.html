@@ -1,0 +1,853 @@
+{% extends 'base.html' %}
+
+{% block title %}Enhanced Dashboard - Manas Student App{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Enhanced Welcome Section with Real-time Data -->
+<div class="card card-gradient mb-6">
+    <div class="flex-between">
+        <div>
+            <h1 class="text-2xl font-bold text-primary mb-2">Welcome back, <span id="user-name">{{ user.first_name|default:"Student" }}</span>!</h1>
+            <p class="text-secondary">How are you feeling today? Let's check in on your mental wellness journey.</p>
+            <div class="mt-3">
+                <span id="current-mood" class="badge badge-info">Loading mood...</span>
+                <span id="wellness-streak" class="badge badge-success ml-2">Loading streak...</span>
+            </div>
+        </div>
+        <div class="text-center">
+            <div class="text-3xl mb-2" id="mood-emoji">🌟</div>
+            <span class="badge badge-success">Active</span>
+            <button onclick="openQuickMoodUpdate()" class="btn btn-sm btn-ghost mt-2">Update Mood</button>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Quick Stats with Real Data -->
+<div class="stats-grid mb-6">
+    <div class="card stat-card hover-lift" onclick="navigateToWellness()">
+        <span class="stat-number text-primary" id="wellness-streak-days">-</span>
+        <span class="stat-label">Days Streak</span>
+        <div class="progress-bar mt-3">
+            <div class="progress-fill" id="streak-progress" style="width: 0%;"></div>
+        </div>
+    </div>
+    <div class="card stat-card hover-lift" onclick="navigateToAppointments()">
+        <span class="stat-number text-success" id="weekly-sessions">-</span>
+        <span class="stat-label">Sessions This Week</span>
+        <div class="progress-bar mt-3">
+            <div class="progress-fill" id="sessions-progress" style="width: 0%;"></div>
+        </div>
+    </div>
+    <div class="card stat-card hover-lift" onclick="navigateToAppointments()">
+        <span class="stat-number text-warning" id="upcoming-appointments">-</span>
+        <span class="stat-label">Upcoming Appointments</span>
+        <div class="progress-bar mt-3">
+            <div class="progress-fill" id="appointments-progress" style="width: 0%;"></div>
+        </div>
+    </div>
+    <div class="card stat-card hover-lift" onclick="navigateToAssessments()">
+        <span class="stat-number text-primary" id="wellness-score">-</span>
+        <span class="stat-label">Wellness Score</span>
+        <div class="progress-bar mt-3">
+            <div class="progress-fill" id="wellness-progress" style="width: 0%;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Quick Actions with New Features -->
+<div class="grid grid-2 mb-6">
+    <div class="card hover-lift">
+        <h3 class="text-xl font-semibold mb-4 text-primary">Quick Actions</h3>
+        <div class="flex flex-col gap-3">
+            <a href="{% url 'manas_ai' %}" class="btn btn-primary btn-md">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Chat with Manas AI
+            </a>
+            <button onclick="openAssessmentModal()" class="btn btn-secondary btn-md">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Take Assessment
+            </button>
+            <a href="{% url 'appointments' %}" class="btn btn-ghost btn-md">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M8 7V3a1 1 0 012 0v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H4a1 1 0 110-2h4z"/>
+                </svg>
+                Book Appointment
+            </button>
+            <button onclick="openCrisisResources()" class="btn btn-error btn-md">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"/>
+                </svg>
+                Crisis Support
+            </button>
+        </div>
+    </div>
+
+    <div class="card hover-lift">
+        <h3 class="text-xl font-semibold mb-4 text-primary">Today's Mood Check</h3>
+        <div class="text-center mb-4" id="mood-display">
+            <div class="text-6xl mb-2" id="current-mood-emoji">😊</div>
+            <p class="text-secondary" id="current-mood-text">Loading...</p>
+            <p class="text-xs text-light" id="last-mood-update">Loading last update...</p>
+        </div>
+        <button onclick="openQuickMoodUpdate()" class="btn btn-primary btn-md" style="width: 100%;">
+            Update Mood
+        </button>
+    </div>
+</div>
+
+<!-- New Wellness Insights Section -->
+<div class="grid grid-3 mb-6">
+    <div class="card hover-lift">
+        <h4 class="text-lg font-semibold mb-3 text-primary">Wellness Goals</h4>
+        <div id="wellness-goals-container">
+            <div class="loading-state">Loading goals...</div>
+        </div>
+        <button onclick="openGoalsModal()" class="btn btn-secondary btn-sm mt-3" style="width: 100%;">
+            Manage Goals
+        </button>
+    </div>
+
+    <div class="card hover-lift">
+        <h4 class="text-lg font-semibold mb-3 text-primary">Challenges</h4>
+        <div id="challenges-container">
+            <div class="loading-state">Loading challenges...</div>
+        </div>
+        <button onclick="openChallengesModal()" class="btn btn-accent btn-sm mt-3" style="width: 100%;">
+            View All Challenges
+        </button>
+    </div>
+
+    <div class="card hover-lift">
+        <h4 class="text-lg font-semibold mb-3 text-primary">Community</h4>
+        <div id="community-activity-container">
+            <div class="loading-state">Loading activity...</div>
+        </div>
+        <a href="{% url 'peer_support' %}" class="btn btn-ghost btn-sm mt-3" style="width: 100%;">
+            Visit Community
+        </a>
+    </div>
+</div>
+
+<!-- Enhanced Recent Activities & Upcoming with Real Data -->
+<div class="grid grid-2">
+    <div class="card">
+        <h3 class="text-xl font-semibold mb-4 text-primary">Recent Activities</h3>
+        <div id="recent-activities-container">
+            <div class="loading-state">Loading recent activities...</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="text-xl font-semibold mb-4 text-primary">Upcoming This Week</h3>
+        <div id="upcoming-events-container">
+            <div class="loading-state">Loading upcoming events...</div>
+        </div>
+        <a href="{% url 'appointments' %}" class="btn btn-secondary btn-sm mt-4" style="width: 100%;">
+            View All Appointments
+        </a>
+    </div>
+</div>
+
+<!-- Notifications Panel -->
+<div id="notifications-panel" class="card mt-6" style="display: none;">
+    <div class="flex-between mb-4">
+        <h3 class="text-xl font-semibold text-primary">Recent Notifications</h3>
+        <button onclick="toggleNotificationsPanel()" class="btn btn-sm btn-ghost">Hide</button>
+    </div>
+    <div id="notifications-container">
+        <div class="loading-state">Loading notifications...</div>
+    </div>
+</div>
+
+<!-- Quick Mood Update Modal -->
+<div id="quick-mood-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>How are you feeling right now?</h3>
+            <button onclick="closeQuickMoodModal()" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="mood-selector">
+                <div class="mood-options">
+                    <button class="mood-option" data-mood="very_happy" data-emoji="😄">
+                        <span class="mood-emoji">😄</span>
+                        <span class="mood-label">Very Happy</span>
+                    </button>
+                    <button class="mood-option" data-mood="happy" data-emoji="😊">
+                        <span class="mood-emoji">😊</span>
+                        <span class="mood-label">Happy</span>
+                    </button>
+                    <button class="mood-option" data-mood="neutral" data-emoji="😐">
+                        <span class="mood-emoji">😐</span>
+                        <span class="mood-label">Neutral</span>
+                    </button>
+                    <button class="mood-option" data-mood="sad" data-emoji="😢">
+                        <span class="mood-emoji">😢</span>
+                        <span class="mood-label">Sad</span>
+                    </button>
+                    <button class="mood-option" data-mood="anxious" data-emoji="😰">
+                        <span class="mood-emoji">😰</span>
+                        <span class="mood-label">Anxious</span>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <label for="mood-notes">How was your day? (optional)</label>
+                    <textarea id="mood-notes" placeholder="Share any thoughts about your day..." rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeQuickMoodModal()" class="btn btn-ghost">Cancel</button>
+            <button onclick="saveMoodUpdate()" class="btn btn-primary" disabled>Save Mood</button>
+        </div>
+    </div>
+</div>
+
+<!-- Assessment Selection Modal -->
+<div id="assessment-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Available Assessments</h3>
+            <button onclick="closeAssessmentModal()" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="assessment-categories-container">
+                <div class="loading-state">Loading assessments...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Crisis Resources Modal -->
+<div id="crisis-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Crisis Support Resources</h3>
+            <button onclick="closeCrisisModal()" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="crisis-warning mb-4">
+                <p><strong>If you're experiencing a mental health emergency, please contact emergency services immediately.</strong></p>
+            </div>
+            <div id="emergency-resources-container">
+                <div class="loading-state">Loading emergency resources...</div>
+            </div>
+            <div class="mt-4">
+                <button onclick="viewSafetyPlans()" class="btn btn-secondary btn-md" style="width: 100%;">
+                    View My Safety Plans
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Dashboard initialization and data loading
+document.addEventListener('DOMContentLoaded', async function() {
+    await initializeDashboard();
+});
+
+async function initializeDashboard() {
+    try {
+        // Wait for API client to be ready
+        if (!window.manasAPI) {
+            setTimeout(initializeDashboard, 500);
+            return;
+        }
+
+        // Load all dashboard data
+        await Promise.all([
+            loadDashboardStats(),
+            loadRecentActivities(),
+            loadUpcomingEvents(),
+            loadWellnessGoals(),
+            loadChallenges(),
+            loadCommunityActivity(),
+            loadNotifications()
+        ]);
+
+        console.log('Dashboard initialized successfully');
+    } catch (error) {
+        console.error('Error initializing dashboard:', error);
+        showError('Failed to load dashboard data. Please refresh the page.');
+    }
+}
+
+async function loadDashboardStats() {
+    try {
+        const [dashboardData, wellnessData, appointmentData] = await Promise.all([
+            manasAPI.getDashboard(),
+            manasAPI.getWellnessDashboard(),
+            manasAPI.getAppointments({ limit: 10 })
+        ]);
+
+        // Update stats
+        updateStatCard('wellness-streak-days', wellnessData.current_streak || 0);
+        updateStatCard('weekly-sessions', dashboardData.quick_stats?.completed_sessions_week || 0);
+        updateStatCard('upcoming-appointments', dashboardData.quick_stats?.upcoming_appointments || 0);
+        updateStatCard('wellness-score', `${wellnessData.wellness_score || 0}%`);
+
+        // Update progress bars
+        updateProgressBar('streak-progress', Math.min((wellnessData.current_streak || 0) * 10, 100));
+        updateProgressBar('sessions-progress', Math.min((dashboardData.quick_stats?.completed_sessions_week || 0) * 20, 100));
+        updateProgressBar('appointments-progress', Math.min((dashboardData.quick_stats?.upcoming_appointments || 0) * 33, 100));
+        updateProgressBar('wellness-progress', wellnessData.wellness_score || 0);
+
+        // Update current mood
+        if (wellnessData.current_mood) {
+            updateCurrentMood(wellnessData.current_mood);
+        }
+
+    } catch (error) {
+        console.error('Error loading dashboard stats:', error);
+    }
+}
+
+async function loadRecentActivities() {
+    try {
+        const activities = await manasAPI.getDashboard();
+        const container = document.getElementById('recent-activities-container');
+        
+        if (activities.recent_activity && activities.recent_activity.length > 0) {
+            container.innerHTML = activities.recent_activity.map(activity => `
+                <div class="flex-between activity-item" style="padding: 0.75rem; background-color: var(--bg-primary); border-radius: var(--radius-md); margin-bottom: 0.5rem;">
+                    <div class="flex gap-3">
+                        <div class="w-10 h-10 flex-center activity-icon ${getActivityIconClass(activity.type)}" style="border-radius: 50%; color: white;">
+                            ${getActivityIcon(activity.type)}
+                        </div>
+                        <div>
+                            <p class="font-medium">${activity.description}</p>
+                            <p class="text-sm text-secondary">${activity.details || ''}</p>
+                        </div>
+                    </div>
+                    <span class="text-sm text-secondary">${manasAPI.timeAgo(activity.timestamp)}</span>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p class="text-secondary">No recent activities to show.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading recent activities:', error);
+        document.getElementById('recent-activities-container').innerHTML = '<p class="text-error">Failed to load activities.</p>';
+    }
+}
+
+async function loadUpcomingEvents() {
+    try {
+        const appointments = await manasAPI.getAppointments({ 
+            status: 'confirmed',
+            from_date: new Date().toISOString().split('T')[0],
+            limit: 5
+        });
+        
+        const container = document.getElementById('upcoming-events-container');
+        
+        if (appointments.results && appointments.results.length > 0) {
+            container.innerHTML = appointments.results.map(appointment => `
+                <div class="card-sm card-info mb-3">
+                    <div class="flex-between mb-2">
+                        <span class="font-medium">${appointment.appointment_type || 'Counseling Session'}</span>
+                        <span class="badge badge-primary">${manasAPI.formatDate(appointment.appointment_date)}</span>
+                    </div>
+                    <p class="text-sm text-secondary">
+                        ${appointment.counselor_name || 'Counselor'} • 
+                        ${new Date(appointment.appointment_date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p class="text-secondary">No upcoming appointments.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading upcoming events:', error);
+        document.getElementById('upcoming-events-container').innerHTML = '<p class="text-error">Failed to load events.</p>';
+    }
+}
+
+async function loadWellnessGoals() {
+    try {
+        const goals = await manasAPI.getWellnessGoals();
+        const container = document.getElementById('wellness-goals-container');
+        
+        if (goals.results && goals.results.length > 0) {
+            const activeGoals = goals.results.filter(goal => goal.status === 'active').slice(0, 3);
+            container.innerHTML = activeGoals.map(goal => `
+                <div class="goal-item mb-2">
+                    <div class="flex-between mb-1">
+                        <span class="text-sm font-medium">${goal.title}</span>
+                        <span class="text-xs text-secondary">${goal.progress}%</span>
+                    </div>
+                    <div class="progress-bar" style="height: 6px;">
+                        <div class="progress-fill" style="width: ${goal.progress}%;"></div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p class="text-secondary text-sm">No active goals. Set some goals to get started!</p>';
+        }
+    } catch (error) {
+        console.error('Error loading wellness goals:', error);
+        document.getElementById('wellness-goals-container').innerHTML = '<p class="text-error text-sm">Failed to load goals.</p>';
+    }
+}
+
+async function loadChallenges() {
+    try {
+        const challenges = await manasAPI.getWellnessChallenges();
+        const container = document.getElementById('challenges-container');
+        
+        if (challenges.results && challenges.results.length > 0) {
+            const availableChallenges = challenges.results.slice(0, 2);
+            container.innerHTML = availableChallenges.map(challenge => `
+                <div class="challenge-item mb-2">
+                    <p class="text-sm font-medium">${challenge.title}</p>
+                    <p class="text-xs text-secondary">${challenge.duration} days • ${challenge.participant_count} participants</p>
+                    <button onclick="joinChallenge(${challenge.id})" class="btn btn-xs btn-primary mt-1">
+                        ${challenge.is_participant ? 'Continue' : 'Join'}
+                    </button>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<p class="text-secondary text-sm">No challenges available right now.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading challenges:', error);
+        document.getElementById('challenges-container').innerHTML = '<p class="text-error text-sm">Failed to load challenges.</p>';
+    }
+}
+
+async function loadCommunityActivity() {
+    try {
+        const communityData = await manasAPI.getCommunityDashboard();
+        const container = document.getElementById('community-activity-container');
+        
+        if (communityData.trending_posts && communityData.trending_posts.length > 0) {
+            const recentPost = communityData.trending_posts[0];
+            container.innerHTML = `
+                <div class="community-activity">
+                    <p class="text-sm font-medium">${recentPost.title}</p>
+                    <p class="text-xs text-secondary">By ${recentPost.author.username} • ${recentPost.comment_count} comments</p>
+                    <div class="flex gap-2 mt-2">
+                        <span class="badge badge-xs badge-primary">${communityData.my_communities?.length || 0} communities</span>
+                        <span class="badge badge-xs badge-secondary">${communityData.support_groups?.length || 0} groups</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            container.innerHTML = '<p class="text-secondary text-sm">Join communities to see activity.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading community activity:', error);
+        document.getElementById('community-activity-container').innerHTML = '<p class="text-error text-sm">Failed to load activity.</p>';
+    }
+}
+
+async function loadNotifications() {
+    try {
+        const notifications = await manasAPI.getNotifications({ limit: 5 });
+        
+        if (notifications.results && notifications.results.length > 0) {
+            const unreadCount = notifications.results.filter(n => !n.is_read).length;
+            if (unreadCount > 0) {
+                document.getElementById('notifications-panel').style.display = 'block';
+                const container = document.getElementById('notifications-container');
+                container.innerHTML = notifications.results.map(notification => `
+                    <div class="notification-item ${notification.is_read ? 'read' : 'unread'}" style="padding: 0.75rem; border-left: 3px solid ${notification.is_read ? '#e5e7eb' : '#6366f1'}; margin-bottom: 0.5rem;">
+                        <div class="flex-between">
+                            <div>
+                                <p class="font-medium">${notification.title}</p>
+                                <p class="text-sm text-secondary">${notification.message}</p>
+                            </div>
+                            <span class="text-xs text-secondary">${manasAPI.timeAgo(notification.created_at)}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch (error) {
+        console.error('Error loading notifications:', error);
+    }
+}
+
+// UI Helper Functions
+function updateStatCard(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = value;
+    }
+}
+
+function updateProgressBar(elementId, percentage) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.style.width = `${Math.max(0, Math.min(100, percentage))}%`;
+    }
+}
+
+function updateCurrentMood(moodData) {
+    const emojiMap = {
+        'very_happy': '😄',
+        'happy': '😊',
+        'neutral': '😐',
+        'sad': '😢',
+        'anxious': '😰',
+        'angry': '😠',
+        'excited': '🤩',
+        'calm': '😌'
+    };
+
+    document.getElementById('current-mood-emoji').textContent = emojiMap[moodData.mood] || '😊';
+    document.getElementById('current-mood-text').textContent = moodData.mood_display || 'Good';
+    document.getElementById('last-mood-update').textContent = `Last updated ${manasAPI.timeAgo(moodData.created_at)}`;
+    document.getElementById('current-mood').textContent = moodData.mood_display || 'Good';
+}
+
+function getActivityIconClass(type) {
+    const classes = {
+        'assessment': 'bg-purple-500',
+        'chat': 'bg-blue-500',
+        'appointment': 'bg-green-500',
+        'mood': 'bg-yellow-500',
+        'community': 'bg-indigo-500',
+        'wellness': 'bg-emerald-500'
+    };
+    return classes[type] || 'bg-gray-500';
+}
+
+function getActivityIcon(type) {
+    const icons = {
+        'assessment': '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+        'chat': '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/></svg>',
+        'appointment': '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1z"/></svg>',
+        'mood': '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 9a1 1 0 000 2h4a1 1 0 000-2H8z"/></svg>',
+        'community': '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/></svg>',
+        'wellness': '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>'
+    };
+    return icons[type] || '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+}
+
+// Modal Functions
+function openQuickMoodUpdate() {
+    document.getElementById('quick-mood-modal').style.display = 'flex';
+}
+
+function closeQuickMoodModal() {
+    document.getElementById('quick-mood-modal').style.display = 'none';
+    // Reset form
+    document.querySelectorAll('.mood-option').forEach(option => option.classList.remove('selected'));
+    document.getElementById('mood-notes').value = '';
+    document.querySelector('#quick-mood-modal .btn-primary').disabled = true;
+}
+
+function openAssessmentModal() {
+    document.getElementById('assessment-modal').style.display = 'flex';
+    loadAssessmentCategories();
+}
+
+function closeAssessmentModal() {
+    document.getElementById('assessment-modal').style.display = 'none';
+}
+
+function openCrisisResources() {
+    document.getElementById('crisis-modal').style.display = 'flex';
+    loadEmergencyResources();
+}
+
+function closeCrisisModal() {
+    document.getElementById('crisis-modal').style.display = 'none';
+}
+
+// Mood Selection
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.mood-option')) {
+        const option = e.target.closest('.mood-option');
+        document.querySelectorAll('.mood-option').forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        document.querySelector('#quick-mood-modal .btn-primary').disabled = false;
+    }
+});
+
+async function saveMoodUpdate() {
+    const selectedMood = document.querySelector('.mood-option.selected');
+    if (!selectedMood) return;
+
+    try {
+        const moodData = {
+            mood: selectedMood.dataset.mood,
+            notes: document.getElementById('mood-notes').value,
+            date: new Date().toISOString().split('T')[0]
+        };
+
+        await manasAPI.createMoodEntry(moodData);
+        manasAPI.showSuccess('Mood updated successfully!');
+        closeQuickMoodModal();
+        
+        // Refresh mood display
+        const emoji = selectedMood.dataset.emoji;
+        const moodLabel = selectedMood.querySelector('.mood-label').textContent;
+        updateCurrentMood({
+            mood: moodData.mood,
+            mood_display: moodLabel,
+            created_at: new Date().toISOString()
+        });
+        
+    } catch (error) {
+        console.error('Error saving mood:', error);
+        manasAPI.showError('Failed to update mood. Please try again.');
+    }
+}
+
+// Navigation Functions
+function navigateToWellness() {
+    window.location.href = '/student/wellness/';
+}
+
+function navigateToAppointments() {
+    window.location.href = '{% url "appointments" %}';
+}
+
+function navigateToAssessments() {
+    window.location.href = '/student/assessments/';
+}
+
+function navigateToCommunity() {
+    window.location.href = '{% url "peer_support" %}';
+}
+
+// Additional Modal Loaders
+async function loadAssessmentCategories() {
+    try {
+        const categories = await manasAPI.getAssessmentCategories();
+        const container = document.getElementById('assessment-categories-container');
+        
+        container.innerHTML = categories.results.map(category => `
+            <div class="assessment-category mb-3" onclick="takeAssessment('${category.id}')">
+                <h4 class="font-semibold">${category.name}</h4>
+                <p class="text-sm text-secondary">${category.description}</p>
+                <p class="text-xs text-light">${category.question_count} questions • ${category.estimated_duration} minutes</p>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading assessment categories:', error);
+    }
+}
+
+async function loadEmergencyResources() {
+    try {
+        const resources = await manasAPI.getEmergencyResources();
+        const container = document.getElementById('emergency-resources-container');
+        
+        container.innerHTML = Object.entries(resources).map(([type, resourceList]) => `
+            <div class="resource-section mb-4">
+                <h4 class="font-semibold capitalize">${type.replace('_', ' ')}</h4>
+                ${resourceList.map(resource => `
+                    <div class="resource-item p-3 border rounded mb-2">
+                        <h5 class="font-medium">${resource.name}</h5>
+                        <p class="text-sm">${resource.description}</p>
+                        <div class="flex gap-2 mt-2">
+                            ${resource.phone ? `<a href="tel:${resource.phone}" class="btn btn-xs btn-primary">Call ${resource.phone}</a>` : ''}
+                            ${resource.website ? `<a href="${resource.website}" target="_blank" class="btn btn-xs btn-secondary">Visit Website</a>` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading emergency resources:', error);
+    }
+}
+
+function toggleNotificationsPanel() {
+    const panel = document.getElementById('notifications-panel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+// Additional Functions
+async function joinChallenge(challengeId) {
+    try {
+        await manasAPI.joinChallenge(challengeId);
+        manasAPI.showSuccess('Successfully joined challenge!');
+        loadChallenges(); // Refresh
+    } catch (error) {
+        console.error('Error joining challenge:', error);
+        manasAPI.showError('Failed to join challenge. Please try again.');
+    }
+}
+
+function takeAssessment(categoryId) {
+    window.location.href = `/student/assessments/take/${categoryId}/`;
+}
+
+function openGoalsModal() {
+    window.location.href = '/student/wellness/goals/';
+}
+
+function openChallengesModal() {
+    window.location.href = '/student/wellness/challenges/';
+}
+
+function viewSafetyPlans() {
+    window.location.href = '/student/crisis/safety-plans/';
+}
+
+function showError(message) {
+    if (window.manasAPI) {
+        manasAPI.showError(message);
+    } else {
+        alert(message);
+    }
+}
+</script>
+
+<style>
+/* Additional styles for enhanced dashboard */
+.loading-state {
+    color: var(--text-light);
+    font-style: italic;
+    padding: 1rem;
+    text-align: center;
+}
+
+.activity-item:hover {
+    background-color: var(--bg-secondary) !important;
+    cursor: pointer;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--radius-lg);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 1.5rem 1.5rem 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+.mood-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.mood-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mood-option:hover {
+    border-color: var(--primary-color);
+    background: var(--bg-primary);
+}
+
+.mood-option.selected {
+    border-color: var(--primary-color);
+    background: var(--blue-light);
+}
+
+.mood-emoji {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.mood-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.goal-item, .challenge-item, .community-activity {
+    padding: 0.75rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+}
+
+.assessment-category {
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.assessment-category:hover {
+    border-color: var(--primary-color);
+    background: var(--bg-primary);
+}
+
+.crisis-warning {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    color: #dc2626;
+}
+
+.notification-item.unread {
+    background: var(--blue-light);
+}
+
+.resource-item {
+    background: var(--bg-primary);
+}
+
+@media (max-width: 768px) {
+    .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+{% endblock %}

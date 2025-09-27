@@ -1,0 +1,649 @@
+{% extends 'counselor/base_counselor_admin.html' %}
+
+{% block title %}Analytics Dashboard - MANAS{% endblock %}
+
+{% block content %}
+<!-- Analytics Dashboard Header -->
+<div style="background: linear-gradient(135deg, rgba(255, 233, 180, 0.1) 0%, rgba(252, 198, 129, 0.1) 100%); border: 1px solid rgba(255, 233, 180, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 style="font-size: 1.125rem; font-weight: 700; color: #b45309; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                📊 Advanced Analytics Dashboard
+            </h3>
+            <p style="color: #d97706; font-size: 0.875rem;">Comprehensive insights and performance metrics for counseling operations</p>
+        </div>
+        <button style="background: linear-gradient(135deg, #ffe9b4 0%, #fcc681 100%); color: #92400e; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: 1px solid rgba(252, 198, 129, 0.3); font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem;" 
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(252, 198, 129, 0.3)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+            </svg>
+            Export Report
+        </button>
+    </div>
+</div>
+
+<!-- Analytics Statistics Overview -->
+<div class="counselor-stats-grid">
+    <div class="counselor-stat-card">
+        <div class="counselor-stat-icon counselor-stat-icon-sessions">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+            </svg>
+        </div>
+        <div class="counselor-stat-number">{{ total_sessions|default:"456" }}</div>
+        <div class="counselor-stat-label">Total Sessions</div>
+        <div class="counselor-stat-trend counselor-trend-up">+15% this month</div>
+    </div>
+    
+    <div class="counselor-stat-card">
+        <div class="counselor-stat-icon counselor-stat-icon-students">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+            </svg>
+        </div>
+        <div class="counselor-stat-number">{{ student_engagement|default:"87%" }}</div>
+        <div class="counselor-stat-label">Student Engagement</div>
+        <div class="counselor-stat-trend counselor-trend-up">+3% improvement</div>
+    </div>
+    
+    <div class="counselor-stat-card">
+        <div class="counselor-stat-icon counselor-stat-icon-rating">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
+            </svg>
+        </div>
+        <div class="counselor-stat-number">{{ satisfaction_score|default:"4.8/5" }}</div>
+        <div class="counselor-stat-label">Satisfaction Score</div>
+        <div class="counselor-stat-trend counselor-trend-up">Outstanding rating</div>
+    </div>
+    
+    <div class="counselor-stat-card">
+        <div class="counselor-stat-icon counselor-stat-icon-crisis">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+            </svg>
+        </div>
+        <div class="counselor-stat-number">{{ response_time|default:"2.3h" }}</div>
+        <div class="counselor-stat-label">Avg Response Time</div>
+        <div class="counselor-stat-trend counselor-trend-up">Excellent</div>
+    color: #6b7280;
+}
+
+.chart-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(120, 123, 218, 0.1);
+}
+
+.time-filter {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-btn {
+    background: white;
+    border: 2px solid var(--gradient-primary);
+    color: var(--gradient-primary);
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: linear-gradient(135deg, var(--gradient-primary), var(--gradient-secondary));
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(120, 123, 218, 0.3);
+}
+
+.chart-placeholder {
+    height: 300px;
+    background: linear-gradient(135deg, rgba(120, 123, 218, 0.05), rgba(142, 224, 254, 0.05));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.progress-bar-container {
+    background: rgba(120, 123, 218, 0.1);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(135deg, var(--gradient-primary), var(--gradient-secondary));
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.metric-item {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.metric-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, var(--gradient-primary), var(--gradient-secondary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-label {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.metric-change {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.insights-card {
+    background: linear-gradient(135deg, rgba(255, 233, 180, 0.1), rgba(252, 198, 129, 0.1));
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.insight-item {
+    display: flex;
+    align-items: start;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(120, 123, 218, 0.1);
+}
+
+.insight-item:last-child {
+    border-bottom: none;
+}
+
+.insight-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: white;
+}
+
+.insight-icon.positive {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.insight-icon.warning {
+    background: linear-gradient(135deg, var(--gradient-warning), #ffa502);
+}
+
+.insight-icon.info {
+    background: linear-gradient(135deg, var(--gradient-primary), var(--gradient-secondary));
+}
+
+.top-issues {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.issue-item {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(229, 231, 235, 1);
+}
+
+.issue-item:last-child {
+    border-bottom: none;
+}
+
+.issue-bar {
+    flex-grow: 1;
+    margin: 0 15px;
+}
+
+.issue-progress {
+    background: rgba(120, 123, 218, 0.1);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.issue-progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.anxiety { background: linear-gradient(135deg, var(--gradient-warning), #ffa502); }
+.depression { background: linear-gradient(135deg, var(--gradient-accent), #ff4757); }
+.stress { background: linear-gradient(135deg, var(--gradient-primary), var(--gradient-secondary)); }
+.relationships { background: linear-gradient(135deg, var(--gradient-info), var(--gradient-secondary)); }
+.academic { background: linear-gradient(135deg, #16a34a, #22c55e); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Analytics Statistics -->
+    <div class="analytics-stats">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h3 class="text-primary mb-2">{{ analytics.total_students }}</h3>
+                    <p class="mb-1 text-muted">Total Students</p>
+                    <div class="metric-change trend-up">
+                        <i class="fas fa-arrow-up"></i>
+                        +{{ analytics.student_growth }}% this month
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h3 class="text-success mb-2">{{ analytics.completed_sessions }}</h3>
+                    <p class="mb-1 text-muted">Sessions Completed</p>
+                    <div class="metric-change trend-up">
+                        <i class="fas fa-arrow-up"></i>
+                        +{{ analytics.session_growth }}% this month
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h3 class="text-info mb-2">{{ analytics.avg_rating }}</h3>
+                    <p class="mb-1 text-muted">Average Rating</p>
+                    <div class="metric-change trend-stable">
+                        <i class="fas fa-minus"></i>
+                        {{ analytics.rating_change }} from last month
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h3 class="text-warning mb-2">{{ analytics.response_time }}min</h3>
+                    <p class="mb-1 text-muted">Avg Response Time</p>
+                    <div class="metric-change trend-down">
+                        <i class="fas fa-arrow-down"></i>
+                        -{{ analytics.response_improvement }}min improved
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Session Analytics Chart -->
+        <div class="col-lg-8">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h5 class="mb-0">Session Analytics</h5>
+                    <div class="time-filter">
+                        <button class="filter-btn active" data-period="week">This Week</button>
+                        <button class="filter-btn" data-period="month">This Month</button>
+                        <button class="filter-btn" data-period="quarter">Quarter</button>
+                        <button class="filter-btn" data-period="year">Year</button>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    <div class="text-center">
+                        <i class="fas fa-chart-line fa-3x mb-3"></i>
+                        <p>Session trends chart would be displayed here</p>
+                        <small class="text-muted">Data: {{ analytics.sessions_last_30_days }} sessions in last 30 days</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Progress Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h5 class="mb-0">Student Progress Tracking</h5>
+                </div>
+                <div class="chart-placeholder">
+                    <div class="text-center">
+                        <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                        <p>Student progress analytics would be displayed here</p>
+                        <small class="text-muted">Tracking {{ analytics.active_students }} active students</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crisis Analytics -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h5 class="mb-0">Crisis Response Analytics</h5>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <span class="metric-label">Crisis Alerts</span>
+                                <span class="metric-change trend-down">
+                                    <i class="fas fa-arrow-down"></i>
+                                    -15%
+                                </span>
+                            </div>
+                            <div class="metric-value">{{ analytics.crisis_alerts }}</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: {{ analytics.crisis_progress }}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <span class="metric-label">Response Time</span>
+                                <span class="metric-change trend-up">
+                                    <i class="fas fa-arrow-up"></i>
+                                    +20%
+                                </span>
+                            </div>
+                            <div class="metric-value">{{ analytics.crisis_response_time }}min</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights & Metrics -->
+        <div class="col-lg-4">
+            <!-- Key Insights -->
+            <div class="insights-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Key Insights
+                </h5>
+                
+                <div class="insight-item">
+                    <div class="insight-icon positive">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">Session Attendance Up</h6>
+                        <p class="mb-0 small text-muted">{{ analytics.attendance_rate }}% attendance rate, +5% from last month</p>
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">Peak Stress Period</h6>
+                        <p class="mb-0 small text-muted">Higher anxiety reports during exam weeks</p>
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon info">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">Student Engagement</h6>
+                        <p class="mb-0 small text-muted">{{ analytics.engagement_score }}% engagement in group sessions</p>
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon positive">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">Satisfaction Score</h6>
+                        <p class="mb-0 small text-muted">{{ analytics.satisfaction_score }}/5.0 average satisfaction rating</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Issues -->
+            <div class="top-issues">
+                <h5 class="mb-3">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Most Common Issues
+                </h5>
+
+                {% for issue in top_issues %}
+                <div class="issue-item">
+                    <div>
+                        <strong>{{ issue.name }}</strong>
+                        <small class="text-muted d-block">{{ issue.count }} cases</small>
+                    </div>
+                    <div class="issue-bar">
+                        <div class="issue-progress">
+                            <div class="issue-progress-fill {{ issue.type }}" 
+                                 style="width: {{ issue.percentage }}%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="fw-bold">{{ issue.percentage }}%</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="chart-container mt-3">
+                <h5 class="mb-3">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    Performance Metrics
+                </h5>
+
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <span class="metric-label">Session Completion Rate</span>
+                    </div>
+                    <div class="metric-value">{{ performance.completion_rate }}%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ performance.completion_rate }}%;"></div>
+                    </div>
+                    <small class="text-muted">{{ performance.completed_sessions }}/{{ performance.total_sessions }} sessions</small>
+                </div>
+
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <span class="metric-label">Student Retention</span>
+                    </div>
+                    <div class="metric-value">{{ performance.retention_rate }}%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ performance.retention_rate }}%;"></div>
+                    </div>
+                    <small class="text-muted">Students continuing counseling</small>
+                </div>
+
+                <div class="metric-item">
+                    <div class="metric-header">
+                        <span class="metric-label">Goal Achievement</span>
+                    </div>
+                    <div class="metric-value">{{ performance.goal_achievement }}%</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ performance.goal_achievement }}%;"></div>
+                    </div>
+                    <small class="text-muted">Students meeting their goals</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Reports -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h5 class="mb-0">Detailed Analytics Report</h5>
+                    <div>
+                        <button class="btn btn-outline-primary btn-sm me-2">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                        <button class="btn btn-primary btn-sm">
+                            <i class="fas fa-file-alt"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="metric-item">
+                            <h6>Weekly Summary</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>Sessions Conducted:</span>
+                                    <strong>{{ weekly_summary.sessions }}</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>New Students:</span>
+                                    <strong>{{ weekly_summary.new_students }}</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>Crisis Interventions:</span>
+                                    <strong>{{ weekly_summary.crisis_interventions }}</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>Follow-ups Scheduled:</span>
+                                    <strong>{{ weekly_summary.followups }}</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric-item">
+                            <h6>Student Demographics</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>Undergraduate:</span>
+                                    <strong>{{ demographics.undergraduate }}%</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>Graduate:</span>
+                                    <strong>{{ demographics.graduate }}%</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>First Year:</span>
+                                    <strong>{{ demographics.first_year }}%</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>International:</span>
+                                    <strong>{{ demographics.international }}%</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric-item">
+                            <h6>Outcome Tracking</h6>
+                            <ul class="list-unstyled mb-0">
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>Improved Wellbeing:</span>
+                                    <strong>{{ outcomes.improved_wellbeing }}%</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>Reduced Anxiety:</span>
+                                    <strong>{{ outcomes.reduced_anxiety }}%</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>Better Coping Skills:</span>
+                                    <strong>{{ outcomes.better_coping }}%</strong>
+                                </li>
+                                <li class="d-flex justify-content-between py-1">
+                                    <span>Academic Improvement:</span>
+                                    <strong>{{ outcomes.academic_improvement }}%</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Filter functionality
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Remove active class from all buttons in the same group
+        const group = this.closest('.time-filter');
+        group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        // Update charts based on selected period
+        const period = this.getAttribute('data-period');
+        updateCharts(period);
+    });
+});
+
+function updateCharts(period) {
+    // This would update charts based on selected time period
+    console.log('Updating charts for period:', period);
+    
+    // Simulate chart update
+    document.querySelectorAll('.chart-placeholder').forEach(chart => {
+        chart.style.opacity = '0.5';
+        setTimeout(() => {
+            chart.style.opacity = '1';
+        }, 500);
+    });
+}
+
+// Animate progress bars on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.progress-bar, .issue-progress-fill');
+    
+    setTimeout(() => {
+        progressBars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            bar.style.transition = 'width 1s ease';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 100);
+        });
+    }, 300);
+});
+</script>
+{% endblock %}

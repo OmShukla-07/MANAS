@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Role - MANAS Mental Wellness Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #4a5568;
+            overflow-x: hidden;
+        }
+
+        /* Professional Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(89, 137, 128, 0.1);
+            animation: slideInDown 1s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #598980;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            background: linear-gradient(135deg, #598980, #4ca1af);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: #598980;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #598980;
+            text-decoration: none;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 5rem;
+            animation: slideInDown 0.8s ease forwards;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #598980, #8364e8, #4ca1af);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 4s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: #4a5568;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Role Cards Grid */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .role-card {
+            background: white;
+            border: none;
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #598980, #8364e8, #4ca1af);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .role-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .role-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Role-specific styling */
+        .role-card.student {
+            --accent-color: #598980;
+        }
+
+        .role-card.counselor {
+            --accent-color: #4ca1af;
+        }
+
+        .role-card.admin {
+            --accent-color: #8364e8;
+        }
+
+        .role-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-color), #4ca1af);
+            color: white;
+        }
+
+        .role-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1a202c;
+        }
+
+        .role-description {
+            font-size: 1rem;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .role-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .feature-tag {
+            background: rgba(89, 137, 128, 0.1);
+            color: #374151;
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid rgba(89, 137, 128, 0.2);
+        }
+
+        .role-card:hover .feature-tag {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* Login Section */
+        .login-section {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1a202c;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .login-description {
+            color: #4b5563;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .login-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(135deg, #598980, #4a7670);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(89, 137, 128, 0.3);
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(89, 137, 128, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Navigation Footer */
+        .navigation-footer {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: transparent;
+            border: 2px solid #598980;
+            color: #598980;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #598980;
+            color: white;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        .nav-button.support {
+            background: linear-gradient(135deg, #598980, #4a7670);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(89, 137, 128, 0.3);
+        }
+
+        .nav-button.support:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(89, 137, 128, 0.4);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            padding: 3rem;
+            background: linear-gradient(135deg, #598980, #4ca1af);
+            color: white;
+            border-radius: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            animation: countUp 2s ease-out;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .main-container {
+                padding: 6rem 1rem 2rem;
+            }
+
+            .roles-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .role-card {
+                padding: 2rem 1.5rem;
+                height: auto;
+            }
+
+            .login-section {
+                padding: 2rem;
+            }
+
+            .navigation-footer {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .role-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .role-card:nth-child(1) { animation-delay: 0.1s; }
+        .role-card:nth-child(2) { animation-delay: 0.2s; }
+        .role-card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Professional Header -->
+    <div class="header">
+        <div class="header-container">
+            <a href="{% url 'landing' %}" class="logo">
+                <div class="logo-icon">
+                    <img src="/static/images/images/icons/brain-icon.png" alt="MANAS Logo">
+                </div>
+                MANAS
+            </a>
+            <nav class="header-nav">
+                <a href="{% url 'landing' %}" class="nav-link">Home</a>
+                <a href="{% url 'learn_more' %}" class="nav-link">Learn More</a>
+                <a href="#" class="nav-link">About</a>
+                <a href="#" class="nav-link">Contact</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title">Choose Your Role</h1>
+            <p class="hero-subtitle">Join MANAS Mental Wellness Platform</p>
+            <p class="hero-description">
+                Select your role to access personalized features and begin your journey towards mental wellness and professional growth.
+            </p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-item">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Active Students</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Professional Counselors</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Institutions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support Available</div>
+            </div>
+        </div>
+
+        <!-- Role Cards -->
+        <div class="roles-grid">
+            <a href="{{ student_url }}" class="role-card student">
+                <div class="role-content">
+                    <div class="role-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h2 class="role-title">Student</h2>
+                    <p class="role-description">
+                        Access personalized mental health support, connect with AI companions, join peer support groups, and track your wellness journey with comprehensive tools designed for student success.
+                    </p>
+                </div>
+                <div class="role-features">
+                    <span class="feature-tag">AI Companions</span>
+                    <span class="feature-tag">24/7 Support</span>
+                    <span class="feature-tag">Peer Community</span>
+                    <span class="feature-tag">Progress Tracking</span>
+                </div>
+            </a>
+
+            <a href="{{ counselor_url }}" class="role-card counselor">
+                <div class="role-content">
+                    <div class="role-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h2 class="role-title">Counselor</h2>
+                    <p class="role-description">
+                        Provide professional mental health guidance, manage student cases, access advanced analytics, and utilize professional tools to deliver effective counseling services.
+                    </p>
+                </div>
+                <div class="role-features">
+                    <span class="feature-tag">Case Management</span>
+                    <span class="feature-tag">Analytics Dashboard</span>
+                    <span class="feature-tag">Resources Library</span>
+                    <span class="feature-tag">Scheduling Tools</span>
+                </div>
+            </a>
+
+            <a href="{{ admin_url }}" class="role-card admin">
+                <div class="role-content">
+                    <div class="role-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h2 class="role-title">Administrator</h2>
+                    <p class="role-description">
+                        Oversee platform operations, manage users and counselors, monitor system health, access comprehensive analytics, and ensure smooth platform functionality.
+                    </p>
+                </div>
+                <div class="role-features">
+                    <span class="feature-tag">User Management</span>
+                    <span class="feature-tag">System Monitoring</span>
+                    <span class="feature-tag">Analytics Reports</span>
+                    <span class="feature-tag">Configuration</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Login Section -->
+        <div class="login-section">
+            <h2 class="login-title">Already have an account?</h2>
+            <p class="login-description">
+                Access your existing MANAS account and continue your mental wellness journey
+            </p>
+            <a href="{% url 'login' %}" class="login-button">
+                <i class="fas fa-sign-in-alt"></i>
+                Login to Your Account
+            </a>
+        </div>
+
+        <!-- Navigation Footer -->
+        <div class="navigation-footer">
+            <a href="{% url 'landing' %}" class="nav-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+            <a href="#" class="nav-button support">
+                <i class="fas fa-headset"></i>
+                Get Support
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleCards = document.querySelectorAll('.role-card');
+            
+            roleCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                const cards = Array.from(document.querySelectorAll('.role-card'));
+                const currentFocus = document.activeElement;
+                const currentIndex = cards.indexOf(currentFocus);
+
+                switch(e.key) {
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        const nextIndex = (currentIndex + 1) % cards.length;
+                        cards[nextIndex].focus();
+                        break;
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        const prevIndex = currentIndex === -1 ? 0 : (currentIndex - 1 + cards.length) % cards.length;
+                        cards[prevIndex].focus();
+                        break;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,685 @@
+{% extends 'student/base_student.html' %}
+{% load static %}
+
+{% block title %}MANAS - Student Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome Message with Real User Data -->
+<div class="welcome-card">
+    <h2>Welcome back, {{ user.first_name }}!</h2>
+    <p>Here's your mental wellness journey summary</p>
+</div>
+
+<!-- Stats Overview -->
+<div class="stats-overview">
+    <div class="stat-card">
+        <h3>{{ stats.total_sessions }}</h3>
+        <p>Chat Sessions</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.total_appointments }}</h3>
+        <p>Appointments</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.mood_entries_this_week }}</h3>
+        <p>Mood Entries This Week</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.active_goals_count }}</h3>
+        <p>Active Goals</p>
+    </div>
+</div>
+
+<!-- Quote Card (Original Design) -->
+<div class="quote-card">
+    <p class="quote-text">"You are stronger than you think, braver than you feel, and more loved than you know."</p>
+    <p class="quote-author">- Daily Motivation</p>
+</div>
+
+<div class="content-grid">
+    <!-- Left Column -->
+    <div class="left-column">
+        <!-- Mood Tracker with Backend Integration -->
+        <div class="mood-tracker">
+            <h3>How are you feeling today?</h3>
+            <div class="mood-selection">
+                <button class="mood-btn" data-mood="1">😢 Very Low</button>
+                <button class="mood-btn" data-mood="2">😔 Low</button>
+                <button class="mood-btn" data-mood="3">😐 Neutral</button>
+                <button class="mood-btn" data-mood="4">😊 Good</button>
+                <button class="mood-btn" data-mood="5">😄 Excellent</button>
+            </div>
+            <div class="mood-notes">
+                <textarea id="mood-notes" placeholder="How are you feeling? (optional)"></textarea>
+                <button id="save-mood" class="save-mood-btn">Save Mood</button>
+            </div>
+        </div>
+
+        <!-- Recent Mood Entries -->
+        <div class="recent-moods">
+            <h3>Recent Mood Entries</h3>
+            <div class="mood-history">
+                {% for mood in recent_mood_entries %}
+                <div class="mood-entry">
+                    <span class="mood-date">{{ mood.date_logged|date:"M d" }}</span>
+                    <span class="mood-level">
+                        {% if mood.mood_level == 1 %}😢
+                        {% elif mood.mood_level == 2 %}😔
+                        {% elif mood.mood_level == 3 %}😐
+                        {% elif mood.mood_level == 4 %}😊
+                        {% elif mood.mood_level == 5 %}😄
+                        {% endif %}
+                    </span>
+                    <span class="mood-description">{{ mood.get_mood_level_display }}</span>
+                </div>
+                {% empty %}
+                <p>No mood entries yet. Start tracking your mood today!</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Activity Cards (Original Design) -->
+        <div class="activity-cards">
+            <div class="activity-card breathe">
+                <div class="activity-icon">
+                    <div class="breathe-icon">
+                        <div class="person-meditating">
+                            <div class="person-body"></div>
+                            <div class="person-head"></div>
+                            <div class="meditation-aura"></div>
+                        </div>
+                    </div>
+                </div>
+                <h4>Breathe</h4>
+            </div>
+            <div class="activity-card journal">
+                <div class="activity-icon">
+                    <div class="journal-icon">
+                        <div class="journal-cover"></div>
+                        <div class="journal-pages"></div>
+                    </div>
+                </div>
+                <h4>Journal</h4>
+            </div>
+            <div class="activity-card relax">
+                <div class="activity-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <h4>Relax</h4>
+            </div>
+        </div>
+
+        <!-- Recent Sessions with Real Data -->
+        <div class="sessions-section">
+            <h3>Recent Activity</h3>
+            {% for session in recent_sessions %}
+            <div class="session-item">
+                <span class="session-name">{{ session.get_session_type_display }}</span>
+                <span class="session-date">{{ session.created_at|date:"M d, H:i" }}</span>
+            </div>
+            {% empty %}
+            <div class="session-item">
+                <span class="session-name">No recent sessions</span>
+                <a href="{% url 'student_manas_ai' %}">Start your first chat</a>
+            </div>
+            {% endfor %}
+            
+            {% for appointment in upcoming_appointments %}
+            <div class="session-item">
+                <span class="session-name">Appointment with {{ appointment.counselor.get_full_name }}</span>
+                <span class="session-date">{{ appointment.scheduled_date|date:"M d" }} at {{ appointment.scheduled_time|time:"H:i" }}</span>
+            </div>
+            {% empty %}
+            {% if not upcoming_appointments and not recent_sessions %}
+            <div class="session-item">
+                <span class="session-name">No upcoming appointments</span>
+                <a href="{% url 'student_appointments' %}">Schedule an appointment</a>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Active Goals with Real Data -->
+        <div class="goals-section">
+            <h3>Active Wellness Goals</h3>
+            {% for goal in active_goals %}
+            <div class="goal-item">
+                <span class="goal-title">{{ goal.title }}</span>
+                <div class="goal-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ goal.progress_percentage }}%"></div>
+                    </div>
+                    <span class="progress-text">{{ goal.progress_percentage|floatformat:0 }}%</span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="goal-item">
+                <span class="goal-title">No active goals</span>
+                <button class="create-goal-btn" onclick="showCreateGoalModal()">Create Goal</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="right-column">
+        <!-- Illustration (Original Design) -->
+        <div class="illustration-container">
+            <!-- <img src="{% static 'images/icons/dashboard-icon.png' %}" alt="Dashboard Illustration" class="dashboard-illustration"> -->
+        </div>
+
+        <!-- Chat Assistant (Original Design) -->
+        <div class="chat-assistant">
+            <button class="chat-button" onclick="window.location.href='{% url 'student_manas_ai' %}'">
+                <span>How Can I Help You</span>
+            </button>
+            <div class="chat-icon">
+                <div class="chat-avatar">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 3C18.75 3 22.5 5 23.75 8.75C25 12.5 23.75 16.25 21.25 18.75C20 20 17.5 21.25 15 21.25C12.5 21.25 10 20 8.75 18.75C6.25 16.25 5 12.5 6.25 8.75C7.5 5 11.25 3 15 3Z" fill="#7BA098"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="action-buttons">
+                <button class="action-btn" onclick="window.location.href='{% url 'student_manas_ai' %}'">
+                    <i class="fas fa-robot"></i>
+                    Chat with MANAS AI
+                </button>
+                <button class="action-btn" onclick="window.location.href='{% url 'student_appointments' %}'">
+                    <i class="fas fa-calendar"></i>
+                    Book Appointment
+                </button>
+                <button class="action-btn" onclick="window.location.href='{% url 'student_resources' %}'">
+                    <i class="fas fa-book"></i>
+                    View Resources
+                </button>
+                <button class="action-btn" onclick="window.location.href='{% url 'student_peer_support' %}'">
+                    <i class="fas fa-users"></i>
+                    Peer Support
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Goal Modal -->
+<div id="create-goal-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="hideCreateGoalModal()">&times;</span>
+        <h3>Create Wellness Goal</h3>
+        <form id="create-goal-form">
+            <input type="text" id="goal-title" placeholder="Goal title" required>
+            <textarea id="goal-description" placeholder="Goal description"></textarea>
+            <select id="goal-type">
+                <option value="mood_improvement">Mood Improvement</option>
+                <option value="stress_reduction">Stress Reduction</option>
+                <option value="exercise">Exercise</option>
+                <option value="sleep">Sleep</option>
+                <option value="meditation">Meditation</option>
+                <option value="custom">Custom Goal</option>
+            </select>
+            <input type="number" id="goal-target" placeholder="Target value" min="1" required>
+            <input type="text" id="goal-unit" placeholder="Unit (e.g., times, hours, days)" required>
+            <input type="date" id="goal-date" required>
+            <button type="submit">Create Goal</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up event listeners
+        setupEventListeners();
+        setupMoodTracker();
+        setupGoalCreation();
+    });
+    
+    function setupEventListeners() {
+        // Activity cards (Original functionality)
+        const breatheCard = document.querySelector('.activity-card.breathe');
+        const journalCard = document.querySelector('.activity-card.journal');
+        const relaxCard = document.querySelector('.activity-card.relax');
+        
+        if (breatheCard) {
+            breatheCard.addEventListener('click', () => {
+                alert('Breathing exercises feature coming soon!');
+            });
+            breatheCard.style.cursor = 'pointer';
+        }
+        
+        if (journalCard) {
+            journalCard.addEventListener('click', () => {
+                alert('Journal feature coming soon!');
+            });
+            journalCard.style.cursor = 'pointer';
+        }
+        
+        if (relaxCard) {
+            relaxCard.addEventListener('click', () => {
+                alert('Mindfulness timer feature coming soon!');
+            });
+            relaxCard.style.cursor = 'pointer';
+        }
+        
+        // Make quote card clickable (refresh quote)
+        const quoteCard = document.querySelector('.quote-card');
+        if (quoteCard) {
+            quoteCard.addEventListener('click', refreshQuote);
+            quoteCard.style.cursor = 'pointer';
+        }
+    }
+    
+    function setupMoodTracker() {
+        // Mood selection buttons
+        const moodButtons = document.querySelectorAll('.mood-btn');
+        let selectedMood = null;
+        
+        moodButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                moodButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                selectedMood = this.dataset.mood;
+            });
+        });
+        
+        // Save mood button
+        const saveMoodBtn = document.getElementById('save-mood');
+        if (saveMoodBtn) {
+            saveMoodBtn.addEventListener('click', saveMoodEntry);
+        }
+    }
+    
+    function saveMoodEntry() {
+        const selectedMood = document.querySelector('.mood-btn.active');
+        const notes = document.getElementById('mood-notes').value;
+        
+        if (!selectedMood) {
+            alert('Please select a mood level first');
+            return;
+        }
+        
+        const moodData = {
+            mood_level: parseInt(selectedMood.dataset.mood),
+            energy_level: 3, // Default for now
+            anxiety_level: 3, // Default for now
+            stress_level: 3, // Default for now
+            notes: notes
+        };
+        
+        fetch('/api/save-mood/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(moodData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Mood saved successfully!');
+                // Clear selection
+                document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById('mood-notes').value = '';
+                // Refresh page to show new mood entry
+                location.reload();
+            } else {
+                alert('Error saving mood: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to save mood entry');
+        });
+    }
+    
+    function setupGoalCreation() {
+        const createGoalForm = document.getElementById('create-goal-form');
+        if (createGoalForm) {
+            createGoalForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                createWellnessGoal();
+            });
+        }
+    }
+    
+    function showCreateGoalModal() {
+        document.getElementById('create-goal-modal').style.display = 'block';
+    }
+    
+    function hideCreateGoalModal() {
+        document.getElementById('create-goal-modal').style.display = 'none';
+    }
+    
+    function createWellnessGoal() {
+        const goalData = {
+            title: document.getElementById('goal-title').value,
+            description: document.getElementById('goal-description').value,
+            goal_type: document.getElementById('goal-type').value,
+            target_value: parseFloat(document.getElementById('goal-target').value),
+            unit: document.getElementById('goal-unit').value,
+            target_date: document.getElementById('goal-date').value
+        };
+        
+        fetch('/api/create-wellness-goal/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(goalData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Goal created successfully!');
+                hideCreateGoalModal();
+                location.reload();
+            } else {
+                alert('Error creating goal: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to create goal');
+        });
+    }
+    
+    function refreshQuote() {
+        // Original quote functionality
+        const quotes = [
+            {
+                text: "You are stronger than you think, braver than you feel, and more loved than you know.",
+                author: "Daily Motivation"
+            },
+            {
+                text: "Mental health is not a destination, but a process. It's about how you drive, not where you're going.",
+                author: "Noam Shpancer"
+            },
+            {
+                text: "Your mental health is a priority. Your happiness is essential. Your self-care is a necessity.",
+                author: "Wellness Reminder"
+            },
+            {
+                text: "You don't have to be positive all the time. It's perfectly okay to feel sad, angry, annoyed, frustrated, scared, or anxious. Having feelings doesn't make you a negative person.",
+                author: "Mental Health Awareness"
+            },
+            {
+                text: "Self-compassion is simply giving the same kindness to ourselves that we would give to others.",
+                author: "Christopher Germer"
+            }
+        ];
+        
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        document.querySelector('.quote-text').textContent = '"' + randomQuote.text + '"';
+        document.querySelector('.quote-author').textContent = '- ' + randomQuote.author;
+    }
+    
+    // Utility function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+<style>
+/* Additional styles for new features */
+.welcome-card {
+    background: linear-gradient(135deg, #7BA098, #598980);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+    font-size: 2rem;
+    color: #7BA098;
+    margin-bottom: 5px;
+}
+
+.mood-selection {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.mood-btn {
+    padding: 10px 15px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.mood-btn:hover, .mood-btn.active {
+    border-color: #7BA098;
+    background-color: #7BA098;
+    color: white;
+}
+
+.mood-notes textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.save-mood-btn {
+    background: #7BA098;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.save-mood-btn:hover {
+    background: #598980;
+}
+
+.recent-moods, .goals-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.mood-history {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.mood-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.mood-entry:last-child {
+    border-bottom: none;
+}
+
+.goal-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.goal-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    margin-left: 15px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #7BA098;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.8rem;
+    color: #666;
+    min-width: 40px;
+}
+
+.create-goal-btn {
+    background: #7BA098;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.quick-actions {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #333;
+}
+
+.action-btn:hover {
+    background: #7BA098;
+    color: white;
+    border-color: #7BA098;
+}
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: red;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal-content input, .modal-content textarea, .modal-content select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.modal-content button {
+    background: #7BA098;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background: #598980;
+}
+</style>
+{% endblock %}

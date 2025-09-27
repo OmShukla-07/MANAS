@@ -1,0 +1,182 @@
+{% extends 'student/base_student.html' %}
+{% load static %}
+
+{% block title %}Peer Support - MANAS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/peer-support-unified.css' %}">
+{% endblock %}
+
+{% block header_title %}Peer Support Community{% endblock %}
+
+{% block content %}
+<div class="content-body fade-in">
+    <!-- Community Stats -->
+    <div class="quote-card">
+        <h3>Join our supportive community of students</h3>
+        <p>Connect with peers who understand your journey</p>
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;">
+            <div><strong>1,234</strong><br><small>Active Members</small></div>
+            <div><strong>89</strong><br><small>Online Now</small></div>
+            <div><strong>456</strong><br><small>Support Groups</small></div>
+        </div>
+    </div>
+
+    <!-- Support Options -->
+    <div class="support-grid">
+        <div class="support-card" onclick="joinGroupChat()">
+            <div class="support-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h3>Group Discussions</h3>
+            <p>Join topic-based group chats with fellow students</p>
+            <div class="availability-badge">12 active groups</div>
+        </div>
+
+        <div class="support-card" onclick="findBuddy()">
+            <div class="support-icon">
+                <i class="fas fa-user-friends"></i>
+            </div>
+            <h3>Study Buddy</h3>
+            <p>Find a study partner or accountability buddy</p>
+            <div class="availability-badge">23 looking for buddies</div>
+        </div>
+
+        <div class="support-card" onclick="shareStory()">
+            <div class="support-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h3>Share Your Story</h3>
+            <p>Inspire others by sharing your wellness journey</p>
+            <div class="availability-badge">Safe & Anonymous</div>
+        </div>
+
+        <div class="support-card" onclick="joinWorkshop()">
+            <div class="support-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>Peer Workshops</h3>
+            <p>Attend peer-led wellness workshops and activities</p>
+            <div class="availability-badge">Next: Today 3 PM</div>
+        </div>
+    </div>
+
+    <!-- Active Groups -->
+    <div style="margin-top: 2rem;">
+        <h3 style="margin-bottom: 1rem; color: #2d3748;">Popular Support Groups</h3>
+        <div class="topic-grid">
+            <div class="topic-card" onclick="joinGroup('exam-stress')">
+                <div class="topic-icon">📚</div>
+                <div class="topic-title">Exam Stress Support</div>
+                <div class="topic-meta">45 members • Very Active</div>
+            </div>
+            
+            <div class="topic-card" onclick="joinGroup('anxiety-support')">
+                <div class="topic-icon">🧠</div>
+                <div class="topic-title">Anxiety Support Circle</div>
+                <div class="topic-meta">89 members • Moderated</div>
+            </div>
+            
+            <div class="topic-card" onclick="joinGroup('study-motivation')">
+                <div class="topic-icon">💪</div>
+                <div class="topic-title">Study Motivation</div>
+                <div class="topic-meta">123 members • Daily Check-ins</div>
+            </div>
+            
+            <div class="topic-card" onclick="joinGroup('wellness-tips')">
+                <div class="topic-icon">🌱</div>
+                <div class="topic-title">Daily Wellness Tips</div>
+                <div class="topic-meta">67 members • Tips & Tricks</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Connect -->
+    <div style="margin-top: 2rem; text-align: center;">
+        <button class="btn btn-primary" onclick="quickConnect()">
+            <i class="fas fa-bolt"></i> Quick Connect with Someone
+        </button>
+        <p style="margin-top: 0.5rem; color: #64748b; font-size: 0.9rem;">
+            Instantly connect with a peer who's available to chat
+        </p>
+    </div>
+</div>
+
+<!-- Group Chat Modal -->
+<div id="groupModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>Join Support Group</h3>
+        <div id="groupContent">
+            <p>Select a group to join and start connecting with peers who share similar experiences.</p>
+            <div style="margin-top: 1rem;">
+                <button class="btn btn-primary" onclick="confirmJoin()">Join Group</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function joinGroupChat() {
+        showNotification('Group chat feature coming soon!', 'info');
+    }
+
+    function findBuddy() {
+        showNotification('Study buddy matching feature coming soon!', 'info');
+    }
+
+    function shareStory() {
+        showNotification('Story sharing feature coming soon!', 'info');
+    }
+
+    function joinWorkshop() {
+        showNotification('Workshop registration coming soon!', 'info');
+    }
+
+    function joinGroup(groupId) {
+        document.getElementById('groupModal').style.display = 'block';
+    }
+
+    function quickConnect() {
+        showNotification('Connecting you with an available peer...', 'info');
+        setTimeout(() => {
+            showNotification('No peers available right now. Try again later!', 'info');
+        }, 2000);
+    }
+
+    function closeModal() {
+        document.getElementById('groupModal').style.display = 'none';
+    }
+
+    function confirmJoin() {
+        showNotification('Successfully joined the support group!', 'success');
+        closeModal();
+    }
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.classList.add('show'), 100);
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => document.body.removeChild(notification), 300);
+        }, 3000);
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('groupModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+</script>
+{% endblock %}

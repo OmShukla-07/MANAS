@@ -1,0 +1,1099 @@
+{% extends 'counselor/base_counselor_admin.html' %}
+{% load static %}
+
+{% block title %}Crisis Management & Reports - Counselor Panel{% endblock %}
+
+{% block content %}
+<!-- Crisis Management Section -->
+<div class="counselor-form-section">
+    <h3>🚨 Active Crisis Alerts</h3>
+    <div class="crisis-alerts-container">
+        {% for alert in crisis_alerts %}
+        <div class="crisis-alert-card {{ alert.severity|lower }}">
+            <div class="crisis-alert-header">
+                <div class="crisis-alert-severity">{{ alert.severity }} Priority</div>
+                <div class="crisis-alert-time">{{ alert.created_at|timesince }} ago</div>
+            </div>
+            <div class="crisis-alert-content">
+                <h4>{{ alert.student.first_name }} {{ alert.student.last_name }}</h4>
+                <p>{{ alert.description }}</p>
+                <div class="crisis-alert-actions">
+                    <button class="btn-respond" onclick="respondToCrisis({{ alert.id }})">
+                        📞 Respond Now
+                    </button>
+                    <button class="btn-escalate" onclick="escalateCrisis({{ alert.id }})">
+                        ⚠️ Escalate
+                    </button>
+                    <button class="btn-resolve" onclick="resolveCrisis({{ alert.id }})">
+                        ✅ Mark Resolved
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-alerts">
+            <div class="no-alerts-icon">🌟</div>
+            <h4>No Active Crisis Alerts</h4>
+            <p>All students are currently stable. Great work!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Emergency Resources (India) -->
+<div class="counselor-form-section">
+    <div class="counselor-form-header">
+        <h3>🚨 Emergency Resources (India)</h3>
+        <div class="counselor-header-actions">
+            <button class="counselor-btn counselor-btn-danger counselor-btn-sm" onclick="showEmergencyAlert()">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" clipRule="evenodd"/>
+                </svg>
+                Emergency Alert
+            </button>
+            <button class="counselor-btn counselor-btn-secondary counselor-btn-sm" onclick="printEmergencyCard()">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd"/>
+                </svg>
+                Print Card
+            </button>
+        </div>
+    </div>
+    
+    <div class="counselor-emergency-grid">
+        <!-- National Emergency Numbers -->
+        <div class="counselor-emergency-section">
+            <h4 class="counselor-emergency-title">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                </svg>
+                National Emergency
+            </h4>
+            <div class="counselor-emergency-cards">
+                <div class="counselor-emergency-card counselor-emergency-critical">
+                    <div class="counselor-emergency-icon">🚨</div>
+                    <div class="counselor-emergency-info">
+                        <h5>Police Emergency</h5>
+                        <p class="counselor-emergency-number">100</p>
+                        <p class="counselor-emergency-desc">Immediate police assistance</p>
+                    </div>
+                    <button class="counselor-btn-icon counselor-btn-icon-danger" onclick="callEmergency('100')" title="Call Now">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="counselor-emergency-card counselor-emergency-critical">
+                    <div class="counselor-emergency-icon">🚑</div>
+                    <div class="counselor-emergency-info">
+                        <h5>Medical Emergency</h5>
+                        <p class="counselor-emergency-number">102</p>
+                        <p class="counselor-emergency-desc">Ambulance services</p>
+                    </div>
+                    <button class="counselor-btn-icon counselor-btn-icon-danger" onclick="callEmergency('102')" title="Call Now">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mental Health Crisis Lines -->
+        <div class="counselor-emergency-section">
+            <h4 class="counselor-emergency-title">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clipRule="evenodd"/>
+                </svg>
+                Mental Health Crisis
+            </h4>
+            <div class="counselor-emergency-cards">
+                <div class="counselor-emergency-card counselor-emergency-mental">
+                    <div class="counselor-emergency-icon">🧠</div>
+                    <div class="counselor-emergency-info">
+                        <h5>KIRAN Mental Health</h5>
+                        <p class="counselor-emergency-number">1800-599-0019</p>
+                        <p class="counselor-emergency-desc">24/7 Mental Health Support</p>
+                    </div>
+                    <button class="counselor-btn-icon counselor-btn-icon-warning" onclick="callEmergency('18005990019')" title="Call Now">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="counselor-emergency-card counselor-emergency-mental">
+                    <div class="counselor-emergency-icon">💭</div>
+                    <div class="counselor-emergency-info">
+                        <h5>Vandrevala Foundation</h5>
+                        <p class="counselor-emergency-number">9999-666-555</p>
+                        <p class="counselor-emergency-desc">24x7 Suicide Prevention</p>
+                    </div>
+                    <button class="counselor-btn-icon counselor-btn-icon-warning" onclick="callEmergency('9999666555')" title="Call Now">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Specialized Support -->
+        <div class="counselor-emergency-section">
+            <h4 class="counselor-emergency-title">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                </svg>
+                Specialized Support
+            </h4>
+            <div class="counselor-emergency-cards">
+                <div class="counselor-emergency-card counselor-emergency-support">
+                    <div class="counselor-emergency-icon">👥</div>
+                    <div class="counselor-emergency-info">
+                        <h5>Sneha India</h5>
+                        <p class="counselor-emergency-number">044-24640050</p>
+                        <p class="counselor-emergency-desc">Emotional Support & Counseling</p>
+                    </div>
+                    <button class="counselor-btn-icon counselor-btn-icon-info" onclick="callEmergency('04424640050')" title="Call Now">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="counselor-emergency-card counselor-emergency-support">
+                    <div class="counselor-emergency-icon">🤝</div>
+                    <div class="counselor-emergency-info">
+                        <h5>Samaritans Mumbai</h5>
+                        <p class="counselor-emergency-number">022-32972828</p>
+                        <p class="counselor-emergency-desc">Crisis Intervention</p>
+                    </div>
+                    <button class="counselor-btn-icon counselor-btn-icon-info" onclick="callEmergency('02232972828')" title="Call Now">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="counselor-emergency-card counselor-emergency-support">
+                    <div class="counselor-emergency-icon">👤</div>
+                    <div class="counselor-emergency-info">
+                        <h5>Mann Mela</h5>
+                        <p class="counselor-emergency-number">08049914614</p>
+                        <p class="counselor-emergency-desc">Youth Mental Health</p>
+                    </div>
+                    <button class="counselor-btn-icon counselor-btn-icon-info" onclick="callEmergency('08049914614')" title="Call Now">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Online Resources -->
+        <div class="counselor-emergency-section counselor-emergency-section-full">
+            <h4 class="counselor-emergency-title">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.559-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.559.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clipRule="evenodd"/>
+                </svg>
+                Online Mental Health Resources
+            </h4>
+            <div class="counselor-online-resources">
+                <div class="counselor-resource-item">
+                    <div class="counselor-resource-icon">🌐</div>
+                    <div class="counselor-resource-info">
+                        <h5>National Institute of Mental Health (NIMHANS)</h5>
+                        <p>nimhans.ac.in - Professional mental health resources</p>
+                    </div>
+                    <button class="counselor-btn counselor-btn-sm counselor-btn-secondary" onclick="openResource('https://nimhans.ac.in')">Visit</button>
+                </div>
+                
+                <div class="counselor-resource-item">
+                    <div class="counselor-resource-icon">💬</div>
+                    <div class="counselor-resource-info">
+                        <h5>YourDOST</h5>
+                        <p>yourdost.com - Online counseling platform for students</p>
+                    </div>
+                    <button class="counselor-btn counselor-btn-sm counselor-btn-secondary" onclick="openResource('https://yourdost.com')">Visit</button>
+                </div>
+                
+                <div class="counselor-resource-item">
+                    <div class="counselor-resource-icon">🧘</div>
+                    <div class="counselor-resource-info">
+                        <h5>Mpower Minds</h5>
+                        <p>mpowerminds.com - Mental health awareness and support</p>
+                    </div>
+                    <button class="counselor-btn counselor-btn-sm counselor-btn-secondary" onclick="openResource('https://mpowerminds.com')">Visit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Emergency Instructions -->
+    <div class="counselor-alert counselor-alert-danger counselor-mb-4">
+        <div class="counselor-flex counselor-items-center">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20" class="counselor-mr-3">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" clipRule="evenodd"/>
+            </svg>
+            <div>
+                <strong>Emergency Protocol:</strong> For immediate danger or suicidal thoughts, call 100 (Police) or 102 (Medical Emergency) first. Then contact KIRAN Mental Health Helpline at 1800-599-0019 for professional mental health crisis support.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Crisis Statistics -->
+<div class="counselor-form-section">
+    <h3>📊 Crisis Management Statistics</h3>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_alerts|default:"3" }}</div>
+            <div class="stat-label">Total Alerts This Month</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ resolved_alerts|default:"15" }}</div>
+            <div class="stat-label">Successfully Resolved</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ average_response_time|default:"4.2" }} min</div>
+            <div class="stat-label">Avg Response Time</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ high_risk_students|default:"2" }}</div>
+            <div class="stat-label">High Risk Students</div>
+        </div>
+    </div>
+</div>
+
+<!-- Reports Section -->
+<div class="counselor-form-section">
+    <h3>📈 Reports & Analytics</h3>
+    
+    <!-- Report Generation -->
+    <div class="report-generation">
+        <h4>Generate Reports</h4>
+        <div class="form-row">
+            <label for="report_type">Report Type</label>
+            <select id="report_type" name="report_type">
+                <option value="crisis_summary">Crisis Management Summary</option>
+                <option value="student_progress">Student Progress Report</option>
+                <option value="session_analytics">Session Analytics</option>
+                <option value="monthly_overview">Monthly Overview</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="date_range">Date Range</label>
+            <select id="date_range" name="date_range">
+                <option value="last_week">Last Week</option>
+                <option value="last_month">Last Month</option>
+                <option value="last_quarter">Last Quarter</option>
+                <option value="custom">Custom Range</option>
+            </select>
+        </div>
+        <button type="button" onclick="generateReport()" style="background: linear-gradient(135deg, #8ee0fe 0%, #ffe9b4 100%);">
+            📄 Generate Report
+        </button>
+    </div>
+    
+    <!-- Recent Reports -->
+    <div class="recent-reports">
+        <h4>Recent Reports</h4>
+        <div class="reports-list">
+            <div class="report-item">
+                <div class="report-info">
+                    <h5>Crisis Management Summary - September 2025</h5>
+                    <p>Generated on {{ "now"|date:"M d, Y" }}</p>
+                </div>
+                <button class="btn-download">📥 Download</button>
+            </div>
+            <div class="report-item">
+                <div class="report-info">
+                    <h5>Student Progress Report - August 2025</h5>
+                    <p>Generated on {{ "now"|date:"M d, Y" }}</p>
+                </div>
+                <button class="btn-download">📥 Download</button>
+            </div>
+            <div class="report-item">
+                <div class="report-info">
+                    <h5>Session Analytics - Q3 2025</h5>
+                    <p>Generated on {{ "now"|date:"M d, Y" }}</p>
+                </div>
+                <button class="btn-download">📥 Download</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Performance Metrics -->
+<div class="counselor-form-section">
+    <h3>🎯 Performance Metrics</h3>
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <h4>Crisis Response Rate</h4>
+            <div class="metric-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 95%"></div>
+                </div>
+                <span>95%</span>
+            </div>
+        </div>
+        <div class="metric-card">
+            <h4>Student Satisfaction</h4>
+            <div class="metric-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 88%"></div>
+                </div>
+                <span>4.4/5.0</span>
+            </div>
+        </div>
+        <div class="metric-card">
+            <h4>Session Completion Rate</h4>
+            <div class="metric-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92%"></div>
+                </div>
+                <span>92%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional CSS for Crisis & Reports -->
+<style>
+.crisis-alerts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.crisis-alert-card {
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border-left: 4px solid;
+}
+
+.crisis-alert-card.high {
+    background: linear-gradient(135deg, rgba(240, 146, 146, 0.1) 0%, rgba(252, 198, 129, 0.1) 100%);
+    border-left-color: #f09292;
+}
+
+.crisis-alert-card.medium {
+    background: linear-gradient(135deg, rgba(252, 198, 129, 0.1) 0%, rgba(255, 233, 180, 0.1) 100%);
+    border-left-color: #fcc681;
+}
+
+.crisis-alert-card.low {
+    background: linear-gradient(135deg, rgba(142, 224, 254, 0.1) 0%, rgba(255, 233, 180, 0.1) 100%);
+    border-left-color: #8ee0fe;
+}
+
+.crisis-alert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.crisis-alert-severity {
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    color: #787bda;
+}
+
+.crisis-alert-time {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.crisis-alert-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.btn-respond {
+    background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%);
+}
+
+.btn-escalate {
+    background: linear-gradient(135deg, #fcc681 0%, #f09292 100%);
+}
+
+.btn-resolve {
+    background: linear-gradient(135deg, #8ee0fe 0%, #ffe9b4 100%);
+}
+
+.no-alerts {
+    text-align: center;
+    padding: 3rem;
+    color: #64748b;
+}
+
+.no-alerts-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.emergency-resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.resource-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.resource-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.resource-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.resource-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #787bda;
+    margin: 0.5rem 0;
+}
+
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.report-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-download {
+    background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.metric-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.metric-progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 0.5rem;
+    background: #e2e8f0;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%);
+    transition: width 0.3s ease;
+}
+
+/* Emergency Resources Styling */
+.counselor-emergency-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.counselor-emergency-section {
+    background: linear-gradient(135deg, rgba(120, 123, 218, 0.05) 0%, rgba(142, 224, 254, 0.05) 100%);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(120, 123, 218, 0.1);
+}
+
+.counselor-emergency-section-full {
+    grid-column: 1 / -1;
+}
+
+.counselor-emergency-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #787bda;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(120, 123, 218, 0.1);
+}
+
+.counselor-emergency-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.counselor-emergency-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.counselor-emergency-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%);
+}
+
+.counselor-emergency-card.counselor-emergency-critical::before {
+    background: linear-gradient(135deg, #f09292 0%, #fcc681 100%);
+}
+
+.counselor-emergency-card.counselor-emergency-mental::before {
+    background: linear-gradient(135deg, #fcc681 0%, #ffe9b4 100%);
+}
+
+.counselor-emergency-card.counselor-emergency-support::before {
+    background: linear-gradient(135deg, #8ee0fe 0%, #ffe9b4 100%);
+}
+
+.counselor-emergency-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(120, 123, 218, 0.15);
+    border-color: #787bda;
+}
+
+.counselor-emergency-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.counselor-emergency-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(120, 123, 218, 0.1) 0%, rgba(142, 224, 254, 0.1) 100%);
+    flex-shrink: 0;
+}
+
+.counselor-emergency-critical .counselor-emergency-icon {
+    background: linear-gradient(135deg, rgba(240, 146, 146, 0.15) 0%, rgba(252, 198, 129, 0.15) 100%);
+}
+
+.counselor-emergency-mental .counselor-emergency-icon {
+    background: linear-gradient(135deg, rgba(252, 198, 129, 0.15) 0%, rgba(255, 233, 180, 0.15) 100%);
+}
+
+.counselor-emergency-support .counselor-emergency-icon {
+    background: linear-gradient(135deg, rgba(142, 224, 254, 0.15) 0%, rgba(255, 233, 180, 0.15) 100%);
+}
+
+.counselor-emergency-info {
+    flex: 1;
+}
+
+.counselor-emergency-info h5 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.25rem 0;
+}
+
+.counselor-emergency-number {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #787bda;
+    margin: 0.25rem 0;
+    letter-spacing: 0.5px;
+}
+
+.counselor-emergency-critical .counselor-emergency-number {
+    color: #f09292;
+}
+
+.counselor-emergency-mental .counselor-emergency-number {
+    color: #fcc681;
+}
+
+.counselor-emergency-desc {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.counselor-btn-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.counselor-btn-icon-danger {
+    background: linear-gradient(135deg, #f09292 0%, #fcc681 100%);
+    color: white;
+}
+
+.counselor-btn-icon-warning {
+    background: linear-gradient(135deg, #fcc681 0%, #ffe9b4 100%);
+    color: #1e293b;
+}
+
+.counselor-btn-icon-info {
+    background: linear-gradient(135deg, #8ee0fe 0%, #787bda 100%);
+    color: white;
+}
+
+.counselor-btn-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Online Resources Styling */
+.counselor-online-resources {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.counselor-resource-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: white;
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.counselor-resource-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(120, 123, 218, 0.1);
+    border-color: #787bda;
+}
+
+.counselor-resource-icon {
+    font-size: 1.5rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(120, 123, 218, 0.1) 0%, rgba(142, 224, 254, 0.1) 100%);
+    flex-shrink: 0;
+}
+
+.counselor-resource-info {
+    flex: 1;
+}
+
+.counselor-resource-info h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.25rem 0;
+}
+
+.counselor-resource-info p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Alert Styling */
+.counselor-alert {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.counselor-alert-danger {
+    background: linear-gradient(135deg, rgba(240, 146, 146, 0.1) 0%, rgba(252, 198, 129, 0.1) 100%);
+    border: 1px solid rgba(240, 146, 146, 0.2);
+    color: #dc2626;
+}
+
+.counselor-flex {
+    display: flex;
+}
+
+.counselor-items-center {
+    align-items: center;
+}
+
+.counselor-mr-3 {
+    margin-right: 0.75rem;
+}
+
+.counselor-mb-4 {
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.counselor-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.counselor-btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.counselor-btn-danger {
+    background: linear-gradient(135deg, #f09292 0%, #fcc681 100%);
+    color: white;
+}
+
+.counselor-btn-secondary {
+    background: linear-gradient(135deg, #8ee0fe 0%, #ffe9b4 100%);
+    color: #1e293b;
+}
+
+.counselor-btn-warning {
+    background: linear-gradient(135deg, #fcc681 0%, #ffe9b4 100%);
+    color: #1e293b;
+}
+
+.counselor-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Header Actions */
+.counselor-header-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Emergency Modal Styling */
+.counselor-emergency-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.counselor-emergency-modal-content {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    animation: slideUp 0.3s ease;
+}
+
+.counselor-emergency-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.counselor-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #64748b;
+    padding: 0.25rem;
+    line-height: 1;
+}
+
+.counselor-emergency-quick-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+/* Notifications */
+.counselor-notification {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    color: white;
+    z-index: 1001;
+    animation: slideInRight 0.3s ease;
+    min-width: 300px;
+}
+
+.counselor-notification-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.counselor-notification-info {
+    background: linear-gradient(135deg, #787bda 0%, #8ee0fe 100%);
+}
+
+.counselor-notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    .counselor-emergency-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .counselor-online-resources {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .counselor-emergency-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .counselor-online-resources {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+</style>
+
+<!-- JavaScript for Crisis Management -->
+<script>
+function respondToCrisis(alertId) {
+    // Implement crisis response logic
+    alert('Crisis response initiated for alert #' + alertId);
+}
+
+function escalateCrisis(alertId) {
+    // Implement crisis escalation logic
+    alert('Crisis escalated for alert #' + alertId);
+}
+
+function resolveCrisis(alertId) {
+    // Implement crisis resolution logic
+    alert('Crisis marked as resolved for alert #' + alertId);
+}
+
+function generateReport() {
+    const reportType = document.getElementById('report_type').value;
+    const dateRange = document.getElementById('date_range').value;
+    
+    // Implement report generation logic
+    alert('Generating ' + reportType + ' for ' + dateRange);
+}
+
+// Emergency Resources Functions
+function callEmergency(number) {
+    if (confirm(`Call ${number}?\n\nThis will attempt to initiate a phone call to the emergency number.`)) {
+        // In a real application, this would integrate with device calling capabilities
+        window.open(`tel:${number}`, '_self');
+        showNotification(`Calling ${number}...`, 'info');
+    }
+}
+
+function showEmergencyAlert() {
+    const alertModal = document.createElement('div');
+    alertModal.className = 'counselor-emergency-modal';
+    alertModal.innerHTML = `
+        <div class="counselor-emergency-modal-content">
+            <div class="counselor-emergency-modal-header">
+                <h3>🚨 Emergency Alert Activated</h3>
+                <button onclick="closeEmergencyAlert()" class="counselor-modal-close">×</button>
+            </div>
+            <div class="counselor-emergency-modal-body">
+                <p><strong>IMMEDIATE ACTION REQUIRED:</strong></p>
+                <ul>
+                    <li>If student is in immediate danger: Call 100 (Police) or 102 (Medical)</li>
+                    <li>For mental health crisis: Call KIRAN 1800-599-0019</li>
+                    <li>Document all actions taken</li>
+                    <li>Notify institution administration</li>
+                </ul>
+                <div class="counselor-emergency-quick-actions">
+                    <button class="counselor-btn counselor-btn-danger" onclick="callEmergency('100')">Call 100 (Police)</button>
+                    <button class="counselor-btn counselor-btn-warning" onclick="callEmergency('18005990019')">Call KIRAN</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(alertModal);
+    
+    // Auto-close after 30 seconds
+    setTimeout(() => {
+        if (document.body.contains(alertModal)) {
+            alertModal.remove();
+        }
+    }, 30000);
+}
+
+function closeEmergencyAlert() {
+    const modal = document.querySelector('.counselor-emergency-modal');
+    if (modal) modal.remove();
+}
+
+function printEmergencyCard() {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Emergency Resources Card</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .emergency-card { border: 2px solid #ff0000; padding: 15px; margin: 10px 0; }
+                .number { font-size: 24px; font-weight: bold; color: #ff0000; }
+                .service { font-size: 18px; margin: 5px 0; }
+                .description { font-size: 14px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <h1>🚨 Emergency Mental Health Resources - India</h1>
+            <div class="emergency-card">
+                <div class="service">Police Emergency</div>
+                <div class="number">100</div>
+                <div class="description">Immediate police assistance</div>
+            </div>
+            <div class="emergency-card">
+                <div class="service">Medical Emergency</div>
+                <div class="number">102</div>
+                <div class="description">Ambulance services</div>
+            </div>
+            <div class="emergency-card">
+                <div class="service">KIRAN Mental Health</div>
+                <div class="number">1800-599-0019</div>
+                <div class="description">24/7 Mental Health Support</div>
+            </div>
+            <div class="emergency-card">
+                <div class="service">Vandrevala Foundation</div>
+                <div class="number">9999-666-555</div>
+                <div class="description">24x7 Suicide Prevention</div>
+            </div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+    showNotification('Emergency resource card prepared for printing', 'success');
+}
+
+function openResource(url) {
+    window.open(url, '_blank');
+    showNotification('Opening mental health resource...', 'info');
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `counselor-notification counselor-notification-${type}`;
+    notification.innerHTML = `
+        <div class="counselor-notification-content">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                ${type === 'success' ? 
+                '<path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>' :
+                type === 'info' ?
+                '<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>' :
+                '<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>'}
+            </svg>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+</script>
+{% endblock %}

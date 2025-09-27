@@ -1,0 +1,147 @@
+/* Simple AI Chatbot Styling */
+
+.chat-header {
+    background: #FFFFFF;
+    border: 1px solid #E5E9F2;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chat-title h2 {
+    margin: 0;
+    color: #1F2937;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.chat-title p {
+    margin: 4px 0 0 0;
+    color: #6B7280;
+    font-size: 0.9rem;
+}
+
+.ai-companions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.ai-companions label {
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.companion-btn {
+    background: #F8FAFC;
+    border: 1px solid #E5E9F2;
+    border-radius: 10px;
+    padding: 8px 14px;
+    color: #6B7280;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.companion-btn:hover {
+    background: #E5E9F2;
+    color: #374151;
+    text-decoration: none;
+}
+
+.companion-btn.active {
+    background: #7BA098;
+    color: white;
+    border-color: #7BA098;
+}
+
+.companion-btn i {
+    font-size: 0.85rem;
+}
+
+/* Chat Controls */
+.chat-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.control-btn {
+    background: #F8FAFC;
+    border: 1px solid #E5E9F2;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #6B7280;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+    background: #E5E9F2;
+    color: #374151;
+    text-decoration: none;
+}
+
+.control-btn.active {
+    background: #7BA098;
+    color: white;
+    border-color: #7BA098;
+}
+
+/* Privacy Toggle */
+.privacy-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #F8FAFC;
+    border: 1px solid #E5E9F2;
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+.privacy-toggle input {
+    margin: 0;
+}
+
+.privacy-toggle label {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6B7280;
+    cursor: pointer;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .chat-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+    
+    .ai-companions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .chat-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}

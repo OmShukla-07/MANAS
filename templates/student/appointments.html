@@ -1,0 +1,703 @@
+{% extends 'student/base_student.html' %}
+{% load static %}
+
+{% block title %}Appointments - MANAS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/appointments-unified.css' %}">
+{% endblock %}
+
+{% block header_title %}Appointment Booking{% endblock %}
+
+{% block content %}
+<!-- Professional Support Banner -->
+<div class="support-banner">
+    <div class="banner-icon">
+        <i class="fas fa-shield-alt"></i>
+    </div>
+    <span class="banner-text">Confidential Professional Support</span>
+</div>
+
+<!-- Communication Options -->
+<div class="communication-options">
+    <div class="option-card">
+        <div class="option-icon campus">
+            <i class="fas fa-user-tie"></i>
+        </div>
+        <span class="option-label">Campus Counselor</span>
+    </div>
+    <div class="option-card">
+        <div class="option-icon video">
+            <i class="fas fa-video"></i>
+        </div>
+        <span class="option-label">Video Call</span>
+    </div>
+    <div class="option-card">
+        <div class="option-icon phone">
+            <i class="fas fa-phone"></i>
+        </div>
+        <span class="option-label">Phone Call</span>
+    </div>
+    <div class="option-card">
+        <div class="option-icon text">
+            <i class="fas fa-comments"></i>
+        </div>
+        <span class="option-label">Text Chat</span>
+    </div>
+</div>
+
+<!-- Book Session Button -->
+<button class="book-session-btn" onclick="openBookingModal()">Book Confidential Session</button>
+
+<!-- Upcoming Appointments Section -->
+{% if upcoming_appointments %}
+<div class="appointments-section">
+    <h3 class="section-title">Your Upcoming Appointments</h3>
+    <div class="appointments-list">
+        {% for appointment in upcoming_appointments %}
+        <div class="appointment-card">
+            <div class="appointment-info">
+                <div class="appointment-date">
+                    <div class="date-day">{{ appointment.scheduled_date|date:"d" }}</div>
+                    <div class="date-month">{{ appointment.scheduled_date|date:"M" }}</div>
+                </div>
+                <div class="appointment-details">
+                    <h4>{{ appointment.counselor.get_full_name }}</h4>
+                    <p class="appointment-type">{{ appointment.appointment_type.name }}</p>
+                    <p class="appointment-time">{{ appointment.scheduled_time|time:"H:i" }} ({{ appointment.duration_minutes }} min)</p>
+                    <span class="appointment-status status-{{ appointment.status }}">{{ appointment.get_status_display }}</span>
+                </div>
+            </div>
+            <div class="appointment-actions">
+                <button class="action-btn" onclick="viewAppointment('{{ appointment.id }}')">View</button>
+                {% if appointment.can_cancel %}
+                <button class="action-btn cancel" onclick="cancelAppointment('{{ appointment.id }}')">Cancel</button>
+                {% endif %}
+                <button class="action-btn" onclick="rescheduleAppointment('{{ appointment.id }}')">Reschedule</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Available Counselors -->
+<div class="counselors-section">
+    <h3 class="section-title">Available Counselors</h3>
+    
+    <div class="counselor-list">
+        {% for counselor in counselors %}
+        <div class="counselor-card" data-counselor-id="{{ counselor.id }}">
+            <div class="counselor-info">
+                <div class="counselor-avatar">
+                    <span class="avatar-text">{{ counselor.first_name.0 }}{{ counselor.last_name.0 }}</span>
+                </div>
+                <div class="counselor-details">
+                    <h4 class="counselor-name">{{ counselor.get_full_name }}</h4>
+                    <p class="counselor-specialty">{{ counselor.profile.specialization|default:"General Counseling" }}</p>
+                    <div class="counselor-rating">
+                        <span class="rating-star">★</span>
+                        <span class="rating-value">{{ counselor.profile.rating|default:"4.8" }}</span>
+                        <span class="rating-reviews">• {{ counselor.profile.experience_years|default:"5" }} years</span>
+                    </div>
+                    <div class="counselor-languages">
+                        <span class="label">Languages:</span>
+                        <span class="value">{{ counselor.profile.languages|default:"English, Hindi" }}</span>
+                    </div>
+                    <div class="counselor-approach">
+                        <span class="label">Approach:</span>
+                        <span class="value">{{ counselor.profile.therapy_approach|default:"Cognitive Behavioral Therapy" }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="counselor-actions">
+                <div class="availability-badge">Check Availability</div>
+                <div class="action-buttons">
+                    <button class="book-btn" onclick="bookAppointment({{ counselor.id }}, '{{ counselor.get_full_name }}')">Book Session</button>
+                    <button class="profile-btn" onclick="viewProfile({{ counselor.id }})">View Profile</button>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-counselors">
+            <p>No counselors available at the moment. Please check back later.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Past Appointments Section -->
+{% if past_appointments %}
+<div class="appointments-section">
+    <h3 class="section-title">Recent Sessions</h3>
+    <div class="appointments-list">
+        {% for appointment in past_appointments %}
+        <div class="appointment-card past">
+            <div class="appointment-info">
+                <div class="appointment-date">
+                    <div class="date-day">{{ appointment.scheduled_date|date:"d" }}</div>
+                    <div class="date-month">{{ appointment.scheduled_date|date:"M" }}</div>
+                </div>
+                <div class="appointment-details">
+                    <h4>{{ appointment.counselor.get_full_name }}</h4>
+                    <p class="appointment-type">{{ appointment.appointment_type.name }}</p>
+                    <p class="appointment-time">{{ appointment.scheduled_time|time:"H:i" }} ({{ appointment.duration_minutes }} min)</p>
+                    <span class="appointment-status status-{{ appointment.status }}">{{ appointment.get_status_display }}</span>
+                </div>
+            </div>
+            <div class="appointment-actions">
+                <button class="action-btn" onclick="viewAppointment('{{ appointment.id }}')">View Notes</button>
+                {% if appointment.status == 'completed' and not appointment.student_rating %}
+                <button class="action-btn" onclick="rateSession('{{ appointment.id }}')">Rate Session</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+                    <button class="profile-btn" onclick="viewProfile(3)">View Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeBookingModal()">&times;</span>
+        <h2>Book Appointment</h2>
+        <form id="appointmentForm" onsubmit="submitAppointment(event)">
+            <div class="form-group">
+                <label for="counselorSelect">Select Counselor:</label>
+                <select id="counselorSelect" required>
+                    <option value="">Choose a counselor...</option>
+                    <option value="1">Dr. Priya Sharma - Anxiety & Depression</option>
+                    <option value="2">Counselor Raj Kumar - Academic Stress</option>
+                    <option value="3">Dr. Sarah Wilson - Relationship & Family</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="appointmentDate">Preferred Date:</label>
+                <input type="date" id="appointmentDate" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="appointmentTime">Preferred Time:</label>
+                <select id="appointmentTime" required>
+                    <option value="">Select time...</option>
+                    <option value="09:00">9:00 AM</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option>
+                    <option value="12:00">12:00 PM</option>
+                    <option value="14:00">2:00 PM</option>
+                    <option value="15:00">3:00 PM</option>
+                    <option value="16:00">4:00 PM</option>
+                    <option value="17:00">5:00 PM</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="sessionType">Session Type:</label>
+                <select id="sessionType" required>
+                    <option value="individual">Individual Session</option>
+                    <option value="group">Group Session</option>
+                    <option value="emergency">Emergency Consultation</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="reason">Reason for Appointment (Optional):</label>
+                <textarea id="reason" placeholder="Brief description of what you'd like to discuss..."></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" onclick="closeBookingModal()">Cancel</button>
+                <button type="submit" class="submit-btn">Book Appointment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- My Appointments Section -->
+<div class="my-appointments-section">
+    <h3 class="section-title">My Appointments</h3>
+    <div id="appointmentsList" class="appointments-list">
+        <!-- Appointments will be loaded here -->
+        <div class="no-appointments">
+            <i class="fas fa-calendar-check"></i>
+            <p>No appointments scheduled yet.</p>
+            <button class="book-now-btn" onclick="openBookingModal()">Book Your First Session</button>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeBookingModal()">&times;</span>
+        <h2>Book Counseling Session</h2>
+        
+        <form id="appointmentForm" onsubmit="submitAppointment(event)">
+            <div class="form-group">
+                <label for="counselorSelect">Select Counselor:</label>
+                <select id="counselorSelect" name="counselor_id" required>
+                    <option value="">Choose a counselor...</option>
+                    {% for counselor in counselors %}
+                    <option value="{{ counselor.id }}">{{ counselor.get_full_name }} - {{ counselor.profile.specialization|default:"General Counseling" }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="appointmentTypeSelect">Appointment Type:</label>
+                <select id="appointmentTypeSelect" name="appointment_type_id" required>
+                    <option value="">Choose appointment type...</option>
+                    {% for apt_type in appointment_types %}
+                    <option value="{{ apt_type.id }}">{{ apt_type.name }} ({{ apt_type.duration_minutes }} min)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="appointmentDate">Preferred Date:</label>
+                <input type="date" id="appointmentDate" name="scheduled_date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="appointmentTime">Available Times:</label>
+                <select id="appointmentTime" name="scheduled_time" required>
+                    <option value="">Select date first...</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="sessionType">Session Type:</label>
+                <select id="sessionType" name="meeting_type" required>
+                    {% for choice in meeting_types %}
+                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="reason">Reason for Session:</label>
+                <textarea id="reason" name="reason" rows="3" placeholder="Brief description of what you'd like to discuss..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="studentNotes">Additional Notes (Optional):</label>
+                <textarea id="studentNotes" name="student_notes" rows="2" placeholder="Any additional information you'd like the counselor to know..."></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" onclick="closeBookingModal()" class="btn-secondary">Cancel</button>
+                <button type="submit" class="btn-primary">Book Appointment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Modal functions
+    function openBookingModal() {
+        document.getElementById('bookingModal').style.display = 'block';
+        
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('appointmentDate').setAttribute('min', today);
+        
+        // Add change listener for date selection
+        document.getElementById('appointmentDate').addEventListener('change', loadAvailableSlots);
+        document.getElementById('counselorSelect').addEventListener('change', loadAvailableSlots);
+    }
+
+    function closeBookingModal() {
+        document.getElementById('bookingModal').style.display = 'none';
+        document.getElementById('appointmentForm').reset();
+        document.getElementById('appointmentTime').innerHTML = '<option value="">Select date first...</option>';
+    }
+
+    // Load available time slots when counselor and date are selected
+    async function loadAvailableSlots() {
+        const counselorId = document.getElementById('counselorSelect').value;
+        const selectedDate = document.getElementById('appointmentDate').value;
+        const timeSelect = document.getElementById('appointmentTime');
+        
+        if (!counselorId || !selectedDate) {
+            timeSelect.innerHTML = '<option value="">Select counselor and date first...</option>';
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/appointments/api/available-slots/?counselor_id=${counselorId}&date=${selectedDate}`);
+            const data = await response.json();
+            
+            if (data.slots && data.slots.length > 0) {
+                timeSelect.innerHTML = '<option value="">Select a time...</option>' + 
+                    data.slots.map(slot => 
+                        `<option value="${slot.time}">${slot.display}</option>`
+                    ).join('');
+            } else {
+                timeSelect.innerHTML = '<option value="">No available slots for this date</option>';
+            }
+        } catch (error) {
+            console.error('Error loading available slots:', error);
+            timeSelect.innerHTML = '<option value="">Error loading slots</option>';
+        }
+    }
+
+    // Quick booking functions
+    function bookAppointment(counselorId, counselorName) {
+        document.getElementById('counselorSelect').value = counselorId;
+        openBookingModal();
+    }
+
+    function viewProfile(counselorId) {
+        alert('Counselor profile feature coming soon!');
+    }
+
+    function viewAppointment(appointmentId) {
+        window.location.href = `/appointments/detail/${appointmentId}/`;
+    }
+
+    function rescheduleAppointment(appointmentId) {
+        // Implementation for rescheduling
+        alert('Reschedule feature coming soon!');
+    }
+
+    async function cancelAppointment(appointmentId) {
+        if (!confirm('Are you sure you want to cancel this appointment?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/appointments/api/cancel/${appointmentId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showNotification('Appointment cancelled successfully', 'success');
+                location.reload(); // Refresh page to show updated appointments
+            } else {
+                showNotification(result.error || 'Failed to cancel appointment', 'error');
+            }
+        } catch (error) {
+            console.error('Error cancelling appointment:', error);
+            showNotification('An error occurred. Please try again.', 'error');
+        }
+    }
+
+    function rateSession(appointmentId) {
+        alert('Session rating feature coming soon!');
+    }
+
+    // Form submission
+    async function submitAppointment(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(document.getElementById('appointmentForm'));
+        
+        try {
+            const response = await fetch('/appointments/book/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                }
+            });
+
+            if (response.ok) {
+                showNotification('Appointment booked successfully!', 'success');
+                closeBookingModal();
+                setTimeout(() => location.reload(), 1500); // Refresh page after 1.5 seconds
+            } else {
+                const result = await response.text();
+                showNotification('Failed to book appointment. Please try again.', 'error');
+            }
+        } catch (error) {
+            console.error('Error booking appointment:', error);
+            showNotification('An error occurred. Please try again.', 'error');
+        }
+    }
+
+    // Notification function
+    function showNotification(message, type) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        `;
+
+        // Add to page
+        document.body.appendChild(notification);
+
+        // Show notification
+        setTimeout(() => notification.classList.add('show'), 100);
+
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    // Utility function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target === modal) {
+                closeBookingModal();
+            }
+        }
+    });
+</script>
+
+<style>
+/* Modal Styles */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #7BA098;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #598980;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    z-index: 10000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    max-width: 300px;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background: #28a745;
+}
+
+.notification.error {
+    background: #dc3545;
+}
+
+.notification.info {
+    background: #17a2b8;
+}
+
+.notification i {
+    margin-right: 10px;
+}
+
+/* Appointment card status styles */
+.appointment-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background: #ffc107;
+    color: #000;
+}
+
+.status-confirmed {
+    background: #28a745;
+    color: white;
+}
+
+.status-completed {
+    background: #007bff;
+    color: white;
+}
+
+.status-cancelled_student,
+.status-cancelled_counselor {
+    background: #dc3545;
+    color: white;
+}
+
+.status-no_show {
+    background: #6c757d;
+    color: white;
+}
+
+/* Appointment actions */
+.appointment-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border: 1px solid #7BA098;
+    background: white;
+    color: #7BA098;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: #7BA098;
+    color: white;
+}
+
+.action-btn.cancel {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.action-btn.cancel:hover {
+    background: #dc3545;
+    color: white;
+}
+
+/* Past appointment styling */
+.appointment-card.past {
+    opacity: 0.8;
+    background: #f8f9fa;
+}
+</style>
+
+<!-- CSRF Token for Django -->
+{% csrf_token %}
+{% endblock %}

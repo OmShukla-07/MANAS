@@ -1,0 +1,61 @@
+# Core Django packages
+Django==5.0.7
+djangorestframework==3.15.2
+django-cors-headers==4.3.1
+
+# Authentication & Security
+djangorestframework-simplejwt==5.3.0
+django-allauth==0.57.0
+
+# Database
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
+
+# Real-time WebSocket
+channels==4.0.0
+channels-redis==4.2.0
+
+# Caching & Session Storage
+redis==5.0.1
+django-redis==5.4.0
+
+# Background Tasks
+celery==5.3.4
+django-celery-beat==2.5.0
+
+# AI Integration
+google-generativeai==0.3.2
+googletrans==4.0.0rc1
+deep-translator==1.11.4
+openai==1.3.7
+
+# Image handling
+Pillow==10.1.0
+
+# Environment configuration
+python-decouple==3.8
+python-dotenv==1.0.0
+
+# Production server
+gunicorn==21.2.0
+whitenoise==6.6.0
+
+# Development tools
+django-extensions==3.2.3
+ipython==8.18.1
+
+# Data validation
+pydantic==2.5.1
+
+# Date/Time utilities
+python-dateutil==2.8.2
+
+# HTTP requests
+requests==2.31.0
+
+# JSON Web Tokens
+PyJWT==2.8.0
+
+# ASGI server for production
+uvicorn==0.24.0
+daphne==4.0.0

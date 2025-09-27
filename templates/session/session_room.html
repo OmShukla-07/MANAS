@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Room - MANAS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .session-container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .session-sidebar {
+            width: 300px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .session-header {
+            background: linear-gradient(135deg, #8ee0fe 0%, #ffe9b4 100%);
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(142, 224, 254, 0.2);
+        }
+        
+        .session-title {
+            color: #0284c7;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .session-subtitle {
+            color: #0369a1;
+            font-size: 0.875rem;
+        }
+        
+        .session-info {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .info-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        .session-status {
+            padding: 1rem 1.5rem;
+            text-align: center;
+        }
+        
+        .status-indicator {
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .session-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        
+        .chat-header {
+            background: #f9fafb;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-participant {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .participant-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .participant-info h4 {
+            color: #1f2937;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .participant-info p {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .session-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+            background: #e5e7eb;
+        }
+        
+        .action-btn.primary {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .action-btn.primary:hover {
+            background: #2563eb;
+        }
+        
+        .action-btn.danger {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+        
+        .action-btn.danger:hover {
+            background: #dc2626;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .message.sent {
+            justify-content: flex-end;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+        
+        .message.received .message-bubble {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: #1f2937;
+        }
+        
+        .message.sent .message-bubble {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 0.25rem;
+            text-align: center;
+        }
+        
+        .message.sent .message-time {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .chat-input {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+        
+        .input-group {
+            flex: 1;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 1.5rem;
+            font-size: 0.875rem;
+            resize: none;
+            min-height: 40px;
+            max-height: 120px;
+        }
+        
+        .message-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .send-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .send-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        
+        .send-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .typing-indicator {
+            color: #6b7280;
+            font-style: italic;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            display: none;
+        }
+        
+        .session-timer {
+            color: #059669;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .session-container {
+                flex-direction: column;
+            }
+            
+            .session-sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .session-info {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="session-container">
+        <!-- Session Sidebar -->
+        <div class="session-sidebar">
+            <div class="session-header">
+                <div class="session-title">
+                    💬 Session Room
+                </div>
+                <div class="session-subtitle">One-on-one counseling session</div>
+            </div>
+            
+            <div class="session-info">
+                <div class="info-item">
+                    <span class="info-label">Session ID:</span>
+                    <span class="info-value">#{{ appointment.id }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value">{{ appointment.scheduled_date|date:"M d, Y" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Time:</span>
+                    <span class="info-value">{{ appointment.scheduled_time|time:"g:i A" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Duration:</span>
+                    <span class="info-value">{{ appointment.duration_minutes|default:"60" }} min</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Type:</span>
+                    <span class="info-value">{{ appointment.get_meeting_type_display|default:"Text Chat" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value">{{ appointment.status|capfirst }}</span>
+                </div>
+            </div>
+            
+            <div class="session-status">
+                <div class="status-indicator">
+                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    </svg>
+                    Connected
+                </div>
+                <div class="session-timer" id="sessionTimer">00:00</div>
+            </div>
+        </div>
+        
+        <!-- Main Chat Area -->
+        <div class="session-main">
+            <div class="chat-header">
+                <div class="chat-participant">
+                    <div class="participant-avatar">
+                        {{ other_user.first_name.0|default:"U" }}{{ other_user.last_name.0|default:"" }}
+                    </div>
+                    <div class="participant-info">
+                        <h4>{{ other_user.get_full_name }}</h4>
+                        <p>{{ other_user.role|capfirst }}</p>
+                    </div>
+                </div>
+                
+                <div class="session-actions">
+                    {% if appointment.meeting_type == 'video_call' %}
+                    <button class="action-btn primary" onclick="startVideoCall()">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                        </svg>
+                        Video Call
+                    </button>
+                    {% elif appointment.meeting_type == 'voice_call' %}
+                    <button class="action-btn primary" onclick="startVoiceCall()">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                        Voice Call
+                    </button>
+                    {% endif %}
+                    
+                    <button class="action-btn" onclick="addNote()">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.828-2.828z"/>
+                        </svg>
+                        Notes
+                    </button>
+                    
+                    <button class="action-btn danger" onclick="endSession()">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM8 8a1 1 0 000 2h4a1 1 0 100-2H8z" clipRule="evenodd"/>
+                        </svg>
+                        End Session
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome Message -->
+                <div class="message received">
+                    <div class="message-bubble">
+                        <strong>Welcome to your session!</strong><br>
+                        This is a secure, private chat between {{ appointment.student.get_full_name }} and {{ appointment.counselor.get_full_name|default:"your counselor" }}.
+                        <div class="message-time">{{ appointment.scheduled_time|time:"g:i A" }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                {{ other_user.first_name }} is typing...
+            </div>
+            
+            <div class="chat-input">
+                <div class="input-group">
+                    <textarea 
+                        id="messageInput" 
+                        class="message-input" 
+                        placeholder="Type your message here..." 
+                        rows="1"
+                        onkeydown="handleKeyDown(event)"
+                        oninput="handleTyping()"
+                    ></textarea>
+                    <button class="send-btn" onclick="sendMessage()" id="sendButton">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                        </svg>
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const typingIndicator = document.getElementById('typingIndicator');
+        let sessionStartTime = new Date();
+        let sessionTimer = null;
+        let typingTimer = null;
+        let isTyping = false;
+
+        // Initialize session
+        document.addEventListener('DOMContentLoaded', function() {
+            startSessionTimer();
+            messageInput.focus();
+            
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
+        });
+
+        function startSessionTimer() {
+            sessionTimer = setInterval(() => {
+                const elapsed = Math.floor((new Date() - sessionStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('sessionTimer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function handleTyping() {
+            if (!isTyping) {
+                isTyping = true;
+                // Here you would send a typing indicator to the other user
+                // via WebSocket or similar real-time communication
+            }
+
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                isTyping = false;
+                // Stop typing indicator
+            }, 1000);
+        }
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Create message element
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message sent';
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    ${escapeHtml(message)}
+                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
+                </div>
+            `;
+
+            // Add to chat
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Clear input
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+
+            // Here you would send the message via WebSocket or AJAX to the backend
+            // For demo purposes, we'll simulate a response
+            setTimeout(() => {
+                simulateResponse();
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function simulateResponse() {
+            const responses = [
+                "I understand your concerns. Let's work through this together.",
+                "That's a great insight. How does that make you feel?",
+                "Thank you for sharing that with me. Can you tell me more?",
+                "It sounds like you're dealing with a lot right now.",
+                "What strategies have you tried before for similar situations?",
+                "I'm here to support you through this process.",
+                "That's completely understandable. Many people feel this way.",
+            ];
+
+            const response = responses[Math.floor(Math.random() * responses.length)];
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message received';
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    ${response}
+                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
+                </div>
+            `;
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function startVideoCall() {
+            alert('Video call feature would integrate with services like Zoom, WebRTC, or Agora. Redirecting to video call interface...');
+        }
+
+        function startVoiceCall() {
+            alert('Voice call feature would integrate with Twilio, WebRTC, or similar. Initiating voice call...');
+        }
+
+        function addNote() {
+            const note = prompt('Add a session note:');
+            if (note) {
+                // Here you would save the note via AJAX
+                showNotification('Session note added successfully!', 'success');
+            }
+        }
+
+        function endSession() {
+            if (confirm('Are you sure you want to end this session?')) {
+                clearInterval(sessionTimer);
+                
+                // Here you would send an end session request to the backend
+                showNotification('Session ended successfully!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = "{% url 'core:counselor_dashboard' %}";
+                }, 2000);
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10001;
+                font-weight: 600;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Simulated real-time features
+        setInterval(() => {
+            if (Math.random() < 0.1) { // 10% chance every 5 seconds
+                typingIndicator.style.display = 'block';
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                }, 2000);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

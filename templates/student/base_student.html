@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MANAS - Student Dashboard{% endblock %}</title>
+    
+    <!-- Original Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/manas-framework.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard-style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation (Exact from Original) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="brain-icon">
+                        <img src="{% static 'images/images/icons/brain-icon.png' %}" alt="MANAS Brain Icon" class="brain-icon-img">
+                    </div>
+                    <span class="logo-text">MANAS</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item {% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}">
+                        <a href="{% url 'student_dashboard' %}" class="nav-link">
+                            <div class="nav-icon">
+                                <img src="{% static 'images/images/icons/dashboard-icon.png' %}" alt="Dashboard" class="dashboard-icon-img">
+                            </div>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.url_name == 'student_manas_ai' %}active{% endif %}">
+                        <a href="{% url 'student_manas_ai' %}" class="nav-link">
+                            <div class="nav-icon">
+                                <img src="{% static 'images/images/icons/manas-ai-icon.png' %}" alt="Manas AI" class="manas-ai-icon-img">
+                            </div>
+                            <span>Manas AI</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.url_name == 'student_appointments' %}active{% endif %}">
+                        <a href="{% url 'student_appointments' %}" class="nav-link">
+                            <div class="nav-icon">
+                                <img src="{% static 'images/images/icons/appointment-icon.png' %}" alt="Appointment" class="appointment-icon-img">
+                            </div>
+                            <span>Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.url_name == 'student_resources' %}active{% endif %}">
+                        <a href="{% url 'student_resources' %}" class="nav-link">
+                            <div class="nav-icon">
+                                <img src="{% static 'images/images/icons/resources-icon.png' %}" alt="Resources" class="resources-icon-img">
+                            </div>
+                            <span>Resources</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.url_name == 'student_peer_support' %}active{% endif %}">
+                        <a href="{% url 'student_peer_support' %}" class="nav-link">
+                            <div class="nav-icon">
+                                <img src="{% static 'images/images/icons/peer-support-icon.png' %}" alt="Peer Support" class="peer-support-icon-img">
+                            </div>
+                            <span>Peer Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.url_name == 'student_game_zone' %}active{% endif %}">
+                        <a href="{% url 'student_game_zone' %}" class="nav-link">
+                            <div class="nav-icon">
+                                <img src="{% static 'images/images/icons/game-zone-icon.png' %}" alt="Game Zone" class="game-zone-icon-img">
+                            </div>
+                            <span>Game Zone</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header (Exact from Original) -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h1>{% block header_title %}Welcome back{% if user.first_name %}, {{ user.first_name }}{% endif %}!{% endblock %}</h1>
+                </div>
+                <div class="header-right">
+                    <a href="{% url 'student_profile' %}" class="profile-link">
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="profile-text">Profile</span>
+                    </a>
+                    <a href="{% url 'logout' %}" class="logout-link" style="margin-left: 20px; color: #6B7280; text-decoration: none;">
+                        <div class="logout-icon">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </div>
+                        <span class="logout-text">Logout</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
