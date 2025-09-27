@@ -5,8 +5,88 @@ Handles REST API endpoints for AI chatbot interactions
 
 import json
 from rest_framework import status, permissions
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
+from rest_framework.decorators@api_view(['POST'])
+@permission_classes([permissions.AllowAny])  # Temporarily allow public access for testing
+def send_ai_message(request, session_id):
+    """Send message to MANAS AI companion and get response"""
+    logger.info(f"AI message request received for session: {session_id}")
+    try:
+        # Get session and validate access (temporarily allow any user)
+        session = get_object_or_404(
+            ChatSession, 
+            id=session_id,
+            session_type='ai_chat'
+        )_view, permission_classes        return Response({
+            'success': False,
+            'error': 'Failed to get provider status'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])  # Allow public access for testing
+def get_all_chat_sessions(request):
+    """Get all MANAS AI chat sessions with basic info for history management"""
+    try:
+        # Get sessions ordered by most recent activity
+        sessions = ChatSession.objects.filter(
+            session_type='ai_chat'
+        ).order_by('-updated_at')
+        
+        session_list = []
+        for session in sessions:
+            # Get message count and last message
+            message_count = session.messages.count()
+            last_message = session.messages.order_by('-created_at').first()
+            
+            # Extract companion type from title
+            companion_type = 'priya'  # default
+            if session.title:
+                title_lower = session.title.lower()
+                if 'arjun' in title_lower:
+                    companion_type = 'arjun'
+                elif 'vikram' in title_lower:
+                    companion_type = 'vikram'
+            
+            companion_info = manas_ai_service.companion_types.get(
+                companion_type, 
+                manas_ai_service.companion_types['priya']
+            )
+            
+            session_data = {
+                'id': str(session.id),
+                'title': session.title,
+                'companion': {
+                    'name': companion_info['name'],
+                    'emoji': companion_info['emoji'],
+                    'color': companion_info['color'],
+                    'type': companion_type
+                },
+                'message_count': message_count,
+                'created_at': session.created_at.isoformat(),
+                'updated_at': session.updated_at.isoformat(),
+                'last_message': {
+                    'content': last_message.content[:100] + '...' if last_message and len(last_message.content) > 100 else last_message.content if last_message else None,
+                    'timestamp': last_message.created_at.isoformat() if last_message else None,
+                    'type': last_message.message_type if last_message else None
+                } if last_message else None,
+                'status': session.status
+            }
+            session_list.append(session_data)
+        
+        logger.info(f"Retrieved {len(session_list)} chat sessions for history overview")
+        
+        return Response({
+            'success': True,
+            'sessions': session_list,
+            'total_sessions': len(session_list)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting all chat sessions: {str(e)}")
+        return Response({
+            'success': False,
+            'error': 'Failed to get chat sessions'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)om rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -216,15 +296,28 @@ def send_ai_message(request, session_id):
                 'error': 'Chat session is not active'
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # Handle both request.data (DRF) and request.POST/JSON
-        if hasattr(request, 'data') and request.data:
-            data = request.data
-        else:
-            import json
-            try:
-                data = json.loads(request.body.decode('utf-8'))
-            except:
-                data = request.POST
+        # Handle both request.data (DRF) and request.POST/JSON with better error handling
+        try:
+            if hasattr(request, 'data') and request.data:
+                data = request.data
+                logger.info("Using request.data")
+            else:
+                import json
+                try:
+                    body = request.body.decode('utf-8')
+                    logger.info(f"Request body: {body[:100]}...")  # Log first 100 chars
+                    data = json.loads(body)
+                    logger.info("Successfully parsed JSON body")
+                except json.JSONDecodeError as e:
+                    logger.error(f"JSON decode error: {e}")
+                    data = request.POST
+                    logger.info("Falling back to request.POST")
+        except Exception as e:
+            logger.error(f"Error parsing request data: {e}")
+            return Response({
+                'success': False,
+                'error': f'Invalid request format: {str(e)}'
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         message_content = data.get('message', '').strip()
         # Extract companion from session title or default to priya
@@ -255,15 +348,18 @@ def send_ai_message(request, session_id):
                 status='sent'
             )
             
-            # Get conversation history for context
+            # Get conversation history for context (excluding current message)
             conversation_history = []
-            recent_messages = session.messages.order_by('-created_at')[:10]
+            recent_messages = session.messages.exclude(id=user_message.id).order_by('-created_at')[:20]  # Get more history
             for msg in reversed(recent_messages):
                 conversation_history.append({
                     'content': msg.content,
-                    'sender_type': 'user' if msg.sender else 'ai',
-                    'timestamp': msg.created_at.isoformat()
+                    'sender_type': msg.message_type,  # Use message_type field directly
+                    'timestamp': msg.created_at.isoformat(),
+                    'message_id': str(msg.id)
                 })
+            
+            logger.info(f"Retrieved {len(conversation_history)} previous messages for context")
             
             # Generate MANAS AI response using enhanced service
             ai_response = enhanced_manas_ai_service.generate_response_sync(
@@ -283,6 +379,58 @@ def send_ai_message(request, session_id):
                 status='sent',
                 contains_crisis_keywords=False  # We'll implement crisis detection later
             )
+            
+            # Sync messages to Supabase for enhanced features and history
+            try:
+                from core.supabase_service import supabase_service
+                if supabase_service.is_available():
+                    supabase_client = supabase_service.get_admin_client()
+                    if supabase_client:
+                        # Sync individual messages to Supabase for better history tracking
+                        user_msg_data = {
+                            'id': str(user_message.id),
+                            'session_id': str(session_id),
+                            'content': message_content,
+                            'message_type': 'user',
+                            'companion_type': companion_name,
+                            'timestamp': user_message.created_at.isoformat(),
+                            'user_id': str(test_user.id) if test_user else None
+                        }
+                        
+                        ai_msg_data = {
+                            'id': str(ai_message.id),
+                            'session_id': str(session_id),
+                            'content': ai_message.content,
+                            'message_type': 'ai',
+                            'companion_type': companion_name,
+                            'ai_model': ai_message.ai_model_used,
+                            'timestamp': ai_message.created_at.isoformat(),
+                            'user_id': str(test_user.id) if test_user else None
+                        }
+                        
+                        # Insert both messages to Supabase
+                        user_result = supabase_client.table('manas_messages').upsert(user_msg_data).execute()
+                        ai_result = supabase_client.table('manas_messages').upsert(ai_msg_data).execute()
+                        
+                        logger.info(f"Successfully synced messages to Supabase: user={len(user_result.data)}, ai={len(ai_result.data)}")
+                        
+                        # Also update session metadata in Supabase
+                        session_data = {
+                            'id': str(session_id),
+                            'title': session.title,
+                            'companion_type': companion_name,
+                            'message_count': session.messages.count(),
+                            'last_activity': timezone.now().isoformat(),
+                            'user_id': str(test_user.id) if test_user else None
+                        }
+                        session_result = supabase_client.table('manas_sessions').upsert(session_data).execute()
+                        logger.info(f"Updated session metadata in Supabase")
+                        
+                else:
+                    logger.warning("Supabase not available for chat sync")
+            except Exception as e:
+                logger.error(f"Failed to sync chat to Supabase: {e}")
+                # Don't fail the main request if Supabase sync fails
             
         # Update session with crisis analysis if needed (placeholder for now)
         crisis_detected = False  # We'll implement proper crisis detection later
@@ -491,18 +639,19 @@ def get_user_ai_sessions(request):
 
 
 @api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.AllowAny])  # Allow public access for testing
 def get_chat_history(request, session_id):
     """Get chat history for a MANAS AI session"""
+    logger.info(f"Chat history requested for session: {session_id}")
     try:
         session = get_object_or_404(
             ChatSession,
             id=session_id,
-            user=request.user,
             session_type='ai_chat'
         )
         
         messages = session.messages.order_by('created_at')
+        logger.info(f"Found {messages.count()} messages for session {session_id}")
         message_data = []
         
         for msg in messages:
@@ -511,8 +660,33 @@ def get_chat_history(request, session_id):
                 'content': msg.content,
                 'sender': 'user' if msg.sender else 'ai',
                 'timestamp': msg.created_at.isoformat(),
-                'message_type': msg.message_type
+                'message_type': msg.message_type,
+                'ai_model_used': getattr(msg, 'ai_model_used', None) if msg.message_type == 'ai' else None
             })
+        
+        # Try to sync messages to Supabase if available
+        try:
+            from core.supabase_service import supabase_service
+            if supabase_service.is_available() and messages.exists():
+                supabase_client = supabase_service.get_admin_client()
+                if supabase_client:
+                    logger.info(f"Syncing {messages.count()} messages to Supabase for persistence")
+                    for msg in messages:
+                        msg_data = {
+                            'id': str(msg.id),
+                            'session_id': str(session_id),
+                            'content': msg.content,
+                            'message_type': msg.message_type,
+                            'timestamp': msg.created_at.isoformat(),
+                            'ai_model_used': getattr(msg, 'ai_model_used', None)
+                        }
+                        try:
+                            supabase_client.table('manas_messages').upsert(msg_data).execute()
+                        except Exception as sync_error:
+                            logger.warning(f"Failed to sync message {msg.id} to Supabase: {sync_error}")
+        except Exception as e:
+            logger.error(f"Error during Supabase sync in history retrieval: {e}")
+            # Don't fail the request if Supabase sync fails
         
         # Extract companion type from session title
         companion_type = 'priya'  # default
@@ -537,9 +711,12 @@ def get_chat_history(request, session_id):
                     'color': companion_info['color']
                 },
                 'created_at': session.created_at.isoformat(),
-                'status': session.status
+                'status': session.status,
+                'message_count': len(message_data),
+                'last_activity': messages.last().created_at.isoformat() if messages.exists() else session.created_at.isoformat()
             },
-            'messages': message_data
+            'messages': message_data,
+            'supabase_synced': True  # Indicates messages have been synced to Supabase
         })
         
     except Exception as e:

@@ -3,7 +3,8 @@ Translation views for MANAS AI Chat
 Provides REST API endpoints for translation services
 """
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
@@ -17,6 +18,7 @@ from .simple_translation_service import simple_translation_service
 logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])  # Allow public access
 def get_supported_languages(request):
     """Get list of supported languages"""
     try:

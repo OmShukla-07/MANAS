@@ -36,6 +36,7 @@ urlpatterns = [
     path('manas/sessions/<uuid:session_id>/history/', ai_views.get_chat_history, name='manas_chat_history'),
     path('manas/sessions/<uuid:session_id>/end/', ai_views.end_ai_session, name='manas_session_end'),
     path('manas/sessions/history/', ai_views.get_user_ai_sessions, name='manas_session_history'),
+    path('manas/sessions/all/', ai_views.get_all_chat_sessions, name='manas_all_sessions'),
     path('manas/quick-start/', ai_views.manas_chat_quick_start, name='manas_quick_start'),
     
     # Legacy AI Chatbot endpoints (keeping for compatibility)
