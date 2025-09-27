@@ -32,17 +32,16 @@ urlpatterns = [
     path('api/v1/core/', include('core.urls')),
 ]
 
+# Frontend URLs (always available)
+from core.frontend_views import home_view
+urlpatterns += [
+    path('', home_view, name='home'),
+    
+    # Include frontend URLs
+    path('', include('core.frontend_urls')),
+]
+
 # Add media files handling for development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-# Add API documentation (optional)
-if settings.DEBUG:
-    from core.frontend_views import home_view
-    urlpatterns += [
-        path('', home_view, name='home'),
-        
-        # Include frontend URLs
-        path('', include('core.frontend_urls')),
-    ]
