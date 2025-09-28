@@ -1,0 +1,19 @@
+# Alternative simpler render.yaml if the main one has issues
+services:
+  - type: web
+    name: manas-backend
+    env: python
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn manas_backend.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: manas_backend.settings
+      - key: DEBUG
+        value: false
+      - key: RENDER
+        value: true
+
+databases:
+  - name: manas-postgres
+    databaseName: manas
+    user: manas
