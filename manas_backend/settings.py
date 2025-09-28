@@ -7,8 +7,6 @@ WebSocket support, JWT authentication, and deployment optimization.
 
 import os
 from pathlib import Path
-from decouple import config
-import dj_database_url
 
 # Enhanced environment variable loading for Railway and other platforms
 try:
@@ -16,6 +14,18 @@ try:
     load_dotenv()
 except ImportError:
     pass
+
+try:
+    from decouple import config
+except ImportError:
+    def config(key, default=None):
+        return os.environ.get(key, default)
+
+# Import required for database configuration
+try:
+    import dj_database_url
+except ImportError:
+    dj_database_url = None
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

@@ -16,8 +16,8 @@
 ## 🌟 **EXPERIENCE MANAS LIVE PLATFORM** 🌟
 
 <h1 style="font-size: 3.5em; font-weight: bold; margin: 20px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
-  <a href="https://manas-backend-production.up.railway.app/" style="color: #00D4AA; text-decoration: none;">
-    🚀 https://manas-backend-production.up.railway.app/
+  <a href="https://manas-backend.onrender.com/" style="color: #00D4AA; text-decoration: none;">
+    🚀 https://manas-backend.onrender.com/
   </a>
 </h1>
 
@@ -25,16 +25,27 @@
   ✨ Full-Stack Django Platform • 🤖 AI Mental Health Companions • 💬 Real-time Chat • 🛡️ Crisis Support ✨
 </p>
 
-<a href="https://manas-backend-production.up.railway.app/">
+<a href="https://manas-backend.onrender.com/">
   <img src="https://img.shields.io/badge/🌟%20CLICK%20TO%20EXPERIENCE%20LIVE-Platform%20Ready%20Now-00D4AA?style=for-the-badge&logoColor=white&logo=rocket&logoWidth=30" style="font-size: 1.5em; padding: 15px 30px;" alt="Experience Live Platform"/>
 </a>
+
+<div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 10px;">
+  <h3 style="color: #FFD700; margin-bottom: 10px;">🔗 Multiple Deployment Options</h3>
+  <p style="font-size: 1.1em; margin: 5px 0;">
+    <strong>🎯 Primary (Render):</strong> <a href="https://manas-backend.onrender.com/" style="color: #00D4AA;">manas-backend.onrender.com</a> <span style="color: #32CD32;">• 750 hrs/month • Better uptime</span>
+  </p>
+  <p style="font-size: 1.1em; margin: 5px 0;">
+    <strong>🔄 Backup (Railway):</strong> <a href="https://manas-backend-production.up.railway.app/" style="color: #00D4AA;">manas-backend-production.up.railway.app</a> <span style="color: #FFD700;">• 500 hrs/month</span>
+  </p>
+</div>
 
 </div>
 
 <!-- Quick Stats -->
 <div align="center" style="margin: 20px 0;">
   <img src="https://img.shields.io/badge/Status-🟢%20LIVE%20NOW-00D4AA?style=flat-square&logoColor=white" alt="Live Status"/>
-  <img src="https://img.shields.io/badge/Deployment-⚡%20Railway%20Cloud-0B0D0E?style=flat-square&logo=railway&logoColor=white" alt="Railway"/>
+  <img src="https://img.shields.io/badge/Primary-⚡%20Render%20Cloud-FF6B6B?style=flat-square&logo=render&logoColor=white" alt="Render"/>
+  <img src="https://img.shields.io/badge/Backup-🚀%20Railway%20Cloud-0B0D0E?style=flat-square&logo=railway&logoColor=white" alt="Railway"/>
   <img src="https://img.shields.io/badge/Response%20Time-⚡%20Fast-4A90E2?style=flat-square" alt="Fast Response"/>
   <img src="https://img.shields.io/badge/AI%20Companions-🤖%203%20Active-FF6B6B?style=flat-square" alt="AI Active"/>
   <img src="https://img.shields.io/badge/Features-✨%20Full%20Stack-9B59B6?style=flat-square" alt="Full Stack"/>
@@ -44,10 +55,10 @@
 
 <!-- Secondary Action Buttons -->
 <p align="center">
-  <a href="https://manas-backend-production.up.railway.app/student/manas-ai-chat/">
+  <a href="https://manas-backend.onrender.com/student/manas-ai-chat/">
     <img src="https://img.shields.io/badge/🤖%20AI%20CHAT-Try%20Companions-FF6B6B?style=for-the-badge&logoColor=white" alt="AI Chat"/>
   </a>
-  <a href="https://manas-backend-production.up.railway.app/login/">
+  <a href="https://manas-backend.onrender.com/login/">
     <img src="https://img.shields.io/badge/👤%20USER%20LOGIN-Test%20Now-9B59B6?style=for-the-badge&logoColor=white" alt="User Login"/>
   </a>
   <a href="#-features-showcase">
@@ -87,25 +98,25 @@
 </a>
 </td>
 <td align="center" width="20%" style="border: none;">
-<a href="https://manas-backend-production.up.railway.app/student/manas-ai-chat/" style="text-decoration: none;">
+<a href="https://manas-backend.onrender.com/student/manas-ai-chat/" style="text-decoration: none;">
 <img src="https://img.shields.io/badge/🤖-AI%20CHAT-FF6B6B?style=for-the-badge&logoColor=white" alt="AI Chat" style="margin: 5px;"/>
 <br/><sub><b>AI Mental Health Companions</b></sub>
 </a>
 </td>
 <td align="center" width="20%" style="border: none;">
-<a href="https://manas-backend-production.up.railway.app/login/" style="text-decoration: none;">
+<a href="https://manas-backend.onrender.com/login/" style="text-decoration: none;">
 <img src="https://img.shields.io/badge/👤-LOGIN-9B59B6?style=for-the-badge&logoColor=white" alt="Login" style="margin: 5px;"/>
 <br/><sub><b>User Authentication</b></sub>
 </a>
 </td>
 <td align="center" width="20%" style="border: none;">
-<a href="https://manas-backend-production.up.railway.app/admin/" style="text-decoration: none;">
+<a href="https://manas-backend.onrender.com/admin/" style="text-decoration: none;">
 <img src="https://img.shields.io/badge/⚙️-ADMIN-FFA726?style=for-the-badge&logoColor=white" alt="Admin" style="margin: 5px;"/>
 <br/><sub><b>Administrative Panel</b></sub>
 </a>
 </td>
 <td align="center" width="20%" style="border: none;">
-<a href="https://manas-backend-production.up.railway.app/api/v1/" style="text-decoration: none;">
+<a href="https://manas-backend.onrender.com/api/v1/" style="text-decoration: none;">
 <img src="https://img.shields.io/badge/📡-API-00D4AA?style=for-the-badge&logoColor=white" alt="API" style="margin: 5px;"/>
 <br/><sub><b>REST API Endpoints</b></sub>
 </a>
@@ -692,11 +703,12 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <p style="font-size: 1.2em; font-weight: bold; margin: 20px 0;">
   🌟 <strong>Platform Status:</strong> <span style="color: #00D4AA;">✅ LIVE & READY</span> • 
-  🚀 <strong>Deployment:</strong> <span style="color: #4A90E2;">Railway Cloud</span> • 
+  🚀 <strong>Primary:</strong> <span style="color: #FF6B6B;">Render Cloud</span> • 
+  🔄 <strong>Backup:</strong> <span style="color: #4A90E2;">Railway Cloud</span> • 
   🤖 <strong>AI:</strong> <span style="color: #FF6B6B;">3 Mental Health Companions Active</span>
 </p>
 
-<a href="https://manas-backend-production.up.railway.app/" style="text-decoration: none;">
+<a href="https://manas-backend.onrender.com/" style="text-decoration: none;">
   <img src="https://img.shields.io/badge/🎯%20MAIN%20PLATFORM%20ACCESS-Click%20Here%20Now-00D4AA?style=for-the-badge&logoColor=white&logo=external-link" alt="Main Platform Access" style="margin: 10px 0;"/>
 </a>
 
