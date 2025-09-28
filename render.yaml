@@ -1,0 +1,55 @@
+services:
+  # Web Service (Django App)
+  - type: web
+    name: manas-backend
+    env: python
+    region: singapore  # Choose closest region
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn manas_backend.wsgi:application --bind 0.0.0.0:$PORT"
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: manas_backend.settings
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: manas-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: manas-redis
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false  # Set this manually in Render dashboard
+      - key: SUPABASE_URL
+        sync: false  # Set this manually in Render dashboard
+      - key: SUPABASE_KEY
+        sync: false  # Set this manually in Render dashboard
+      - key: SUPABASE_JWT_SECRET
+        sync: false  # Set this manually in Render dashboard
+    domains:
+      - manas-platform.onrender.com  # Your custom domain
+
+  # PostgreSQL Database
+  - type: pgsql
+    name: manas-postgres
+    databaseName: manas_db
+    user: manas_user
+    plan: free
+    region: singapore
+
+  # Redis Cache (Optional - for better performance)
+  - type: redis
+    name: manas-redis
+    plan: free
+    region: singapore
+    maxmemoryPolicy: allkeys-lru
