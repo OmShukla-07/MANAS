@@ -3,10 +3,10 @@ services:
   - type: web
     name: manas-backend
     env: python
-    region: singapore  # Choose closest region
+    region: singapore
     plan: free
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn manas_backend.wsgi:application --bind 0.0.0.0:$PORT"
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py createcachetable"
+    startCommand: "gunicorn manas_backend.wsgi:application"
     healthCheckPath: /
     envVars:
       - key: PYTHON_VERSION
@@ -15,18 +15,11 @@ services:
         value: manas_backend.settings
       - key: DEBUG
         value: false
-      - key: ALLOWED_HOSTS
-        value: "*"
       - key: RENDER
         value: true
       - key: DATABASE_URL
         fromDatabase:
           name: manas-postgres
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: manas-redis
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
@@ -39,17 +32,10 @@ services:
       - key: SUPABASE_JWT_SECRET
         sync: false  # Set this manually in Render dashboard
 
+databases:
   # PostgreSQL Database
-  - type: postgres
-    name: manas-postgres
-    databaseName: manas_db
-    user: manas_user
+  - name: manas-postgres
+    databaseName: manas
+    user: manas
     plan: free
     region: singapore
-
-  # Redis Cache (Optional - for better performance)
-  - type: redis
-    name: manas-redis
-    plan: free
-    region: singapore
-    maxmemoryPolicy: allkeys-lru
