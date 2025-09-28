@@ -1,15 +1,22 @@
-<!DOC    <title>Admin Registration - MANAS</title>
-    <link rel="icon" type="image/png" href="/static/images/images/icons/manas fevicon edited.png">
-    <link rel="shortcut icon" type="image/png" href="/static/images/images/icons/manas fevicon edited.png">
-    <link rel="apple-touch-icon" href="/static/images/images/icons/manas fevicon edited.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"> html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrator Registration - MANAS</title>
+    
+    <!-- Favicon - Multiple sizes for better visibility -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/images/icons/manas fevicon edited.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/images/images/icons/manas fevicon edited.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/static/images/images/icons/manas fevicon edited.png">
+    <link rel="shortcut icon" type="image/png" href="/static/images/images/icons/manas fevicon edited.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/images/images/icons/manas fevicon edited.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/images/images/icons/manas fevicon edited.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/images/images/icons/manas fevicon edited.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/images/images/icons/manas fevicon edited.png">
+    <meta name="msapplication-TileImage" content="/static/images/images/icons/manas fevicon edited.png">
+    <meta name="msapplication-TileColor" content="#7c3aed">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -444,33 +451,110 @@
             gap: 10px;
         }
 
+        /* Enhanced Visual Effects */
+        .form-group input:valid {
+            border-color: #22c55e;
+        }
+
+        .form-group input:invalid:not(:focus):not(:placeholder-shown) {
+            border-color: #ef4444;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .error-message i {
+            margin-right: 0.5rem;
+        }
+
+        /* Success message styling */
+        .success-message {
+            color: #22c55e;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .success-message i {
+            margin-right: 0.5rem;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
             .container {
-                padding: 33px;
-                margin: 12px;
+                padding: 25px;
+                margin: 0;
+                border-radius: 20px;
             }
             
             .form-grid {
                 grid-template-columns: 1fr;
-                gap: 18px;
+                gap: 15px;
             }
             
             .header h1 {
                 font-size: 2.1rem;
             }
 
+            .header p {
+                font-size: 1rem;
+            }
+
             .logo-container {
-                width: 75px;
-                height: 75px;
+                width: 70px;
+                height: 70px;
             }
 
             .logo-container i {
-                font-size: 30px;
+                font-size: 28px;
             }
 
             .permissions-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .links a {
+                display: block;
+                margin: 10px 0;
+            }
+
+            .floating-icon {
+                display: none;
+            }
+
+            .submit-btn {
+                padding: 16px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .role-badge {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
             }
         }
 
@@ -687,20 +771,95 @@
             });
         });
 
-        // Form validation and submission
+        // Enhanced form validation and submission
         document.getElementById('adminSignupForm').addEventListener('submit', function(e) {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm_password').value;
             
+            // Remove existing error messages
+            document.querySelectorAll('.error-message').forEach(msg => msg.remove());
+            
+            let hasErrors = false;
+            
+            // Password validation
             if (password !== confirmPassword) {
                 e.preventDefault();
-                alert('Passwords do not match!');
-                return;
+                showFieldError('confirm_password', 'Passwords do not match!');
+                hasErrors = true;
             }
             
-            // Add loading state
-            this.classList.add('loading');
+            if (password.length < 8) {
+                e.preventDefault();
+                showFieldError('password', 'Password must be at least 8 characters long!');
+                hasErrors = true;
+            }
+            
+            // Email validation
+            const email = document.getElementById('email').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                showFieldError('email', 'Please enter a valid email address!');
+                hasErrors = true;
+            }
+            
+            // Required fields validation
+            const requiredFields = ['first_name', 'last_name', 'username', 'email', 'department', 'access_level', 'password'];
+            requiredFields.forEach(fieldName => {
+                const field = document.getElementById(fieldName);
+                if (!field.value.trim()) {
+                    e.preventDefault();
+                    showFieldError(fieldName, 'This field is required!');
+                    hasErrors = true;
+                }
+            });
+            
+            if (!hasErrors) {
+                // Add loading state
+                this.classList.add('loading');
+                const submitBtn = this.querySelector('.submit-btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            }
         });
+
+        // Function to show field-specific error messages
+        function showFieldError(fieldName, message) {
+            const field = document.getElementById(fieldName);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            field.parentElement.parentElement.appendChild(errorDiv);
+            field.focus();
+        }
+
+        // Real-time password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthIndicator = document.getElementById('password-strength') || createPasswordStrengthIndicator(this);
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            const strengthTexts = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+            const strengthColors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#16a34a'];
+            
+            strengthIndicator.textContent = `Password Strength: ${strengthTexts[strength] || 'Very Weak'}`;
+            strengthIndicator.style.color = strengthColors[strength] || '#ef4444';
+        });
+
+        function createPasswordStrengthIndicator(passwordField) {
+            const indicator = document.createElement('div');
+            indicator.id = 'password-strength';
+            indicator.className = 'password-strength';
+            indicator.style.cssText = 'font-size: 0.875rem; margin-top: 0.5rem; font-weight: 500;';
+            passwordField.parentElement.parentElement.appendChild(indicator);
+            return indicator;
+        }
 
         // Enhanced input focus animations
         document.querySelectorAll('input, select').forEach(input => {
