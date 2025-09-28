@@ -5,8 +5,190 @@ Handles REST API endpoints for AI chatbot interactions
 
 import json
 from rest_framework import status, permissions
-from rest_framework.decorators@api_view(['POST'])
-@permission_classes([permissions.AllowAny])  # Temporarily allow public access for testing
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from django.db import transaction
+from asgiref.sync import sync_to_async
+from django.core.cache import cache
+
+from .models import ChatSession, Message, AIPersonality, ChatAnalytics
+from .serializers import (
+    MessageSerializer, ChatSessionDetailSerializer,
+    ChatbotListSerializer, ChatbotStartSessionSerializer
+)
+from .ai_service import gemini_service
+from .manas_ai_service import manas_ai_service
+from .enhanced_ai_service import enhanced_manas_ai_service
+from crisis.models import CrisisAlert
+
+import logging
+logger = logging.getLogger(__name__)
+
+
+class ChatbotListView(APIView):
+    """List available AI chatbot personalities - MANAS companions"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """Get list of available MANAS AI companions with provider info"""
+        try:
+            # Get companions from enhanced service
+            companions = enhanced_manas_ai_service.get_available_companions()
+            
+            # Get provider status
+            provider_status = enhanced_manas_ai_service.get_provider_status()
+            
+            return Response({
+                'success': True,
+                'companions': companions,
+                'providers': enhanced_manas_ai_service.get_available_providers(),
+                'provider_status': provider_status,
+                'message': 'MANAS AI companions retrieved successfully'
+            })
+        except Exception as e:
+            logger.error(f"Error fetching companions: {str(e)}")
+            return Response({
+                'success': False,
+                'error': 'Failed to fetch available companions'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ChatbotStartSessionView(APIView):
+    """Start a new AI chat session"""
+    permission_classes = [permissions.AllowAny]  # Allow public access for testing
+    
+    def post(self, request):
+        """Start new AI chat session with MANAS companion"""
+        try:
+            # Handle both request.data (DRF) and request.POST/JSON
+            if hasattr(request, 'data') and request.data:
+                data = request.data
+            else:
+                import json
+                try:
+                    data = json.loads(request.body.decode('utf-8'))
+                except:
+                    data = request.POST
+            
+            companion_name = data.get('companion', 'priya').lower()
+            initial_message = data.get('initial_message', '')
+            
+            # Validate companion name
+            if companion_name not in ['arjun', 'priya', 'vikram']:
+                companion_name = 'priya'  # Default fallback
+            
+            companion_info = manas_ai_service.companion_types.get(companion_name)
+            
+            # Get or create a test user for session
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            try:
+                test_user = User.objects.first()
+                if not test_user:
+                    # Create a test user if none exists
+                    test_user = User.objects.create_user(
+                        username='test_user',
+                        email='test@example.com',
+                        role='student'
+                    )
+            except Exception as e:
+                logger.error(f"Error getting test user: {e}")
+                return Response({
+                    'success': False,
+                    'error': 'Unable to create session'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            # Create new chat session
+            session = ChatSession.objects.create(
+                user=test_user,
+                title=f"Chat with {companion_info['name']}",
+                session_type='ai_chat',
+                status='active',
+                metadata={
+                    'companion': companion_name,
+                    'companion_info': companion_info
+                }
+            )
+            
+            # Send initial welcome message from AI
+            welcome_message = f"Hi! I'm {companion_info['name']}, your MANAS companion. {companion_info['description']} How are you feeling today?"
+            
+            ai_message = Message.objects.create(
+                session=session,
+                sender=None,  # AI message
+                content=welcome_message,
+                message_type='ai',
+                status='sent'
+            )
+            
+            # If there's an initial message from user, process it
+            if initial_message:
+                user_message = Message.objects.create(
+                    session=session,
+                    sender=test_user,
+                    content=initial_message,
+                    message_type='user',
+                    status='sent'
+                )
+                
+                # Get AI response to initial message
+                try:
+                    ai_response = enhanced_manas_ai_service.get_ai_response(
+                        initial_message, 
+                        companion_name, 
+                        []  # Empty history for first message
+                    )
+                    
+                    response_message = Message.objects.create(
+                        session=session,
+                        sender=None,
+                        content=ai_response['content'] if isinstance(ai_response, dict) else ai_response,
+                        message_type='ai',
+                        status='sent'
+                    )
+                    
+                except Exception as e:
+                    logger.error(f"Error getting AI response: {e}")
+                    # Fallback response
+                    response_message = Message.objects.create(
+                        session=session,
+                        sender=None,
+                        content="I'm here to listen and support you. Please tell me more about how you're feeling.",
+                        message_type='ai',
+                        status='sent'
+                    )
+            
+            return Response({
+                'success': True,
+                'session_id': str(session.id),
+                'companion': {
+                    'name': companion_info['name'],
+                    'emoji': companion_info['emoji'],
+                    'color': companion_info['color'],
+                    'description': companion_info['description']
+                },
+                'welcome_message': {
+                    'id': str(ai_message.id),
+                    'content': welcome_message,
+                    'timestamp': ai_message.created_at.isoformat(),
+                    'sender': 'ai'
+                },
+                'message': 'Chat session started successfully'
+            })
+            
+        except Exception as e:
+            logger.error(f"Error starting chat session: {str(e)}")
+            return Response({
+                'success': False,
+                'error': f'Failed to start chat session: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
 def send_ai_message(request, session_id):
     """Send message to MANAS AI companion and get response"""
     logger.info(f"AI message request received for session: {session_id}")
@@ -16,9 +198,179 @@ def send_ai_message(request, session_id):
             ChatSession, 
             id=session_id,
             session_type='ai_chat'
-        )_view, permission_classes        return Response({
+        )
+        
+        if session.status != 'active':
+            return Response({
+                'success': False,
+                'error': 'Chat session is not active'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Handle both request.data (DRF) and request.POST/JSON with better error handling
+        try:
+            if hasattr(request, 'data') and request.data:
+                data = request.data
+                logger.info("Using request.data")
+            else:
+                import json
+                try:
+                    body = request.body.decode('utf-8')
+                    logger.info(f"Request body: {body[:100]}...")  # Log first 100 chars
+                    data = json.loads(body)
+                    logger.info("Successfully parsed JSON body")
+                except json.JSONDecodeError as e:
+                    logger.error(f"JSON decode error: {e}")
+                    data = request.POST
+                    logger.info("Falling back to request.POST")
+        except Exception as e:
+            logger.error(f"Error parsing request data: {e}")
+            return Response({
+                'success': False,
+                'error': f'Invalid request format: {str(e)}'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        message_content = data.get('message', '').strip()
+        # Extract companion from session title or default to priya
+        companion_name = 'priya'
+        if 'Arjun' in session.title:
+            companion_name = 'arjun'
+        elif 'Vikram' in session.title:
+            companion_name = 'vikram'
+        
+        if not message_content:
+            return Response({
+                'success': False,
+                'error': 'Message content is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Create user message
+        with transaction.atomic():
+            # Get or create a test user for messaging
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            test_user = User.objects.first()
+            
+            user_message = Message.objects.create(
+                session=session,
+                sender=test_user,
+                content=message_content,
+                message_type='user',
+                status='sent'
+            )
+            
+            # Get conversation history for context (excluding current message)
+            conversation_history = []
+            recent_messages = session.messages.exclude(id=user_message.id).order_by('-created_at')[:20]  # Get more history
+            for msg in reversed(recent_messages):
+                conversation_history.append({
+                    'content': msg.content,
+                    'sender_type': msg.message_type,  # Use message_type field directly
+                    'timestamp': msg.created_at.isoformat(),
+                    'id': str(msg.id)
+                })
+            
+            # Get AI response using enhanced service
+            try:
+                ai_response = enhanced_manas_ai_service.get_ai_response(
+                    message_content, 
+                    companion_name,
+                    conversation_history
+                )
+                
+                # Check for crisis detection
+                crisis_detected = False
+                crisis_keywords = ['suicide', 'kill myself', 'end it all', 'want to die', 'hurt myself']
+                if any(keyword in message_content.lower() for keyword in crisis_keywords):
+                    crisis_detected = True
+                    logger.warning(f"Crisis keywords detected in message: {message_content[:50]}...")
+                
+            except Exception as ai_error:
+                logger.error(f"AI service error: {ai_error}")
+                # Fallback response
+                ai_response = {
+                    'content': "I'm here to listen and support you. Can you tell me more about how you're feeling right now?",
+                    'model': 'fallback',
+                    'provider_name': 'System'
+                }
+                crisis_detected = False
+            
+            # Create AI response message
+            ai_message = Message.objects.create(
+                session=session,
+                sender=None,  # AI message
+                content=ai_response['content'] if isinstance(ai_response, dict) else ai_response,
+                message_type='ai',
+                status='sent'
+            )
+            
+            # Create crisis alert if needed
+            if crisis_detected:
+                try:
+                    # Create crisis alert if intervention required
+                    CrisisAlert.objects.get_or_create(
+                        user=test_user,
+                        session=session,
+                        defaults={
+                            'alert_type': 'ai_detected',
+                            'severity': 'high',
+                            'description': f"MANAS AI detected crisis indicators in conversation",
+                            'metadata': {
+                                'companion': companion_name,
+                                'crisis_keywords': [],
+                                'message_id': str(ai_message.id)
+                            }
+                        }
+                    )
+                except Exception as crisis_error:
+                    logger.error(f"Error creating crisis alert: {crisis_error}")
+        
+        # Update session timestamp
+        session.updated_at = timezone.now()
+        session.save()
+        
+        # Get companion info for response
+        companion_info = manas_ai_service.companion_types.get(companion_name)
+        
+        response_data = {
+            'success': True,
+            'user_message': {
+                'id': str(user_message.id),
+                'content': message_content,
+                'timestamp': user_message.created_at.isoformat(),
+                'sender': 'user'
+            },
+            'ai_response': {
+                'id': str(ai_message.id),
+                'content': ai_response['content'] if isinstance(ai_response, dict) else ai_response,
+                'timestamp': ai_message.created_at.isoformat(),
+                'sender': 'ai',
+                'companion_name': companion_info['name'],
+                'companion_emoji': companion_info['emoji'],
+                'companion_color': companion_info['color'],
+                'model_used': ai_response.get('model', 'gemini-2.5-flash') if isinstance(ai_response, dict) else 'gemini-2.5-flash',
+                'provider': ai_response.get('provider_name', 'Google Gemini') if isinstance(ai_response, dict) else 'Google Gemini'
+            },
+            'session_id': str(session.id),
+            'crisis_detected': crisis_detected
+        }
+        
+        # Add crisis support info if needed
+        if crisis_detected:
+            response_data['crisis_support'] = {
+                'message': 'It seems like you might be going through a difficult time. Would you like to connect with a professional counselor?',
+                'emergency_contacts': [
+                    {'name': 'National Suicide Prevention Lifeline', 'phone': '988'},
+                    {'name': 'Crisis Text Line', 'phone': 'Text HOME to 741741'}
+                ]
+            }
+        
+        return Response(response_data)
+        
+    except Exception as e:
+        logger.error(f"Error in send_ai_message: {str(e)}")
+        return Response({
             'success': False,
-            'error': 'Failed to get provider status'
+            'error': f'Failed to process message: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -86,25 +438,7 @@ def get_all_chat_sessions(request):
         return Response({
             'success': False,
             'error': 'Failed to get chat sessions'
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)om rest_framework.response import Response
-from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
-from django.db import transaction
-from asgiref.sync import sync_to_async
-from django.core.cache import cache
-
-from .models import ChatSession, Message, AIPersonality, ChatAnalytics
-from .serializers import (
-    MessageSerializer, ChatSessionDetailSerializer,
-    ChatbotListSerializer, ChatbotStartSessionSerializer
-)
-from .ai_service import gemini_service
-from .manas_ai_service import manas_ai_service
-from .enhanced_ai_service import enhanced_manas_ai_service
-from crisis.models import CrisisAlert
-
-import logging
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 logger = logging.getLogger(__name__)
 
 
