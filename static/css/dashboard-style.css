@@ -17,6 +17,8 @@ body {
     display: flex;
     min-height: 100vh;
     background-color: #F5F7FA;
+    position: relative;
+    overflow-x: hidden;
 }
 
 /* Sidebar */
@@ -30,6 +32,8 @@ body {
     left: 0;
     top: 0;
     z-index: 100;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .sidebar-header {
@@ -202,6 +206,44 @@ body {
 
 .profile-link:hover .profile-text {
     color: #7BA098;
+    transition: color 0.3s ease;
+}
+
+/* Logout Link Styles */
+.logout-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #6B7280;
+    cursor: pointer;
+    margin-left: 12px;
+}
+
+.logout-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #6B7280;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.logout-text {
+    font-size: 0.9rem;
+    color: #6B7280;
+    font-weight: 500;
+}
+
+.logout-link:hover .logout-icon {
+    background-color: #EF4444;
+    transition: background-color 0.3s ease;
+}
+
+.logout-link:hover .logout-text {
+    color: #EF4444;
     transition: color 0.3s ease;
 }
 
@@ -952,6 +994,177 @@ body {
 }
 
 /* Responsive Design */
+
+/* Keyframe animations */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(123, 160, 152, 0.4);
+    }
+    50% {
+        box-shadow: 0 6px 20px rgba(123, 160, 152, 0.6);
+    }
+}
+
+/* Mobile Menu Overlay */
+.mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 60px; /* Start below top bar by default */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 60px); /* Fill space below top bar */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 150;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.mobile-overlay.overlay-active {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Mobile Top Bar - Fixed at top with hamburger, profile, logout */
+.mobile-top-bar {
+    display: none; /* Hidden by default on desktop */
+    flex-direction: row;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(135deg, #7BA098, #6B9289);
+    z-index: 300; /* Above everything */
+    padding: 0 15px;
+    align-items: center; /* Vertically center all items */
+    justify-content: space-between; /* Space between left and right */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Show on mobile devices using JavaScript-added class */
+body.mobile-device .mobile-top-bar {
+    display: flex !important;
+}
+
+body.mobile-device .mobile-menu-toggle {
+    display: flex !important;
+}
+
+.mobile-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mobile-profile-btn,
+.mobile-logout-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.mobile-profile-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.mobile-logout-btn:hover {
+    background-color: rgba(239, 68, 68, 0.9);
+    transform: scale(1.1);
+}
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+    display: none; /* Hidden on desktop by default */
+    position: relative; /* Changed from fixed - now inside mobile-top-bar */
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 8px;
+    width: 40px; /* Match profile/logout size */
+    height: 40px; /* Match profile/logout size */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px; /* Reduced gap between lines */
+    cursor: pointer;
+    box-shadow: none; /* Remove shadow for cleaner look */
+    transition: all 0.3s ease;
+    padding: 8px;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.mobile-menu-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.mobile-menu-toggle:active {
+    transform: scale(0.98);
+}
+
+.hamburger-line {
+    width: 20px; /* Slightly smaller for 40px button */
+    height: 2px;
+    background-color: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+/* Hamburger animation when active */
+.mobile-menu-toggle.active .hamburger-line:nth-child(1) {
+    transform: translateY(6px) rotate(45deg); /* Adjusted for smaller size */
+}
+
+.mobile-menu-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active .hamburger-line:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg); /* Adjusted for smaller size */
+}
+
+/* Mobile Close Button */
+.mobile-close-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #6B7280;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: auto;
+    transition: all 0.3s ease;
+}
+
+.mobile-close-btn:hover {
+    color: #7BA098;
+    transform: rotate(90deg);
+}
+
 @media (max-width: 1200px) {
     .content-grid {
         grid-template-columns: 1fr;
@@ -971,44 +1184,406 @@ body {
     .chat-assistant {
         flex-shrink: 0;
     }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
 }
 
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
+/* HIDE mobile top bar on DESKTOP (larger screens) */
+@media (min-width: 1025px) {
+    body:not(.mobile-device) .mobile-top-bar {
+        display: none !important;
+    }
+    body:not(.mobile-device) .mobile-menu-toggle {
+        display: none !important;
+    }
+    .mobile-overlay {
+        top: 0;
+        height: 100vh;
+    }
+}
+
+/* Mobile styles - using both media query AND body class for maximum compatibility */
+@media (max-width: 1024px) {
+    /* Show mobile top bar */
+    .mobile-top-bar {
+        display: flex !important;
     }
     
-    .main-content {
-        margin-left: 0;
+    /* Show mobile menu button inside top bar */
+    .mobile-menu-toggle {
+        display: flex !important;
+    }
+    
+    /* Adjust overlay to start below top bar */
+    .mobile-overlay {
+        top: 60px;
+        height: calc(100vh - 60px);
+    }
+    
+    /* Show mobile close button */
+    .mobile-close-btn {
+        display: block;
+    }
+    
+    /* Adjust sidebar header for close button */
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         padding: 20px 15px;
     }
     
+    /* Hide sidebar by default on mobile */
+    .sidebar {
+        top: 60px; /* Start below mobile top bar */
+        height: calc(100vh - 60px); /* Adjust height to fit below top bar */
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: none;
+        z-index: 200; /* Ensure sidebar is above overlay on mobile */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        will-change: transform; /* GPU acceleration */
+    }
+    
+    /* Show sidebar when open */
+    .sidebar.sidebar-open {
+        transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Adjust main content */
+    .main-content {
+        margin-left: 0;
+        padding: 20px 20px 20px 20px;
+        padding-top: 80px !important; /* Space for fixed mobile top bar (60px + 20px) */
+    }
+    
+    /* Dashboard header mobile adjustments */
     .dashboard-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        margin-top: 0; /* No extra margin since we have padding-top on main-content */
+        padding-top: 0; /* No extra padding */
     }
     
     .dashboard-header h1 {
-        font-size: 1.5rem;
+        font-size: 1.3rem; /* Slightly larger since Profile/Logout moved to top bar */
+        flex: 1;
+        min-width: 150px;
     }
     
-    .activity-cards {
-        grid-template-columns: 1fr;
-        gap: 15px;
+    /* Hide desktop Profile/Logout on mobile (now in top bar) */
+    .header-right {
+        display: none !important;
     }
     
+    /* Quote card mobile */
     .quote-card {
         padding: 20px;
     }
     
+    .quote-text {
+        font-size: 1rem;
+    }
+    
+    .quote-author {
+        font-size: 0.85rem;
+    }
+    
+    /* Stats grid mobile */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 18px;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    /* Mood tracker mobile */
+    .mood-tracker {
+        padding: 20px;
+    }
+    
+    .mood-tracker h3 {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+    
+    .mood-selection {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .mood-btn {
+        padding: 12px;
+        font-size: 0.9rem;
+        width: 100%;
+    }
+    
+    .mood-notes textarea {
+        min-height: 80px;
+        font-size: 0.9rem;
+    }
+    
+    .save-mood-btn {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    /* Activity cards mobile */
+    .activity-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .activity-card {
+        padding: 15px;
+    }
+    
+    .activity-card h4 {
+        font-size: 0.85rem;
+    }
+    
+    .activity-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 12px;
+    }
+    
+    .activity-description {
+        font-size: 0.75rem;
+    }
+    
+    /* Right column mobile */
     .right-column {
         flex-direction: column;
         gap: 20px;
     }
     
     .illustration-container {
-        padding: 30px;
-        min-height: 250px;
+        padding: 25px;
+        min-height: 200px;
+    }
+    
+    /* Chat assistant mobile */
+    .chat-button {
+        padding: 18px;
+        font-size: 0.95rem;
+    }
+    
+    .chat-avatar {
+        width: 45px;
+        height: 45px;
+    }
+    
+    /* Profile link mobile */
+    .profile-link .profile-text,
+    .logout-link .logout-text {
+        font-size: 0.85rem;
+    }
+    
+    .profile-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    /* Content grid mobile */
+    .content-grid {
+        gap: 20px;
+    }
+    
+    .left-column,
+    .right-column {
+        width: 100%;
+    }
+    
+    /* Welcome card mobile */
+    .welcome-card {
+        padding: 20px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.3rem;
+    }
+    
+    .welcome-card p {
+        font-size: 0.9rem;
+    }
+    
+    /* Stats overview mobile */
+    .stats-overview {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    /* Recent moods mobile */
+    .recent-moods {
+        padding: 18px;
+    }
+    
+    .recent-moods h3 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+    
+    .mood-history {
+        gap: 10px;
+    }
+    
+    .mood-entry {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+    
+    /* Sessions section mobile */
+    .sessions-section {
+        padding: 18px;
+    }
+    
+    .sessions-section h3 {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+    
+    .session-item {
+        padding: 12px 15px;
+        font-size: 0.85rem;
     }
 }
+
+@media (max-width: 480px) {
+    /* Extra small mobile devices */
+    
+    /* Mobile top bar adjustments for very small screens */
+    .mobile-top-bar {
+        height: 55px;
+        padding: 0 10px;
+    }
+    
+    .mobile-top-bar .hamburger-button,
+    .mobile-actions button {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .mobile-top-bar .hamburger-button .hamburger-line {
+        width: 18px;
+    }
+    
+    .mobile-actions button i {
+        font-size: 14px;
+    }
+    
+    /* Sidebar adjustments */
+    .sidebar {
+        top: 55px !important;
+        height: calc(100vh - 55px) !important;
+    }
+    
+    /* Overlay adjustments */
+    .mobile-overlay {
+        top: 55px !important;
+        height: calc(100vh - 55px) !important;
+    }
+    
+    /* Main content adjustments */
+    .main-content {
+        padding: 70px 10px 12px 10px;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-card h3 {
+        font-size: 0.85rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .activity-cards {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .activity-card {
+        padding: 12px;
+    }
+    
+    .quote-card {
+        padding: 15px;
+    }
+    
+    .quote-text {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+}
+
+/* Landscape mode on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .main-content {
+        padding: 70px 15px 15px 15px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+    
+    .activity-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Tablet/Desktop adjustments - DISABLED (now using mobile view up to 1024px) */
+/*
+@media (min-width: 769px) and (max-width: 1024px) {
+    .sidebar {
+        width: 200px;
+    }
+    
+    .main-content {
+        margin-left: 200px;
+        padding: 25px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .activity-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+*/
+

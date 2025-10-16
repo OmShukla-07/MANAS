@@ -6,6 +6,7 @@
 {% block extra_css %}
 <meta name="csrf-token" content="{{ csrf_token }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/crisis_popup.css' %}">
 <style>
     .manas-ai-container {
         height: calc(100vh - 120px);
@@ -581,24 +582,168 @@
         background: rgba(40, 167, 69, 0.9);
     }
 
-    /* Responsive adjustments for language controls */
-    @media (max-width: 768px) {
+    /* Responsive adjustments - Mobile and Tablet */
+    @media (max-width: 1024px) {
+        .manas-ai-container {
+            height: calc(100vh - 140px);
+            margin: 0;
+            border-radius: 10px;
+        }
+        
+        .manas-header {
+            padding: 15px 10px;
+        }
+        
+        .manas-title {
+            font-size: 20px;
+        }
+        
+        .companion-selector {
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .companion-btn {
+            padding: 8px 15px;
+            font-size: 13px;
+        }
+        
+        .chat-container {
+            margin: 15px;
+            border-radius: 10px;
+        }
+        
+        .chat-messages {
+            padding: 15px;
+        }
+        
+        .message-bubble {
+            max-width: 85%;
+            font-size: 14px;
+        }
+        
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            font-size: 16px;
+        }
+        
+        .chat-input-container {
+            padding: 15px;
+        }
+        
+        .chat-input {
+            font-size: 14px;
+            padding: 10px 14px;
+        }
+        
+        .send-btn {
+            width: 42px;
+            height: 42px;
+        }
+        
         .language-controls {
             position: static;
             display: flex;
             flex-direction: row;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .language-selector {
             font-size: 12px;
+            padding: 6px 10px;
+        }
+        
+        .translate-toggle {
+            font-size: 11px;
+            padding: 6px 10px;
+        }
+    }
+    
+    /* Small mobile devices */
+    @media (max-width: 480px) {
+        .manas-ai-container {
+            height: calc(100vh - 135px);
+            border-radius: 8px;
+        }
+        
+        .manas-header {
+            padding: 12px 8px;
+        }
+        
+        .manas-title {
+            font-size: 18px;
+        }
+        
+        .companion-selector {
+            gap: 8px;
+        }
+        
+        .companion-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .companion-btn i {
+            font-size: 12px;
+        }
+        
+        .chat-container {
+            margin: 10px;
+            border-radius: 8px;
+        }
+        
+        .chat-messages {
+            padding: 10px;
+        }
+        
+        .message {
+            margin-bottom: 12px;
+        }
+        
+        .message-bubble {
+            max-width: 90%;
+            font-size: 13px;
+            padding: 10px 14px;
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+        }
+        
+        .chat-input-container {
+            padding: 12px;
+        }
+        
+        .chat-input {
+            font-size: 13px;
+            padding: 10px 12px;
+        }
+        
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+        
+        .language-selector {
+            font-size: 11px;
+            padding: 5px 8px;
         }
         
         .translate-toggle {
             font-size: 10px;
             padding: 5px 8px;
+        }
+        
+        .message-translation {
+            font-size: 12px;
+            padding: 6px 10px;
         }
     }
 
@@ -729,6 +874,9 @@
     <i class="fas fa-history"></i>
 </button>
 
+<!-- Crisis Detection Script -->
+<script src="{% static 'js/crisis_detection.js' %}"></script>
+
 <script>
 // Global variables
 let currentCompanion = 'arjun';
@@ -834,9 +982,26 @@ function setupEventListeners() {
 
     sendBtn.addEventListener('click', sendMessage);
 
-    // Auto-resize input
+    // Auto-resize input and crisis detection
+    let crisisDetectionTimeout;
     messageInput.addEventListener('input', function() {
         sendBtn.disabled = this.value.trim() === '';
+        
+        // Crisis detection with debounce (check after user stops typing)
+        if (window.ManasCrisisDetection) {
+            clearTimeout(crisisDetectionTimeout);
+            crisisDetectionTimeout = setTimeout(() => {
+                const text = this.value.trim();
+                if (text) {
+                    const detection = window.ManasCrisisDetection.detect(text);
+                    if (detection && detection.severity === 'severe') {
+                        // Show popup immediately for severe cases
+                        window.ManasCrisisDetection.showPopup(detection.severity);
+                        window.ManasCrisisDetection.sendAlert(text, detection.severity, detection.level);
+                    }
+                }
+            }, 800); // 800ms debounce
+        }
     });
 }
 
@@ -889,6 +1054,17 @@ function sendMessage() {
     const message = messageInput.value.trim();
 
     if (!message || isTyping) return;
+
+    // Check for crisis keywords before sending
+    if (window.ManasCrisisDetection) {
+        const detection = window.ManasCrisisDetection.detect(message);
+        if (detection) {
+            // Show crisis popup
+            window.ManasCrisisDetection.showPopup(detection.severity);
+            // Send alert to backend
+            window.ManasCrisisDetection.sendAlert(message, detection.severity, detection.level);
+        }
+    }
 
     // Add user message
     addUserMessage(message);

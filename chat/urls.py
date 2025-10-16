@@ -5,6 +5,7 @@ URL configuration for chat app.
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views, ai_views, translation_views
+from . import crisis_views as views_crisis
 
 router = DefaultRouter()
 
@@ -60,4 +61,8 @@ urlpatterns = [
     # Admin/Counselor endpoints
     path('admin/sessions/', views.AdminChatSessionListView.as_view(), name='admin_session_list'),
     path('admin/stats/', views.admin_chat_stats, name='admin_chat_stats'),
+    
+    # Crisis Detection & Alerts
+    path('api/crisis-alert/', views_crisis.crisis_alert_api, name='crisis_alert_api'),
+    path('api/crisis-helplines/', views_crisis.crisis_helplines, name='crisis_helplines'),
 ]

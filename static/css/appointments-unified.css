@@ -1,4 +1,7 @@
 /* Appointments Unified Styles */
+* {
+    box-sizing: border-box;
+}
 
 /* Support Banner */
 .support-banner {
@@ -122,6 +125,11 @@
 /* Counselors Section */
 .counselors-section {
     margin-bottom: 2rem;
+}
+
+.counselor-list {
+    display: grid;
+    gap: 1.5rem;
 }
 
 .counselors-grid {
@@ -493,6 +501,268 @@
         width: 95%;
         padding: 1rem;
     }
+}
+
+/* Appointments Section */
+.appointments-section {
+    margin-bottom: 3rem;
+}
+
+.appointments-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.appointment-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #E5E9F2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.appointment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #7BA098;
+}
+
+.appointment-info {
+    display: flex;
+    gap: 1.5rem;
+    flex: 1;
+    align-items: center;
+}
+
+.appointment-date {
+    background: linear-gradient(135deg, #7BA098, #6B9289);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 70px;
+    flex-shrink: 0;
+}
+
+.date-day {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.date-month {
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+}
+
+.appointment-details {
+    flex: 1;
+}
+
+.appointment-details h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2D3748;
+    margin: 0 0 0.5rem 0;
+}
+
+.appointment-type {
+    color: #6B7280;
+    font-size: 0.9rem;
+    margin: 0 0 0.25rem 0;
+}
+
+.appointment-time {
+    color: #4A5568;
+    font-size: 0.9rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+}
+
+.appointment-status {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.status-confirmed {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.status-completed {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.status-cancelled_student,
+.status-cancelled_counselor,
+.status-cancelled {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.status-no_show {
+    background: #E5E7EB;
+    color: #374151;
+}
+
+.appointment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #7BA098;
+    background: white;
+    color: #7BA098;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.action-btn:hover {
+    background: #7BA098;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.action-btn.cancel {
+    border-color: #EF4444;
+    color: #EF4444;
+}
+
+.action-btn.cancel:hover {
+    background: #EF4444;
+    color: white;
+}
+
+.appointment-card.past {
+    opacity: 0.85;
+    background: #F9FAFB;
+}
+
+/* No Appointments */
+.no-appointments {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.no-appointments i {
+    font-size: 4rem;
+    color: #D1D5DB;
+    margin-bottom: 1rem;
+}
+
+.no-appointments p {
+    color: #6B7280;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.book-now-btn {
+    background: linear-gradient(135deg, #7BA098, #6B9289);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.book-now-btn:hover {
+    background: linear-gradient(135deg, #6B9289, #5A7F78);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(123, 160, 152, 0.3);
+}
+
+/* No Counselors */
+.no-counselors {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.no-counselors p {
+    color: #6B7280;
+    font-size: 1rem;
+}
+
+/* My Appointments Section */
+.my-appointments-section {
+    margin-bottom: 3rem;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.cancel-btn,
+.btn-secondary {
+    background: #E5E7EB;
+    color: #374151;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover,
+.btn-secondary:hover {
+    background: #D1D5DB;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #7BA098, #6B9289);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #6B9289, #5A7F78);
+    transform: translateY(-1px);
 }
 
 /* Animation */

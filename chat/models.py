@@ -254,6 +254,10 @@ class MessageReaction(models.Model):
         return f"{self.user.get_full_name()} - {self.get_reaction_type_display()}"
 
 
+# Note: CrisisAlert model is defined in crisis.models
+# Use crisis.models.CrisisAlert instead of defining it here to avoid duplication
+
+
 class ChatAnalytics(models.Model):
     """
     Analytics and insights from chat sessions

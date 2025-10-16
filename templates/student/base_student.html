@@ -28,9 +28,52 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <!-- Mobile Detection Script - Runs immediately -->
+    <script>
+        // Detect mobile device and add class to body
+        (function() {
+            const isMobile = window.innerWidth <= 1024 || 
+                           /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                document.body.classList.add('mobile-device');
+            }
+            
+            // Update on resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth <= 1024) {
+                    document.body.classList.add('mobile-device');
+                } else {
+                    document.body.classList.remove('mobile-device');
+                }
+            });
+        })();
+    </script>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    
+    <!-- Mobile Top Bar (only visible on mobile) -->
+    <div class="mobile-top-bar" id="mobileTopBar">
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        
+        <div class="mobile-actions">
+            <a href="{% url 'student_profile' %}" class="mobile-profile-btn">
+                <i class="fas fa-user"></i>
+            </a>
+            <a href="{% url 'logout' %}" class="mobile-logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+    </div>
+    
     <div class="dashboard-container">
+
         <!-- Sidebar Navigation (Exact from Original) -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo-container">
                     <div class="brain-icon">
@@ -38,6 +81,10 @@
                     </div>
                     <span class="logo-text">MANAS</span>
                 </div>
+                <!-- Mobile Close Button -->
+                <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             
             <nav class="sidebar-nav">
@@ -108,7 +155,7 @@
                         </div>
                         <span class="profile-text">Profile</span>
                     </a>
-                    <a href="{% url 'logout' %}" class="logout-link" style="margin-left: 20px; color: #6B7280; text-decoration: none;">
+                    <a href="{% url 'logout' %}" class="logout-link">
                         <div class="logout-icon">
                             <i class="fas fa-sign-out-alt"></i>
                         </div>
@@ -124,6 +171,82 @@
             </div>
         </main>
     </div>
+
+    <!-- Mobile Menu JavaScript -->
+    <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+            const sidebar = document.getElementById('sidebar');
+            const mobileOverlay = document.getElementById('mobileOverlay');
+            
+            // Add pulse animation to hamburger on first load (mobile only)
+            if (window.innerWidth <= 768 && mobileMenuToggle) {
+                mobileMenuToggle.style.animation = 'pulse 2s ease-in-out 3';
+                setTimeout(() => {
+                    mobileMenuToggle.style.animation = '';
+                }, 6000);
+            }
+            
+            function openMobileMenu() {
+                sidebar.classList.add('sidebar-open');
+                mobileOverlay.classList.add('overlay-active');
+                mobileMenuToggle.classList.add('active'); // Animate hamburger to X
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+            
+            function closeMobileMenu() {
+                sidebar.classList.remove('sidebar-open');
+                mobileOverlay.classList.remove('overlay-active');
+                mobileMenuToggle.classList.remove('active'); // Animate X back to hamburger
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+            
+            // Toggle menu
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    if (sidebar.classList.contains('sidebar-open')) {
+                        closeMobileMenu();
+                    } else {
+                        openMobileMenu();
+                    }
+                });
+            }
+            
+            // Close button
+            if (mobileCloseBtn) {
+                mobileCloseBtn.addEventListener('click', closeMobileMenu);
+            }
+            
+            // Overlay click
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', closeMobileMenu);
+            }
+            
+            // Close menu when clicking on a nav link (mobile)
+            const navLinks = sidebar.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // Close menu on window resize if width > 768px
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Log for debugging
+            console.log('Mobile menu initialized');
+            console.log('Viewport width:', window.innerWidth);
+            console.log('Hamburger button:', mobileMenuToggle ? 'Found' : 'Not found');
+        });
+    </script>
 
     <!-- JavaScript -->
     {% block extra_js %}{% endblock %}

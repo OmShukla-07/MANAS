@@ -1,0 +1,406 @@
+/**
+ * Crisis Popup Styles
+ * Emergency helpline popup styling
+ */
+
+/* Crisis Popup Container */
+.crisis-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: crisisFadeIn 0.3s ease-out;
+}
+
+.crisis-popup.closing {
+    animation: crisisFadeOut 0.3s ease-in;
+}
+
+/* Overlay */
+.crisis-popup-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+}
+
+/* Popup Content */
+.crisis-popup-content {
+    position: relative;
+    background: white;
+    border-radius: 16px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    animation: crisisSlideUp 0.4s ease-out;
+}
+
+/* Header */
+.crisis-popup-header {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    padding: 24px;
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.crisis-popup-header.moderate {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+}
+
+.crisis-icon {
+    font-size: 32px;
+    animation: crisisPulse 2s infinite;
+}
+
+.crisis-popup-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    flex: 1;
+}
+
+.crisis-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 32px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.crisis-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+/* Body */
+.crisis-popup-body {
+    padding: 28px;
+}
+
+.crisis-message {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #fff3cd;
+    border-left: 4px solid #ff9800;
+    border-radius: 8px;
+}
+
+.crisis-message strong {
+    color: #dc3545;
+}
+
+/* Helpline Section */
+.helpline-section {
+    margin: 24px 0;
+}
+
+.helpline-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.helpline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.helpline-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s;
+}
+
+.helpline-item:hover {
+    border-color: #4ca1af;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(76, 161, 175, 0.2);
+}
+
+.helpline-item.urgent {
+    background: #fff5f5;
+    border-color: #dc3545;
+    animation: urgentPulse 2s infinite;
+}
+
+.helpline-info {
+    flex: 1;
+}
+
+.helpline-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.helpline-desc {
+    margin: 0;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.helpline-number {
+    background: linear-gradient(135deg, #4ca1af, #598980);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+    transition: all 0.3s;
+}
+
+.helpline-number:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(76, 161, 175, 0.4);
+    color: white;
+}
+
+.helpline-item.urgent .helpline-number {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+/* Urgent Notice */
+.urgent-notice {
+    background: #fff5f5;
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.urgent-notice strong {
+    color: #dc3545;
+    font-size: 15px;
+}
+
+/* Action Buttons */
+.crisis-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn-crisis-primary,
+.btn-crisis-secondary {
+    flex: 1;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-crisis-primary {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-crisis-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+}
+
+.btn-crisis-secondary {
+    background: white;
+    color: #333;
+    border: 2px solid #dee2e6;
+}
+
+.btn-crisis-secondary:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+/* Footer */
+.crisis-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+    color: #6c757d;
+}
+
+.crisis-footer small {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Animations */
+@keyframes crisisFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes crisisFadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes crisisSlideUp {
+    from {
+        transform: translateY(60px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes crisisPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes urgentPulse {
+    0%, 100% {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+    }
+    50% {
+        border-color: #ff6b7a;
+        box-shadow: 0 0 0 6px rgba(220, 53, 69, 0);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .crisis-popup-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+    
+    .crisis-popup-header h2 {
+        font-size: 20px;
+    }
+    
+    .crisis-popup-body {
+        padding: 20px;
+    }
+    
+    .helpline-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .helpline-number {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .crisis-actions {
+        flex-direction: column;
+    }
+    
+    .btn-crisis-primary,
+    .btn-crisis-secondary {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .crisis-popup-header {
+        padding: 18px;
+    }
+    
+    .crisis-icon {
+        font-size: 24px;
+    }
+    
+    .crisis-popup-header h2 {
+        font-size: 18px;
+    }
+    
+    .crisis-popup-body {
+        padding: 16px;
+    }
+    
+    .crisis-message {
+        font-size: 14px;
+        padding: 12px;
+    }
+    
+    .helpline-section h3 {
+        font-size: 16px;
+    }
+    
+    .helpline-item {
+        padding: 12px;
+    }
+    
+    .helpline-label {
+        font-size: 14px;
+    }
+    
+    .helpline-desc {
+        font-size: 12px;
+    }
+    
+    .helpline-number {
+        font-size: 14px;
+        padding: 8px 14px;
+    }
+}
+
+/* Print styles - hide popup when printing */
+@media print {
+    .crisis-popup {
+        display: none !important;
+    }
+}
