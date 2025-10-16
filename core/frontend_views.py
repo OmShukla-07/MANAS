@@ -20,8 +20,8 @@ from datetime import date, datetime, timedelta
 
 
 def home_view(request):
-    """Serve the premium modern landing page with professional design"""
-    print("DEBUG: home_view called - serving PREMIUM landing template (modern gradient design)")
+    """Serve the main landing page"""
+    print("DEBUG: home_view called - serving main landing page")
     
     # Basic site context with cache busting
     import time
@@ -31,10 +31,9 @@ def home_view(request):
         'is_authenticated': request.user.is_authenticated,
         'username': request.user.username if request.user.is_authenticated else None,
         'cache_version': int(time.time()),  # Force browser refresh
-        'debug_info': 'Premium Modern - Gradient Design with Floating Animations',
     }
     
-    return render(request, 'landing_premium.html', context)
+    return render(request, 'landing.html', context)
 
 
 def choose_user_view(request):

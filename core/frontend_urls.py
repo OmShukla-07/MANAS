@@ -27,8 +27,6 @@ urlpatterns = [
     # Frontend authentication URLs (pure HTML/CSS/JS interface)
     path('', frontend_views.home_view, name='landing'),  # Landing page with AI chatbot info
     path('home/', frontend_views.home_view, name='home'),  # Home alias
-    path('learn-more/', TemplateView.as_view(template_name='learn_more.html'), name='learn_more'),  # Learn more page
-    path('landing-premium/', frontend_views.home_view, name='landing_premium'),  # Premium landing alias
     path('login/', frontend_views.login_view, name='login'),  # Clean HTML login page
     path('choose-user/', frontend_views.choose_user_view, name='choose_user'),  # New clean user selection
     path('user-selection/', frontend_views.redirect_old_user_selection, name='redirect_old'),  # Redirect old URL
@@ -114,9 +112,6 @@ urlpatterns = [
     path('appointments/api/reschedule/<uuid:appointment_id>/', frontend_views.reschedule_appointment, name='reschedule_appointment'),
     path('appointments/api/dashboard-stats/', frontend_views.appointment_dashboard_stats, name='appointment_dashboard_stats'),
     
-    # Admin access guide
-    path('admin-access/', TemplateView.as_view(template_name='admin_access_guide.html'), name='admin_access_guide'),
-    
     # Frontend file serving for standalone HTML files
     path('frontend/<path:file_path>', serve_frontend_file, name='serve_frontend'),
     path('js/manas-api-client.js', serve_frontend_file, {'file_path': 'js/manas-api-client.js'}, name='manas_api_client'),
@@ -128,7 +123,4 @@ urlpatterns = [
     path('counsellor-dashboard.html', serve_frontend_file, {'file_path': 'counsellor-dashboard.html'}, name='counsellor_dashboard_html'),
     path('student/enhanced_dashboard.html', serve_frontend_file, {'file_path': 'student/enhanced_dashboard.html'}, name='enhanced_student_dashboard_html'),
     path('counselor/enhanced_dashboard.html', serve_frontend_file, {'file_path': 'counselor/enhanced_dashboard.html'}, name='enhanced_counselor_dashboard_html'),
-    
-    # Admin URLs fixed page
-    path('admin-fixed/', TemplateView.as_view(template_name='admin_urls_fixed.html'), name='admin_fixed_guide'),
 ]
