@@ -27,6 +27,7 @@ urlpatterns = [
     # Frontend authentication URLs (pure HTML/CSS/JS interface)
     path('', frontend_views.home_view, name='landing'),  # Landing page with AI chatbot info
     path('home/', frontend_views.home_view, name='home'),  # Home alias
+    path('learn-more/', TemplateView.as_view(template_name='learn_more.html'), name='learn_more'),  # Learn more page
     path('login/', frontend_views.login_view, name='login'),  # Clean HTML login page
     path('choose-user/', frontend_views.choose_user_view, name='choose_user'),  # New clean user selection
     path('user-selection/', frontend_views.redirect_old_user_selection, name='redirect_old'),  # Redirect old URL
