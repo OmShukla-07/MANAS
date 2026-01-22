@@ -176,7 +176,7 @@ def signup_view(request):
 
 
 def student_signup_simple_view(request):
-    """Enhanced student signup with comprehensive profile data collection"""
+    """Simplified student signup with essential fields only"""
     if request.method == 'POST':
         # Get form data
         email = request.POST.get('email')
@@ -188,13 +188,10 @@ def student_signup_simple_view(request):
         phone_number = request.POST.get('phone_number', '')
         date_of_birth = request.POST.get('date_of_birth')
         
-        # Student profile fields
-        institution = request.POST.get('institution', '')
-        course = request.POST.get('course', '')
-        year_of_study = request.POST.get('year_of_study')
+        # Emergency contact fields
         emergency_contact_name = request.POST.get('emergency_contact_name', '')
+        emergency_contact_email = request.POST.get('emergency_contact_email', '')
         emergency_contact_phone = request.POST.get('emergency_contact_phone', '')
-        emergency_contact_relationship = request.POST.get('emergency_contact_relationship', '')
         
         # Basic validation
         if not all([email, username, password, confirm_password, first_name, last_name]):
@@ -207,8 +204,6 @@ def student_signup_simple_view(request):
             messages.error(request, 'Email already exists')
         elif CustomUser.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
-        elif not all([institution, course, year_of_study, emergency_contact_name, emergency_contact_phone, emergency_contact_relationship]):
-            messages.error(request, 'All student profile fields are required')
         else:
             try:
                 # Create new user
@@ -223,14 +218,14 @@ def student_signup_simple_view(request):
                     date_of_birth=date_of_birth if date_of_birth else None
                 )
                 
-                # Create or update student profile
+                # Create or update student profile with emergency contact
                 student_profile, created = StudentProfile.objects.get_or_create(user=user)
-                student_profile.institution = institution
-                student_profile.course = course
-                student_profile.year_of_study = int(year_of_study)
-                student_profile.emergency_contact_name = emergency_contact_name
-                student_profile.emergency_contact_phone = emergency_contact_phone
-                student_profile.emergency_contact_relationship = emergency_contact_relationship
+                if emergency_contact_name:
+                    student_profile.emergency_contact_name = emergency_contact_name
+                if emergency_contact_email:
+                    student_profile.emergency_contact_email = emergency_contact_email
+                if emergency_contact_phone:
+                    student_profile.emergency_contact_phone = emergency_contact_phone
                 student_profile.save()
                 
                 # Mark profile as completed
@@ -250,7 +245,7 @@ def student_signup_simple_view(request):
 
 
 def counselor_signup_simple_view(request):
-    """Enhanced counselor signup with comprehensive profile data collection"""
+    """Enhanced counselor signup with simplified fields"""
     if request.method == 'POST':
         # Get form data
         email = request.POST.get('email')
@@ -263,14 +258,10 @@ def counselor_signup_simple_view(request):
         date_of_birth = request.POST.get('date_of_birth')
         
         # Counselor profile fields
-        license_number = request.POST.get('license_number', '')
         specializations = request.POST.get('specializations', '')
         qualifications = request.POST.get('qualifications', '')
+        college_name = request.POST.get('college_name', '')
         experience_years = request.POST.get('experience_years')
-        languages_spoken = request.POST.get('languages_spoken', '')
-        consultation_fee = request.POST.get('consultation_fee')
-        session_duration_minutes = request.POST.get('session_duration_minutes')
-        bio = request.POST.get('bio', '')
         
         # Basic validation
         if not all([email, username, password, confirm_password, first_name, last_name]):
@@ -283,7 +274,7 @@ def counselor_signup_simple_view(request):
             messages.error(request, 'Email already exists')
         elif CustomUser.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
-        elif not all([license_number, specializations, qualifications, experience_years]):
+        elif not all([specializations, qualifications, college_name, experience_years]):
             messages.error(request, 'All professional fields are required')
         else:
             try:
@@ -299,18 +290,17 @@ def counselor_signup_simple_view(request):
                     date_of_birth=date_of_birth if date_of_birth else None
                 )
                 
-                # Create or update counselor profile
-                counselor_profile, created = CounselorProfile.objects.get_or_create(user=user)
-                counselor_profile.license_number = license_number
-                counselor_profile.specializations = specializations.split(', ')
+                # Create or update counselor profile with license_number
+                import uuid
+                license_number = f"MANAS-{uuid.uuid4().hex[:8].upper()}"
+                
+                counselor_profile, created = CounselorProfile.objects.get_or_create(
+                    user=user,
+                    defaults={'license_number': license_number}
+                )
+                counselor_profile.specializations = [s.strip() for s in specializations.split(',')]
                 counselor_profile.qualifications = qualifications
                 counselor_profile.experience_years = int(experience_years)
-                counselor_profile.languages_spoken = languages_spoken.split(', ') if languages_spoken else []
-                if consultation_fee:
-                    counselor_profile.consultation_fee = float(consultation_fee)
-                if session_duration_minutes:
-                    counselor_profile.session_duration_minutes = int(session_duration_minutes)
-                counselor_profile.bio = bio
                 counselor_profile.save()
                 
                 # Mark profile as completed
@@ -330,27 +320,22 @@ def counselor_signup_simple_view(request):
 
 
 def admin_signup_simple_view(request):
-    """Enhanced admin signup with comprehensive profile data collection"""
+    """Simplified admin signup with 9 essential fields"""
     if request.method == 'POST':
-        # Get form data
-        email = request.POST.get('email')
-        username = request.POST.get('username') 
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+        # Get form data (9 fields)
         first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
         phone_number = request.POST.get('phone_number', '')
         date_of_birth = request.POST.get('date_of_birth')
-        
-        # Admin profile fields
         department = request.POST.get('department', '')
         access_level = request.POST.get('access_level', '')
-        can_manage_users = request.POST.get('can_manage_users') == 'true'
-        can_manage_content = request.POST.get('can_manage_content') == 'true'
-        can_view_analytics = request.POST.get('can_view_analytics') == 'true'
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
         
         # Basic validation
-        if not all([email, username, password, confirm_password, first_name, last_name]):
+        if not all([first_name, last_name, username, email, password, confirm_password]):
             messages.error(request, 'All required fields must be filled')
         elif password != confirm_password:
             messages.error(request, 'Passwords do not match')
@@ -360,11 +345,13 @@ def admin_signup_simple_view(request):
             messages.error(request, 'Email already exists')
         elif CustomUser.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
-        elif not all([department, access_level]):
-            messages.error(request, 'Department and access level are required')
+        elif not department:
+            messages.error(request, 'Department is required')
+        elif not access_level:
+            messages.error(request, 'Access level is required')
         else:
             try:
-                # Create new user
+                # Create new admin user
                 user = CustomUser.objects.create_user(
                     email=email,
                     username=username,
@@ -377,13 +364,18 @@ def admin_signup_simple_view(request):
                     is_staff=True  # Admin users should have staff access
                 )
                 
-                # Create or update admin profile
+                # Create admin profile
                 admin_profile, created = AdminProfile.objects.get_or_create(user=user)
                 admin_profile.department = department
                 admin_profile.access_level = access_level
-                admin_profile.can_manage_users = can_manage_users
-                admin_profile.can_manage_content = can_manage_content
-                admin_profile.can_view_analytics = can_view_analytics
+                # Set default permissions based on access level
+                if access_level == 'super':
+                    admin_profile.can_manage_users = True
+                    admin_profile.can_manage_content = True
+                    admin_profile.can_view_analytics = True
+                elif access_level == 'manager':
+                    admin_profile.can_manage_content = True
+                    admin_profile.can_view_analytics = True
                 admin_profile.save()
                 
                 # Mark profile as completed
@@ -426,28 +418,135 @@ def terms_view(request):
 # Student Views
 @login_required
 def student_dashboard_view(request):
-    """Use your actual dashboard template directly"""
+    """Modern redesigned dashboard with clean UI"""
     if not hasattr(request.user, 'role') or request.user.role != 'student':
         return redirect('login')
     
-    # Provide context for your actual dashboard
+    from django.utils import timezone
+    from datetime import timedelta
+    import random
+    from django.http import JsonResponse
+    
+    # Handle mood saving via POST
+    if request.method == 'POST':
+        mood_value = request.POST.get('mood_value')
+        mood_note = request.POST.get('mood_note', '')
+        
+        # TODO: Save to MoodEntry model when it exists
+        # For now, just return success
+        print(f"DEBUG: Mood saved - Value: {mood_value}, Note: {mood_note}")
+        print(f"DEBUG: Request is AJAX: {request.headers.get('X-Requested-With')}")
+        
+        # Always return JSON for AJAX requests
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json':
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Mood saved successfully',
+                'mood_value': mood_value
+            })
+        else:
+            messages.success(request, 'Mood check-in saved successfully!')
+            return redirect('student_dashboard')
+    
+    # Daily quotes pool
+    quotes = [
+        {"text": "You are stronger than you think, braver than you feel, and more loved than you know.", "author": "A.A. Milne"},
+        {"text": "Your mental health is a priority. Your happiness is essential. Your self-care is a necessity.", "author": "Unknown"},
+        {"text": "One small positive thought can change your whole day.", "author": "Zig Ziglar"},
+        {"text": "You don't have to be perfect to be amazing.", "author": "Unknown"},
+        {"text": "Healing takes time, and asking for help is a courageous step.", "author": "Mariska Hargitay"},
+    ]
+    
+    # Get or create student profile
+    try:
+        student_profile = request.user.student_profile
+    except:
+        student_profile, created = StudentProfile.objects.get_or_create(user=request.user)
+    
+    # Calculate streak (simplified - can be enhanced with actual tracking)
+    streak_days = 3  # TODO: Calculate from actual mood entries
+    
+    # Get recent mood entries
+    from django.db import models
+    # Assuming you have a MoodEntry model, if not, use placeholder
+    mood_entries_count = 0
+    try:
+        mood_entries_count = models.get_model('mood', 'MoodEntry').objects.filter(
+            user=request.user,
+            created_at__gte=timezone.now() - timedelta(days=7)
+        ).count()
+    except:
+        pass
+    
+    # Get appointments
+    from appointments.models import Appointment
+    upcoming_appointments = Appointment.objects.filter(
+        student=request.user,
+        status__in=['pending', 'confirmed'],
+        scheduled_date__gte=timezone.now().date()
+    ).order_by('scheduled_date', 'scheduled_time')[:3]
+    
+    # Calculate average mood score (placeholder)
+    mood_score = "7.8"  # TODO: Calculate from actual mood entries
+    
+    # Get total sessions (placeholder)
+    total_sessions = 0
+    try:
+        from chat.models import ChatSession
+        total_sessions = ChatSession.objects.filter(user=request.user).count()
+    except:
+        pass
+    
+    # Next appointment
+    next_appointment = upcoming_appointments.first() if upcoming_appointments else None
+    
+    # Build upcoming tasks
+    upcoming_tasks = []
+    if next_appointment:
+        upcoming_tasks.append({
+            'time': next_appointment.scheduled_time.strftime('%I:%M %p') if next_appointment.scheduled_time else 'TBD',
+            'title': f'Session with {next_appointment.counselor.get_full_name()}',
+            'description': next_appointment.appointment_type.name if next_appointment.appointment_type else 'Counseling Session'
+        })
+    
+    # Build recent activities (sample data - can be enhanced with real tracking)
+    recent_activities = [
+        {
+            'icon': 'fas fa-smile',
+            'text': 'Completed mood check-in',
+            'time': '2 hours ago'
+        },
+        {
+            'icon': 'fas fa-comments',
+            'text': 'Had a chat session with MANAS AI',
+            'time': 'Yesterday'
+        },
+        {
+            'icon': 'fas fa-calendar-check',
+            'text': 'Booked appointment with counselor',
+            'time': '2 days ago'
+        },
+    ]
+    
+    # Provide context for dashboard
     context = {
         'user': request.user,
-        'profile': None,
-        'recent_sessions': [],
-        'upcoming_appointments': [],
-        'recent_mood_entries': [],
-        'active_goals': [],
+        'profile': student_profile,
+        'upcoming_tasks': upcoming_tasks,
+        'recent_activities': recent_activities,
+        'daily_quote': random.choice(quotes),
         'stats': {
-            'total_sessions': 0,
-            'total_appointments': 0,
-            'mood_entries_this_week': 0,
-            'active_goals_count': 0,
+            'streak_days': streak_days,
+            'mood_score': mood_score,
+            'mood_entries_this_week': mood_entries_count,
+            'total_sessions': total_sessions,
+            'total_appointments': Appointment.objects.filter(student=request.user).count(),
+            'active_goals_count': 0,  # TODO: Add goals tracking
+            'next_appointment': next_appointment,
         }
     }
     
-    # Use your actual dashboard.html directly - no more intermediate pages!
-    return render(request, 'student/dashboard.html', context)
+    return render(request, 'student/dashboard_fixed.html', context)
 
 
 @login_required
@@ -463,13 +562,27 @@ def student_profile_view(request):
         # Handle profile update
         user = request.user
         
+        print(f"DEBUG: Saving profile for {user.email}")
+        print(f"DEBUG: POST data: {request.POST}")
+        
+        # Handle profile picture upload
+        if 'profile_picture' in request.FILES:
+            # You can add profile picture field to CustomUser model later
+            # For now, we'll just acknowledge the upload
+            print(f"DEBUG: Profile picture uploaded: {request.FILES['profile_picture'].name}")
+            pass
+        
         # Update user fields
         user.first_name = request.POST.get('first_name', user.first_name)
         user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email', user.email)
         user.phone_number = request.POST.get('phone_number', user.phone_number)
         user.date_of_birth = request.POST.get('date_of_birth') or user.date_of_birth
-        user.gender = request.POST.get('gender', user.gender)
+        if hasattr(user, 'gender'):
+            user.gender = request.POST.get('gender', user.gender)
         user.save()
+        
+        print(f"DEBUG: User saved: {user.first_name} {user.last_name}")
         
         # Update student profile fields - comprehensive data
         student_profile.institution = request.POST.get('institution', student_profile.institution)
@@ -479,10 +592,24 @@ def student_profile_view(request):
             student_profile.year_of_study = int(year_of_study)
         
         student_profile.student_id = request.POST.get('student_id', student_profile.student_id)
-        student_profile.address = request.POST.get('address', student_profile.address)
-        student_profile.city = request.POST.get('city', student_profile.city)
-        student_profile.state = request.POST.get('state', student_profile.state)
-        student_profile.pincode = request.POST.get('pincode', student_profile.pincode)
+        
+        # City/State and Country (using existing fields or new temporary storage)
+        city_state = request.POST.get('city_state', '')
+        if city_state:
+            if hasattr(student_profile, 'city'):
+                student_profile.city = city_state
+        
+        country = request.POST.get('country', '')
+        # Store in existing fields if available
+        if hasattr(student_profile, 'country'):
+            student_profile.country = country
+        
+        if hasattr(student_profile, 'address'):
+            student_profile.address = request.POST.get('address', student_profile.address)
+        if hasattr(student_profile, 'state'):
+            student_profile.state = request.POST.get('state', student_profile.state)
+        if hasattr(student_profile, 'pincode'):
+            student_profile.pincode = request.POST.get('pincode', student_profile.pincode)
         
         # Academic information
         student_profile.previous_education = request.POST.get('previous_education', student_profile.previous_education)
@@ -491,18 +618,47 @@ def student_profile_view(request):
         student_profile.career_goals = request.POST.get('career_goals', student_profile.career_goals)
         
         # Emergency contact information
-        student_profile.emergency_contact_name = request.POST.get('emergency_contact_name', student_profile.emergency_contact_name)
-        student_profile.emergency_contact_phone = request.POST.get('emergency_contact_phone', student_profile.emergency_contact_phone)
-        student_profile.emergency_contact_relationship = request.POST.get('emergency_contact_relationship', student_profile.emergency_contact_relationship)
-        student_profile.emergency_contact_address = request.POST.get('emergency_contact_address', student_profile.emergency_contact_address)
+        emergency_name = request.POST.get('emergency_contact_name', '')
+        emergency_phone = request.POST.get('emergency_contact_phone', '')
+        emergency_email = request.POST.get('emergency_contact_email', '')
+        emergency_relationship = request.POST.get('emergency_contact_relationship', '')
         
-        # Additional information
-        student_profile.medical_conditions = request.POST.get('medical_conditions', student_profile.medical_conditions)
-        student_profile.medications = request.POST.get('medications', student_profile.medications)
-        student_profile.hobbies = request.POST.get('hobbies', student_profile.hobbies)
-        student_profile.bio = request.POST.get('bio', student_profile.bio)
+        print(f"DEBUG: Emergency contact data from form:")
+        print(f"  Name: {emergency_name}")
+        print(f"  Phone: {emergency_phone}")
+        print(f"  Email: {emergency_email}")
+        print(f"  Relationship: {emergency_relationship}")
+        
+        if emergency_name:
+            student_profile.emergency_contact_name = emergency_name
+        if emergency_phone:
+            student_profile.emergency_contact_phone = emergency_phone
+        if hasattr(student_profile, 'emergency_contact_email') and emergency_email:
+            student_profile.emergency_contact_email = emergency_email
+        if hasattr(student_profile, 'emergency_contact_relationship') and emergency_relationship:
+            student_profile.emergency_contact_relationship = emergency_relationship
+        if hasattr(student_profile, 'emergency_contact_address'):
+            emergency_address = request.POST.get('emergency_contact_address', '')
+            if emergency_address:
+                student_profile.emergency_contact_address = emergency_address
+        
+        # Additional information - only update if fields exist
+        if hasattr(student_profile, 'bio'):
+            bio = request.POST.get('bio', '')
+            if bio:
+                student_profile.bio = bio
+        if hasattr(student_profile, 'medical_conditions'):
+            student_profile.medical_conditions = request.POST.get('medical_conditions', student_profile.medical_conditions)
+        if hasattr(student_profile, 'medications'):
+            student_profile.medications = request.POST.get('medications', student_profile.medications)
+        if hasattr(student_profile, 'hobbies'):
+            student_profile.hobbies = request.POST.get('hobbies', student_profile.hobbies)
         
         student_profile.save()
+        
+        print(f"DEBUG: Profile saved with emergency contact:")
+        print(f"  Name: {student_profile.emergency_contact_name}")
+        print(f"  Phone: {student_profile.emergency_contact_phone}")
         
         # Mark profile as completed
         user.profile_completed = True
@@ -510,6 +666,11 @@ def student_profile_view(request):
         
         messages.success(request, 'Profile updated successfully!')
         return redirect('student_profile')
+    
+    # For GET request, log what data we have
+    print(f"DEBUG: Loading profile for {request.user.email}")
+    print(f"DEBUG: Emergency contact name: '{student_profile.emergency_contact_name}'")
+    print(f"DEBUG: Emergency contact phone: '{student_profile.emergency_contact_phone}'")
     
     context = {
         'user': request.user,

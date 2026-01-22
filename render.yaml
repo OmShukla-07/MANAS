@@ -1,12 +1,12 @@
 services:
   # Web Service (Django App)
   - type: web
-    name: manas-backend
+    name: manas-mental-health
     env: python
     region: singapore
     plan: free
-    buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py createcachetable"
-    startCommand: "gunicorn manas_backend.wsgi:application"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "gunicorn manas_backend.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4"
     healthCheckPath: /
     envVars:
       - key: PYTHON_VERSION
@@ -23,19 +23,15 @@ services:
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
+      - key: ALLOWED_HOSTS
+        value: *.onrender.com
       - key: GEMINI_API_KEY
-        sync: false  # Set this manually in Render dashboard
-      - key: SUPABASE_URL
-        sync: false  # Set this manually in Render dashboard
-      - key: SUPABASE_KEY
-        sync: false  # Set this manually in Render dashboard
-      - key: SUPABASE_JWT_SECRET
-        sync: false  # Set this manually in Render dashboard
+        sync: false  # Set manually in Render dashboard
 
 databases:
-  # PostgreSQL Database
+  # PostgreSQL Database (Free tier)
   - name: manas-postgres
-    databaseName: manas
-    user: manas
+    databaseName: manas_db
+    user: manas_user
     plan: free
     region: singapore

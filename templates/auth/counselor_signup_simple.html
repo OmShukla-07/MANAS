@@ -7,10 +7,8 @@
     <link rel="icon" type="image/png" href="/static/images/images/icons/manas fevicon edited.png">
     <link rel="shortcut icon" type="image/png" href="/static/images/images/icons/manas fevicon edited.png">
     <link rel="apple-touch-icon" href="/static/images/images/icons/manas fevicon edited.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -18,170 +16,291 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
             overflow-x: hidden;
+            background: #ffffff;
         }
 
-        /* Animated background particles */
-        .particles {
-            position: fixed;
+        .signup-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Left Side - Branding */
+        .branding-section {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #5568e3 50%, #4451b8 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            position: sticky;
             top: 0;
-            left: 0;
+            height: 100vh;
+        }
+
+        /* Animated background elements */
+        .branding-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .floating-shapes {
+            position: absolute;
             width: 100%;
             height: 100%;
+            top: 0;
+            left: 0;
             pointer-events: none;
-            z-index: 0;
         }
 
-        .particle {
+        .shape {
             position: absolute;
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            animation: float 8s ease-in-out infinite;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .shape:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            top: 30%;
+            right: 15%;
+            animation-delay: 1s;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.4; }
-            50% { transform: translateY(-30px) rotate(180deg); opacity: 0.9; }
-        }
-
-        /* Floating medical icons */
-        .floating-icon {
-            position: absolute;
-            font-size: 28px;
-            color: rgba(255, 255, 255, 0.25);
-            animation: floatIcon 10s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-40px) rotate(15deg); }
-        }
-
-        .icon-1 { top: 15%; left: 8%; animation-delay: 0s; }
-        .icon-2 { top: 25%; right: 12%; animation-delay: 2.5s; }
-        .icon-3 { bottom: 25%; left: 12%; animation-delay: 5s; }
-        .icon-4 { bottom: 35%; right: 8%; animation-delay: 7.5s; }
-
-        .container {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(25px);
-            border-radius: 28px;
-            padding: 45px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.18);
-            max-width: 700px;
-            width: 100%;
-            position: relative;
-            z-index: 1;
-            animation: slideInUp 0.9s ease-out;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(60px);
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.5;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+                opacity: 0.8;
             }
         }
 
-        .header {
+        .brand-content {
             text-align: center;
-            margin-bottom: 45px;
+            color: white;
+            z-index: 10;
+            max-width: 500px;
         }
 
-        .logo-container {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 25px;
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            border-radius: 22px;
+        .logo-wrapper {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: pulse 2.5s ease-in-out infinite;
-            box-shadow: 0 12px 25px rgba(5, 150, 105, 0.35);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: pulse 3s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+            }
         }
 
-        .logo-container i {
-            font-size: 38px;
+        .logo-wrapper i {
+            font-size: 48px;
             color: white;
         }
 
-        .header h1 {
-            color: #2d3748;
-            font-size: 2.8rem;
-            margin-bottom: 12px;
-            font-weight: 800;
+        .brand-content h1 {
             font-family: 'Playfair Display', serif;
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: fadeInDown 1s ease-out 0.3s both;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
         }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-35px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header p {
-            color: #4a5568;
+        .brand-content p {
             font-size: 1.15rem;
             line-height: 1.6;
-            animation: fadeInUp 1s ease-out 0.5s both;
+            opacity: 0.95;
+            font-weight: 400;
+            margin-bottom: 2rem;
         }
 
-        @keyframes fadeInUp {
+        .benefits-list {
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .benefit-item i {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .benefit-item span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Right Side - Signup Form */
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem;
+            background: #ffffff;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .form-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: #718096;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Messages */
+        .messages {
+            margin-bottom: 2rem;
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(35px);
+                transform: translateX(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
         }
 
+        .alert-error {
+            background: #fff5f5;
+            color: #c53030;
+            border-left: 4px solid #c53030;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            color: #22543d;
+            border-left: 4px solid #22543d;
+        }
+
+        /* Form Styles */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            gap: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 28px;
-            animation: fadeInLeft 0.8s ease-out;
+            margin-bottom: 1.5rem;
         }
 
         .form-group.full-width {
@@ -190,20 +309,16 @@
 
         .section-title {
             grid-column: 1 / -1;
-            color: #059669;
+            color: #667eea;
             font-weight: 700;
-            font-size: 1.3rem;
-            margin: 35px 0 25px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid rgba(5, 150, 105, 0.25);
+            font-size: 1.2rem;
+            margin: 2rem 0 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
             position: relative;
             display: flex;
             align-items: center;
-        }
-
-        .section-title i {
-            margin-right: 12px;
-            font-size: 1.1rem;
+            gap: 0.5rem;
         }
 
         .section-title::after {
@@ -213,477 +328,577 @@
             left: 0;
             width: 60px;
             height: 2px;
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            animation: expandWidth 1.2s ease-out;
+            background: linear-gradient(135deg, #667eea 0%, #5568e3 100%);
         }
 
-        @keyframes expandWidth {
-            from { width: 0; }
-            to { width: 60px; }
-        }
-
-        label {
+        .form-label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 0.5rem;
             color: #2d3748;
             font-weight: 600;
-            font-size: 14px;
-            transition: color 0.3s ease;
+            font-size: 0.9rem;
         }
 
-        input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="number"], select, textarea {
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
             width: 100%;
-            padding: 16px 22px;
+            padding: 0.9rem 0.9rem 0.9rem 2.8rem;
             border: 2px solid #e2e8f0;
-            border-radius: 14px;
-            font-size: 16px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(255, 255, 255, 0.95);
-            position: relative;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+            color: #2d3748;
         }
 
-        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, 
-        input[type="date"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+        .form-input:focus {
             outline: none;
-            border-color: #059669;
-            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
-            transform: translateY(-3px);
-            background: white;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 90px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .input-group {
-            position: relative;
+            border-color: #667eea;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
         }
 
         .input-icon {
             position: absolute;
+            left: 1rem;
             top: 50%;
-            right: 18px;
             transform: translateY(-50%);
             color: #a0aec0;
-            font-size: 18px;
-            pointer-events: none;
+            font-size: 1rem;
             transition: color 0.3s ease;
         }
 
-        .input-group input:focus ~ .input-icon,
-        .input-group select:focus ~ .input-icon {
-            color: #059669;
+        .form-input:focus ~ .input-icon {
+            color: #667eea;
         }
 
-        .submit-btn {
+        .signup-button {
             width: 100%;
-            padding: 20px;
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            background: linear-gradient(135deg, #667eea 0%, #5568e3 100%);
             color: white;
             border: none;
-            border-radius: 14px;
-            font-size: 18px;
-            font-weight: 700;
+            padding: 1.15rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-top: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 2rem;
             position: relative;
             overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            box-shadow: 0 8px 16px rgba(5, 150, 105, 0.3);
         }
 
-        .submit-btn::before {
+        .signup-button::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-            transition: left 0.6s ease;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
         }
 
-        .submit-btn:hover::before {
+        .signup-button:hover::before {
             left: 100%;
         }
 
-        .submit-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(5, 150, 105, 0.4);
-        }
-
-        .submit-btn:active {
+        .signup-button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
         }
 
-        .links {
+        .signup-button:active {
+            transform: translateY(0);
+        }
+
+        .signup-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .divider {
             text-align: center;
-            margin-top: 35px;
-            animation: fadeIn 1s ease-out 0.9s both;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .links a {
-            color: #059669;
-            text-decoration: none;
-            font-weight: 600;
-            margin: 0 20px;
-            transition: all 0.3s ease;
+            margin: 2rem 0;
             position: relative;
-            display: inline-flex;
-            align-items: center;
         }
 
-        .links a i {
-            margin-right: 8px;
-        }
-
-        .links a::after {
+        .divider::before {
             content: '';
             position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -6px;
-            left: 50%;
-            background: #059669;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1.5rem;
+            color: #718096;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .login-link {
+            text-align: center;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            display: inline-block;
             transition: all 0.3s ease;
         }
 
-        .links a:hover::after {
-            width: 100%;
-            left: 0;
+        .login-link a:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateY(-1px);
         }
 
-        .links a:hover {
-            color: #047857;
-            transform: translateY(-3px);
+        .back-link {
+            margin-top: 2rem;
+            text-align: center;
         }
 
-        .role-badge {
+        .back-link a {
+            color: #718096;
+            text-decoration: none;
+            font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            color: white;
-            padding: 14px 28px;
-            border-radius: 30px;
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 20px rgba(5, 150, 105, 0.35);
-            animation: bounceIn 1.2s ease-out;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 8px;
         }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.08); }
-            70% { transform: scale(0.92); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .role-badge i {
-            margin-right: 10px;
-            font-size: 18px;
-        }
-
-        /* Custom Select Styling */
-        select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 15px center;
-            background-repeat: no-repeat;
-            background-size: 18px;
-            padding-right: 45px;
-            appearance: none;
-            cursor: pointer;
+        .back-link a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 35px;
-                margin: 15px;
+        @media (max-width: 1024px) {
+            .branding-section {
+                display: none;
             }
-            
+
+            .form-section {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .form-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-header h2 {
+                font-size: 2rem;
+            }
+
             .form-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .header h1 {
-                font-size: 2.2rem;
             }
 
-            .logo-container {
-                width: 80px;
-                height: 80px;
-            }
-
-            .logo-container i {
-                font-size: 32px;
+            .brand-content h1 {
+                font-size: 2rem;
             }
         }
 
-        /* Loading Animation */
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
+        /* Animations */
+        .form-container {
+            animation: fadeIn 0.8s ease-out;
         }
 
-        .loading .submit-btn {
-            background: #a0aec0;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-
-        /* Form sections with staggered animation */
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .form-group:nth-child(3) { animation-delay: 0.3s; }
-        .form-group:nth-child(4) { animation-delay: 0.4s; }
     </style>
 </head>
 <body>
-    <!-- Animated Background Elements -->
-    <div class="particles">
-        <div class="particle" style="left: 15%; top: 25%; animation-delay: 0s;"></div>
-        <div class="particle" style="left: 25%; top: 65%; animation-delay: 1.5s;"></div>
-        <div class="particle" style="left: 75%; top: 45%; animation-delay: 3s;"></div>
-        <div class="particle" style="left: 85%; top: 15%; animation-delay: 4.5s;"></div>
-        <div class="particle" style="left: 5%; top: 85%; animation-delay: 6s;"></div>
-        <div class="particle" style="left: 65%; top: 85%; animation-delay: 7.5s;"></div>
-    </div>
-
-    <!-- Floating Medical Icons -->
-    <div class="floating-icon icon-1"><i class="fas fa-stethoscope"></i></div>
-    <div class="floating-icon icon-2"><i class="fas fa-heart-pulse"></i></div>
-    <div class="floating-icon icon-3"><i class="fas fa-brain"></i></div>
-    <div class="floating-icon icon-4"><i class="fas fa-user-md"></i></div>
-
-    <div class="container">
-        <div class="header">
-            <div class="logo-container">
-                <i class="fas fa-user-md"></i>
+    <div class="signup-wrapper">
+        <!-- Left Side - Branding -->
+        <div class="branding-section">
+            <div class="floating-shapes">
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
             </div>
-            <div class="role-badge">
-                <i class="fas fa-stethoscope"></i>
-                Counselor Registration
+            
+            <div class="brand-content">
+                <div class="logo-wrapper">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                
+                <h1>Join MANAS</h1>
+                <p>Become a Professional Counselor</p>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <i class="fas fa-users"></i>
+                        <span>Help students in need</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Track your impact</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Flexible scheduling</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-comments"></i>
+                        <span>AI-assisted sessions</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-certificate"></i>
+                        <span>Professional development</span>
+                    </div>
+                </div>
             </div>
-            <h1>Join MANAS</h1>
-            <p>Create your professional counselor account to provide comprehensive mental health support</p>
         </div>
 
-        <form method="post" id="counselorSignupForm">
-            {% csrf_token %}
-            <input type="hidden" name="role" value="counselor">
-            
-            <div class="form-grid">
-                <!-- Basic Information Section -->
-                <h3 class="section-title">
-                    <i class="fas fa-user"></i> Basic Information
-                </h3>
+        <!-- Right Side - Signup Form -->
+        <div class="form-section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Counselor Registration</h2>
+                    <p>Create your professional account to start making a difference</p>
+                </div>
+
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {% if message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% else %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post" id="signupForm">
+                    {% csrf_token %}
+                    
+                    <div class="form-grid">
+                        <!-- Personal Information -->
+                        <h3 class="section-title">
+                            <i class="fas fa-user"></i> Personal Information
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="first_name" class="form-label">First Name *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="first_name" 
+                                    name="first_name" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Dr. Surbhi"
+                                >
+                                <i class="input-icon fas fa-user"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="last_name" class="form-label">Last Name *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="last_name" 
+                                    name="last_name" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Pranav"
+                                >
+                                <i class="input-icon fas fa-user"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username" class="form-label">Username *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="username" 
+                                    name="username" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="dr.surbhipranav"
+                                >
+                                <i class="input-icon fas fa-at"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="surbhi.pranav@example.com"
+                                >
+                                <i class="input-icon fas fa-envelope"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone_number" class="form-label">Phone Number *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="phone_number" 
+                                    name="phone_number" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="+91 9876543210"
+                                >
+                                <i class="input-icon fas fa-phone"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date_of_birth" class="form-label">Date of Birth *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="date" 
+                                    id="date_of_birth" 
+                                    name="date_of_birth" 
+                                    class="form-input" 
+                                    required
+                                >
+                                <i class="input-icon fas fa-calendar"></i>
+                            </div>
+                        </div>
+
+                        <!-- Professional Information -->
+                        <h3 class="section-title">
+                            <i class="fas fa-briefcase"></i> Professional Information
+                        </h3>
+
+                        <div class="form-group full-width">
+                            <label for="specializations" class="form-label">Specializations *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="specializations" 
+                                    name="specializations" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Anxiety, Depression, Stress Management"
+                                >
+                                <i class="input-icon fas fa-brain"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="qualifications" class="form-label">Qualifications *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="qualifications" 
+                                    name="qualifications" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Ph.D. in Clinical Psychology, Licensed Professional Counselor (LPC)"
+                                >
+                                <i class="input-icon fas fa-certificate"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="college_name" class="form-label">College/University *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="college_name" 
+                                    name="college_name" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Harvard University"
+                                >
+                                <i class="input-icon fas fa-university"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="experience_years" class="form-label">Years of Experience *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="number" 
+                                    id="experience_years" 
+                                    name="experience_years" 
+                                    class="form-input" 
+                                    required 
+                                    min="0"
+                                    placeholder="5"
+                                >
+                                <i class="input-icon fas fa-clock"></i>
+                            </div>
+                        </div>
+
+                        <!-- Security -->
+                        <h3 class="section-title">
+                            <i class="fas fa-lock"></i> Security
+                        </h3>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    class="form-input" 
+                                    required 
+                                    minlength="6"
+                                    placeholder="Minimum 6 characters"
+                                >
+                                <i class="input-icon fas fa-key"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm_password" class="form-label">Confirm Password *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="confirm_password" 
+                                    name="confirm_password" 
+                                    class="form-input" 
+                                    required 
+                                    minlength="6"
+                                    placeholder="Re-enter password"
+                                >
+                                <i class="input-icon fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="signup-button" id="signupBtn">
+                        <i class="fas fa-user-plus"></i>
+                        Create Counselor Account
+                    </button>
+                </form>
                 
-                <div class="form-group">
-                    <label for="first_name">First Name *</label>
-                    <div class="input-group">
-                        <input type="text" id="first_name" name="first_name" required>
-                        <i class="input-icon fas fa-user"></i>
-                    </div>
+                <div class="divider">
+                    <span>Already have an account?</span>
                 </div>
-
-                <div class="form-group">
-                    <label for="last_name">Last Name *</label>
-                    <div class="input-group">
-                        <input type="text" id="last_name" name="last_name" required>
-                        <i class="input-icon fas fa-user"></i>
-                    </div>
+                
+                <div class="login-link">
+                    <a href="{% url 'login' %}">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </a>
                 </div>
-
-                <div class="form-group">
-                    <label for="username">Username *</label>
-                    <div class="input-group">
-                        <input type="text" id="username" name="username" required>
-                        <i class="input-icon fas fa-at"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <div class="input-group">
-                        <input type="email" id="email" name="email" required>
-                        <i class="input-icon fas fa-envelope"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone_number">Phone Number</label>
-                    <div class="input-group">
-                        <input type="text" id="phone_number" name="phone_number" placeholder="e.g., +91 9876543210">
-                        <i class="input-icon fas fa-phone"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="date_of_birth">Date of Birth</label>
-                    <div class="input-group">
-                        <input type="date" id="date_of_birth" name="date_of_birth">
-                        <i class="input-icon fas fa-calendar"></i>
-                    </div>
-                </div>
-
-                <!-- Professional Information Section -->
-                <h3 class="section-title">
-                    <i class="fas fa-certificate"></i> Professional Information
-                </h3>
-
-                <div class="form-group">
-                    <label for="license_number">License Number *</label>
-                    <div class="input-group">
-                        <input type="text" id="license_number" name="license_number" placeholder="e.g., COUNS/2024/001234" required>
-                        <i class="input-icon fas fa-id-badge"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="specializations">Specializations *</label>
-                    <div class="input-group">
-                        <input type="text" id="specializations" name="specializations" placeholder="e.g., Anxiety, Depression, Stress Management" required>
-                        <i class="input-icon fas fa-tags"></i>
-                    </div>
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="qualifications">Qualifications *</label>
-                    <textarea id="qualifications" name="qualifications" rows="3" placeholder="e.g., M.A. Psychology, Ph.D. Clinical Psychology, Certified Therapist..." required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="experience_years">Years of Experience *</label>
-                    <select id="experience_years" name="experience_years" required>
-                        <option value="">Select Experience</option>
-                        <option value="0">Less than 1 year</option>
-                        <option value="1">1-2 years</option>
-                        <option value="2">2-5 years</option>
-                        <option value="5">5-10 years</option>
-                        <option value="10">10+ years</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="languages_spoken">Languages Spoken</label>
-                    <div class="input-group">
-                        <input type="text" id="languages_spoken" name="languages_spoken" placeholder="e.g., English, Hindi, Tamil, Bengali">
-                        <i class="input-icon fas fa-language"></i>
-                    </div>
-                </div>
-
-                <!-- Consultation Details Section -->
-                <h3 class="section-title">
-                    <i class="fas fa-calendar-check"></i> Consultation Details
-                </h3>
-
-                <div class="form-group">
-                    <label for="consultation_fee">Consultation Fee (₹ per session)</label>
-                    <div class="input-group">
-                        <input type="number" id="consultation_fee" name="consultation_fee" min="0" placeholder="e.g., 1500">
-                        <i class="input-icon fas fa-rupee-sign"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="session_duration_minutes">Session Duration</label>
-                    <select id="session_duration_minutes" name="session_duration_minutes">
-                        <option value="">Select Duration</option>
-                        <option value="30">30 minutes</option>
-                        <option value="45">45 minutes</option>
-                        <option value="60">60 minutes</option>
-                        <option value="90">90 minutes</option>
-                    </select>
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="bio">Professional Bio</label>
-                    <textarea id="bio" name="bio" rows="4" placeholder="Brief description of your therapeutic approach, expertise, and philosophy in helping clients..."></textarea>
-                </div>
-
-                <!-- Security Section -->
-                <h3 class="section-title">
-                    <i class="fas fa-lock"></i> Security
-                </h3>
-
-                <div class="form-group">
-                    <label for="password">Password *</label>
-                    <div class="input-group">
-                        <input type="password" id="password" name="password" required>
-                        <i class="input-icon fas fa-key"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="confirm_password">Confirm Password *</label>
-                    <div class="input-group">
-                        <input type="password" id="confirm_password" name="confirm_password" required>
-                        <i class="input-icon fas fa-check"></i>
-                    </div>
+                
+                <div class="back-link">
+                    <a href="{% url 'landing' %}">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Home
+                    </a>
                 </div>
             </div>
-
-            <button type="submit" class="submit-btn">
-                <i class="fas fa-user-plus"></i> Create Counselor Account
-            </button>
-        </form>
-
-        <div class="links">
-            <a href="/choose-user/"><i class="fas fa-arrow-left"></i> Back to Role Selection</a>
-            <a href="/login/"><i class="fas fa-sign-in-alt"></i> Already have an account?</a>
         </div>
     </div>
 
     <script>
-        // Form animation on load
         document.addEventListener('DOMContentLoaded', function() {
-            const formGroups = document.querySelectorAll('.form-group');
-            formGroups.forEach((group, index) => {
-                group.style.animationDelay = `${index * 0.08}s`;
-            });
-        });
+            const signupForm = document.getElementById('signupForm');
+            const signupBtn = document.getElementById('signupBtn');
+            const originalBtnText = signupBtn.innerHTML;
 
-        // Form validation and submission
-        document.getElementById('counselorSignupForm').addEventListener('submit', function(e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-            
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Passwords do not match!');
-                return;
-            }
-            
-            // Add loading state
-            this.classList.add('loading');
-        });
+            signupForm.addEventListener('submit', function(e) {
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                    return;
+                }
 
-        // Enhanced input focus animations
-        document.querySelectorAll('input, select, textarea').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'scale(1.02)';
+                if (password.length < 6) {
+                    e.preventDefault();
+                    alert('Password must be at least 6 characters long!');
+                    return;
+                }
+                
+                // Show loading state
+                signupBtn.disabled = true;
+                signupBtn.innerHTML = '<div class="loading-spinner"></div> Creating Account...';
+                
+                // Re-enable button after 5 seconds if form hasn't redirected
+                setTimeout(() => {
+                    signupBtn.disabled = false;
+                    signupBtn.innerHTML = originalBtnText;
+                }, 5000);
             });
-            
-            input.addEventListener('blur', function() {
-                this.parentElement.style.transform = 'scale(1)';
-            });
-        });
 
-        // Auto-resize textareas
-        document.querySelectorAll('textarea').forEach(textarea => {
-            textarea.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = this.scrollHeight + 'px';
+            // Focus animation for inputs
+            const inputs = document.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-1px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    window.location.href = "{% url 'landing' %}";
+                }
             });
         });
     </script>

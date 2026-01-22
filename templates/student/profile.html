@@ -1,273 +1,545 @@
 {% extends 'student/base_student.html' %}
 {% load static %}
 
-{% block title %}Profile - MANAS{% endblock %}
+{% block title %}My Profile - MANAS{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/profile-enhanced.css' %}">
+<style>
+    .profile-page {
+        background: #f9fafb;
+        min-height: 100vh;
+        padding: 2rem;
+    }
+
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .profile-header {
+        padding: 2rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .profile-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .profile-body {
+        padding: 2rem;
+    }
+
+    /* Avatar Section */
+    .avatar-section {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4ca1af 0%, #2c7a75 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        font-weight: 600;
+        flex-shrink: 0;
+        overflow: hidden;
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .avatar-circle.has-image {
+        background: none;
+    }
+
+    .avatar-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .avatar-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-change-avatar {
+        padding: 0.625rem 1.25rem;
+        background: linear-gradient(135deg, #4ca1af 0%, #2c7a75 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-change-avatar:hover {
+        background: linear-gradient(135deg, #2c7a75 0%, #4ca1af 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(76, 161, 175, 0.3);
+    }
+
+    .btn-remove-avatar {
+        padding: 0.625rem 1.25rem;
+        background: white;
+        color: #6b7280;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-remove-avatar:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+    }
+
+    /* Form Styles */
+    .profile-form {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        color: #1f2937;
+        background: white;
+        transition: all 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        outline: none;
+        border-color: #4ca1af;
+        box-shadow: 0 0 0 3px rgba(76, 161, 175, 0.1);
+    }
+
+    .form-input::placeholder {
+        color: #9ca3af;
+    }
+
+    .form-select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+
+    .form-textarea {
+        min-height: 100px;
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn-cancel {
+        padding: 0.625rem 1.5rem;
+        background: white;
+        color: #6b7280;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+    }
+
+    .btn-save {
+        padding: 0.625rem 1.5rem;
+        background: linear-gradient(135deg, #4ca1af 0%, #2c7a75 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-save:hover {
+        background: linear-gradient(135deg, #2c7a75 0%, #4ca1af 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(76, 161, 175, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .profile-page {
+            padding: 1rem;
+        }
+
+        .profile-form {
+            grid-template-columns: 1fr;
+        }
+
+        .avatar-section {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+        .btn-cancel,
+        .btn-save {
+            width: 100%;
+        }
+    }
+
+    /* Success Message */
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #6ee7b7;
+    }
+
+    .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+    }
+</style>
 {% endblock %}
 
 {% block header_title %}My Profile{% endblock %}
 
 {% block content %}
-<div class="content-body fade-in">
-    <div class="profile-sections">
-        <!-- Profile Card - Full Width -->
-        <div class="profile-card">
-            <div class="profile-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="profile-card-content">
-                <div class="profile-info-left">
-                    <h3>{{ user.get_full_name|default:user.username }}</h3>
-                    <p>{{ user.email }}</p>
-                    <div class="availability-badge">Member since {{ user.date_joined|date:"M Y" }}</div>
+<div class="profile-page">
+    <div class="profile-container">
+        <div class="profile-body">
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Avatar Section -->
+            <div class="avatar-section">
+                <div class="avatar-circle" id="avatarCircle">
+                    {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
                 </div>
-                
-                <!-- Quick Stats -->
-                <div class="activities-grid">
-                    <div class="activity-card">
-                        <div class="activity-icon breathe">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div class="activity-title">Wellness Score</div>
-                        <div class="activity-description">8.5/10 - Great!</div>
-                    </div>
-                    
-                    <div class="activity-card">
-                        <div class="activity-icon journal">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div class="activity-title">Sessions</div>
-                        <div class="activity-description">12 completed</div>
-                    </div>
-                    
-                    <div class="activity-card">
-                        <div class="activity-icon relax">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="activity-title">Achievements</div>
-                        <div class="activity-description">7 badges earned</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Information -->
-        <div class="profile-info">
-            <div class="tab-navigation">
-                <button class="tab-btn active" onclick="showProfileTab('personal')">Personal Info</button>
-                <button class="tab-btn" onclick="showProfileTab('preferences')">Preferences</button>
-                <button class="tab-btn" onclick="showProfileTab('privacy')">Privacy</button>
-            </div>
-
-            <!-- Personal Information Tab -->
-            <div id="personal-tab" class="profile-tab">
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    <!-- Basic Information Section -->
-                    <h4 style="margin-bottom: 1rem; color: #2d3748; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">
-                        <i class="fas fa-user"></i> Basic Information
-                    </h4>
-                    
-                    <div class="form-group">
-                        <label for="first_name">First Name</label>
-                        <input type="text" id="first_name" name="first_name" class="form-input" value="{{ user.first_name }}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="last_name">Last Name</label>
-                        <input type="text" id="last_name" name="last_name" class="form-input" value="{{ user.last_name }}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-input" value="{{ user.email }}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone_number">Phone Number</label>
-                        <input type="tel" id="phone_number" name="phone_number" class="form-input" value="{{ user.phone_number|default:'' }}" placeholder="Enter your phone number">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="date_of_birth">Date of Birth</label>
-                        <input type="date" id="date_of_birth" name="date_of_birth" class="form-input" value="{% if user.date_of_birth %}{{ user.date_of_birth|date:'Y-m-d' }}{% endif %}">
-                    </div>
-
-                    <!-- Academic Information Section -->
-                    <h4 style="margin: 2rem 0 1rem 0; color: #2d3748; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">
-                        <i class="fas fa-graduation-cap"></i> Academic Information
-                    </h4>
-                    
-                    <div class="form-group">
-                        <label for="institution">Institution/University</label>
-                        <input type="text" id="institution" name="institution" class="form-input" value="{{ profile.institution|default:'' }}" placeholder="e.g., Delhi University">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="course">Course/Program</label>
-                        <input type="text" id="course" name="course" class="form-input" value="{{ profile.course|default:'' }}" placeholder="e.g., B.Tech Computer Science">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="year_of_study">Year of Study</label>
-                        <select id="year_of_study" name="year_of_study" class="form-input">
-                            <option value="">Select Year</option>
-                            <option value="1" {% if profile.year_of_study == 1 %}selected{% endif %}>1st Year</option>
-                            <option value="2" {% if profile.year_of_study == 2 %}selected{% endif %}>2nd Year</option>
-                            <option value="3" {% if profile.year_of_study == 3 %}selected{% endif %}>3rd Year</option>
-                            <option value="4" {% if profile.year_of_study == 4 %}selected{% endif %}>4th Year</option>
-                            <option value="5" {% if profile.year_of_study == 5 %}selected{% endif %}>5th Year</option>
-                            <option value="6" {% if profile.year_of_study == 6 %}selected{% endif %}>6th Year</option>
-                        </select>
-                    </div>
-
-                    <!-- Emergency Contact Section -->
-                    <h4 style="margin: 2rem 0 1rem 0; color: #2d3748; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">
-                        <i class="fas fa-phone"></i> Emergency Contact
-                    </h4>
-                    
-                    <div class="form-group">
-                        <label for="emergency_contact_name">Emergency Contact Name</label>
-                        <input type="text" id="emergency_contact_name" name="emergency_contact_name" class="form-input" value="{{ profile.emergency_contact_name|default:'' }}" placeholder="e.g., Parent/Guardian Name">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="emergency_contact_phone">Emergency Contact Phone</label>
-                        <input type="tel" id="emergency_contact_phone" name="emergency_contact_phone" class="form-input" value="{{ profile.emergency_contact_phone|default:'' }}" placeholder="e.g., +91 9876543210">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="emergency_contact_relationship">Relationship</label>
-                        <select id="emergency_contact_relationship" name="emergency_contact_relationship" class="form-input">
-                            <option value="">Select Relationship</option>
-                            <option value="father" {% if profile.emergency_contact_relationship == 'father' %}selected{% endif %}>Father</option>
-                            <option value="mother" {% if profile.emergency_contact_relationship == 'mother' %}selected{% endif %}>Mother</option>
-                            <option value="guardian" {% if profile.emergency_contact_relationship == 'guardian' %}selected{% endif %}>Guardian</option>
-                            <option value="sibling" {% if profile.emergency_contact_relationship == 'sibling' %}selected{% endif %}>Sibling</option>
-                            <option value="spouse" {% if profile.emergency_contact_relationship == 'spouse' %}selected{% endif %}>Spouse</option>
-                            <option value="friend" {% if profile.emergency_contact_relationship == 'friend' %}selected{% endif %}>Friend</option>
-                            <option value="other" {% if profile.emergency_contact_relationship == 'other' %}selected{% endif %}>Other</option>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Update Profile
+                <div class="avatar-actions">
+                    <button type="button" class="btn-change-avatar" onclick="document.getElementById('avatarInput').click()">
+                        Change picture
                     </button>
-                </form>
+                    <button type="button" class="btn-remove-avatar" onclick="removeAvatar()">
+                        Remove picture
+                    </button>
+                </div>
             </div>
 
-            <!-- Preferences Tab -->
-            <div id="preferences-tab" class="profile-tab" style="display: none;">
-                <form onsubmit="updatePreferences(event)">
-                    <div class="form-group">
-                        <label for="notifications">Email Notifications</label>
-                        <select id="notifications" class="form-input">
-                            <option value="all">All notifications</option>
-                            <option value="important">Important only</option>
-                            <option value="none">None</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="reminderTime">Daily Wellness Reminder</label>
-                        <input type="time" id="reminderTime" class="form-input" value="09:00">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="theme">Theme Preference</label>
-                        <select id="theme" class="form-input">
-                            <option value="light">Light Mode</option>
-                            <option value="dark">Dark Mode</option>
-                            <option value="auto">Auto (System)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="language">Language</label>
-                        <select id="language" class="form-input">
-                            <option value="en">English</option>
-                            <option value="hi">Hindi</option>
-                            <option value="es">Spanish</option>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Save Preferences</button>
-                </form>
-            </div>
+            <!-- Debug info (remove in production) -->
+            <script>
+                console.log('Profile Data:', {
+                    first_name: '{{ user.first_name }}',
+                    last_name: '{{ user.last_name }}',
+                    email: '{{ user.email }}',
+                    phone: '{{ user.phone_number }}',
+                    institution: '{{ profile.institution }}',
+                    course: '{{ profile.course }}',
+                    year: '{{ profile.year_of_study }}',
+                    student_id: '{{ profile.student_id }}',
+                    emergency_name: '{{ profile.emergency_contact_name }}',
+                    emergency_phone: '{{ profile.emergency_contact_phone }}',
+                    emergency_email: '{{ profile.emergency_contact_email }}',
+                });
+            </script>
 
-            <!-- Privacy Tab -->
-            <div id="privacy-tab" class="profile-tab" style="display: none;">
-                <form onsubmit="updatePrivacy(event)">
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="profileVisible" checked> 
-                            Make my profile visible to other students
-                        </label>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="shareProgress" checked> 
-                            Allow sharing wellness progress with counselors
-                        </label>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="anonymousData"> 
-                            Contribute anonymous data for research
-                        </label>
-                    </div>
-                    
-                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
-                        <h4 style="margin-bottom: 1rem; color: #dc2626;">Data Management</h4>
-                        <button type="button" class="btn btn-secondary" onclick="exportData()">
-                            <i class="fas fa-download"></i> Export My Data
-                        </button>
-                        <button type="button" class="btn" style="background: #dc2626; color: white; margin-left: 0.5rem;" onclick="deleteAccount()">
-                            <i class="fas fa-trash"></i> Delete Account
-                        </button>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Save Privacy Settings</button>
-                </form>
-            </div>
-        </div>
-    </div>
+            <!-- Profile Form -->
+            <form method="post" enctype="multipart/form-data" class="profile-form">
+                {% csrf_token %}
+                
+                <!-- Hidden file input for avatar -->
+                <input type="file" id="avatarInput" name="profile_picture" accept="image/*" style="display: none;">
+                
+                <!-- First Name -->
+                <div class="form-group">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input 
+                        type="text" 
+                        id="first_name" 
+                        name="first_name" 
+                        class="form-input" 
+                        value="{{ user.first_name }}" 
+                        placeholder="Tejas"
+                        required
+                    >
+                </div>
 
-    <!-- Recent Activity -->
-    <div style="margin-top: 2rem;">
-        <h3 style="margin-bottom: 1rem; color: #2d3748;">Recent Activity</h3>
-        <div class="support-grid">
-            <div class="support-card">
-                <div class="support-icon breathe">
-                    <i class="fas fa-comments"></i>
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input 
+                        type="text" 
+                        id="last_name" 
+                        name="last_name" 
+                        class="form-input" 
+                        value="{{ user.last_name }}" 
+                        placeholder="Shukla"
+                        required
+                    >
                 </div>
-                <h4>Chat with MANAS AI</h4>
-                <p>Had a helpful conversation about stress management</p>
-                <small style="color: #64748b;">2 hours ago</small>
-            </div>
-            
-            <div class="support-card">
-                <div class="support-icon journal">
-                    <i class="fas fa-book"></i>
+
+                <!-- Email Address -->
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        value="{{ user.email }}" 
+                        placeholder="tejas.shukla@example.com"
+                        required
+                    >
                 </div>
-                <h4>Read Article</h4>
-                <p>Managing Exam Anxiety - 7 minute read</p>
-                <small style="color: #64748b;">Yesterday</small>
-            </div>
-            
-            <div class="support-card">
-                <div class="support-icon relax">
-                    <i class="fas fa-gamepad"></i>
+
+                <!-- Phone -->
+                <div class="form-group">
+                    <label for="phone_number" class="form-label">Phone</label>
+                    <input 
+                        type="tel" 
+                        id="phone_number" 
+                        name="phone_number" 
+                        class="form-input" 
+                        value="{{ user.phone_number|default:'' }}" 
+                        placeholder="+91 9876543210"
+                    >
                 </div>
-                <h4>Played Wellness Game</h4>
-                <p>Completed Breathing Bubble exercise</p>
-                <small style="color: #64748b;">2 days ago</small>
-            </div>
+
+                <!-- Institution -->
+                <div class="form-group">
+                    <label for="institution" class="form-label">Institution</label>
+                    <input 
+                        type="text" 
+                        id="institution" 
+                        name="institution" 
+                        class="form-input" 
+                        value="{{ profile.institution|default:'' }}" 
+                        placeholder="Delhi University"
+                    >
+                </div>
+
+                <!-- Course -->
+                <div class="form-group">
+                    <label for="course" class="form-label">Course</label>
+                    <input 
+                        type="text" 
+                        id="course" 
+                        name="course" 
+                        class="form-input" 
+                        value="{{ profile.course|default:'' }}" 
+                        placeholder="B.Tech Computer Science"
+                    >
+                </div>
+
+                <!-- Year of Study -->
+                <div class="form-group">
+                    <label for="year_of_study" class="form-label">Year of Study</label>
+                    <select id="year_of_study" name="year_of_study" class="form-select">
+                        <option value="">Select Year</option>
+                        <option value="1" {% if profile.year_of_study == 1 %}selected{% endif %}>1st Year</option>
+                        <option value="2" {% if profile.year_of_study == 2 %}selected{% endif %}>2nd Year</option>
+                        <option value="3" {% if profile.year_of_study == 3 %}selected{% endif %}>3rd Year</option>
+                        <option value="4" {% if profile.year_of_study == 4 %}selected{% endif %}>4th Year</option>
+                        <option value="5" {% if profile.year_of_study == 5 %}selected{% endif %}>5th Year</option>
+                        <option value="6" {% if profile.year_of_study == 6 %}selected{% endif %}>6th Year</option>
+                    </select>
+                </div>
+
+                <!-- Student ID -->
+                <div class="form-group">
+                    <label for="student_id" class="form-label">Student ID</label>
+                    <input 
+                        type="text" 
+                        id="student_id" 
+                        name="student_id" 
+                        class="form-input" 
+                        value="{{ profile.student_id|default:'' }}" 
+                        placeholder="STU2024001"
+                    >
+                </div>
+
+                <!-- City/State -->
+                <div class="form-group">
+                    <label for="city_state" class="form-label">City/State</label>
+                    <input 
+                        type="text" 
+                        id="city_state" 
+                        name="city_state" 
+                        class="form-input" 
+                        value="" 
+                        placeholder="New Delhi"
+                    >
+                </div>
+
+                <!-- Country -->
+                <div class="form-group">
+                    <label for="country" class="form-label">Country</label>
+                    <select id="country" name="country" class="form-select">
+                        <option value="">Select Country</option>
+                        <option value="IN" selected>India</option>
+                        <option value="US">United States</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="CA">Canada</option>
+                        <option value="AU">Australia</option>
+                        <option value="SG">Singapore</option>
+                        <option value="AE">United Arab Emirates</option>
+                        <option value="DE">Germany</option>
+                        <option value="FR">France</option>
+                        <option value="JP">Japan</option>
+                        <option value="CN">China</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+
+                <!-- Emergency Contact Name -->
+                <div class="form-group">
+                    <label for="emergency_contact_name" class="form-label">Emergency Contact Name</label>
+                    <input 
+                        type="text" 
+                        id="emergency_contact_name" 
+                        name="emergency_contact_name" 
+                        class="form-input" 
+                        value="{{ profile.emergency_contact_name|default:'' }}" 
+                        placeholder="Ramesh Shukla"
+                    >
+                </div>
+
+                <!-- Emergency Contact Phone -->
+                <div class="form-group">
+                    <label for="emergency_contact_phone" class="form-label">Emergency Contact Phone</label>
+                    <input 
+                        type="tel" 
+                        id="emergency_contact_phone" 
+                        name="emergency_contact_phone" 
+                        class="form-input" 
+                        value="{{ profile.emergency_contact_phone|default:'' }}" 
+                        placeholder="+91 9123456789"
+                    >
+                </div>
+
+                <!-- Emergency Contact Email -->
+                <div class="form-group">
+                    <label for="emergency_contact_email" class="form-label">Emergency Contact Email</label>
+                    <input 
+                        type="email" 
+                        id="emergency_contact_email" 
+                        name="emergency_contact_email" 
+                        class="form-input" 
+                        value="{{ profile.emergency_contact_email|default:'' }}" 
+                        placeholder="parent@example.com"
+                    >
+                </div>
+
+                <!-- Emergency Contact Relationship -->
+                <div class="form-group">
+                    <label for="emergency_contact_relationship" class="form-label">Relationship</label>
+                    <select id="emergency_contact_relationship" name="emergency_contact_relationship" class="form-select">
+                        <option value="">Select Relationship</option>
+                        <option value="father" {% if profile.emergency_contact_relationship == 'father' %}selected{% endif %}>Father</option>
+                        <option value="mother" {% if profile.emergency_contact_relationship == 'mother' %}selected{% endif %}>Mother</option>
+                        <option value="guardian" {% if profile.emergency_contact_relationship == 'guardian' %}selected{% endif %}>Guardian</option>
+                        <option value="sibling" {% if profile.emergency_contact_relationship == 'sibling' %}selected{% endif %}>Sibling</option>
+                        <option value="other" {% if profile.emergency_contact_relationship == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                <!-- Bio -->
+                <div class="form-group full-width">
+                    <label for="bio" class="form-label">Bio</label>
+                    <textarea 
+                        id="bio" 
+                        name="bio" 
+                        class="form-textarea" 
+                        placeholder="Tell us about yourself..."
+                    >{{ profile.bio|default:'' }}</textarea>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="window.history.back()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-save">
+                        Save
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -275,66 +547,70 @@
 
 {% block extra_js %}
 <script>
-    function showProfileTab(tabName) {
-        // Remove active class from all tab buttons
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        tabBtns.forEach(btn => btn.classList.remove('active'));
-        
-        // Add active class to clicked button
-        event.target.classList.add('active');
-        
-        // Hide all tabs
-        const tabs = document.querySelectorAll('.profile-tab');
-        tabs.forEach(tab => tab.style.display = 'none');
-        
-        // Show selected tab
-        const targetTab = document.getElementById(tabName + '-tab');
-        if (targetTab) {
-            targetTab.style.display = 'block';
+    // Avatar change handler
+    document.getElementById('avatarInput').addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                // Preview the image
+                const avatarCircle = document.getElementById('avatarCircle');
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                
+                // Clear existing content and add image
+                avatarCircle.innerHTML = '';
+                avatarCircle.appendChild(img);
+                avatarCircle.classList.add('has-image');
+                
+                // Show success message
+                showNotification('Picture selected! Click Save to update your profile.', 'info');
+            };
+            
+            reader.readAsDataURL(file);
         }
+    });
+    
+    // Remove avatar function
+    function removeAvatar() {
+        const avatarCircle = document.getElementById('avatarCircle');
+        const firstName = '{{ user.first_name|first|upper }}';
+        const lastName = '{{ user.last_name|first|upper }}';
+        
+        // Remove image class and reset to initials
+        avatarCircle.classList.remove('has-image');
+        avatarCircle.innerHTML = firstName + lastName;
+        
+        // Clear file input
+        document.getElementById('avatarInput').value = '';
+        
+        showNotification('Avatar removed. Click Save to update.', 'info');
     }
-
-    function updateProfile(event) {
-        event.preventDefault();
-        showNotification('Profile updated successfully!', 'success');
-    }
-
-    function updatePreferences(event) {
-        event.preventDefault();
-        showNotification('Preferences saved!', 'success');
-    }
-
-    function updatePrivacy(event) {
-        event.preventDefault();
-        showNotification('Privacy settings updated!', 'success');
-    }
-
-    function exportData() {
-        showNotification('Preparing your data export...', 'info');
-        setTimeout(() => {
-            showNotification('Data export ready! Check your email.', 'success');
-        }, 2000);
-    }
-
-    function deleteAccount() {
-        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-            showNotification('Account deletion initiated. You will receive a confirmation email.', 'info');
-        }
-    }
-
+    
+    // Show notification function
     function showNotification(message, type) {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-            <span>${message}</span>
-        `;
-        document.body.appendChild(notification);
-        setTimeout(() => notification.classList.add('show'), 100);
+        const existingAlert = document.querySelector('.alert');
+        if (existingAlert) {
+            existingAlert.remove();
+        }
+        
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'error' : 'success'}`;
+        alert.textContent = message;
+        
+        const profileBody = document.querySelector('.profile-body');
+        profileBody.insertBefore(alert, profileBody.firstChild);
+        
+        // Auto-dismiss after 5 seconds
         setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => document.body.removeChild(notification), 300);
-        }, 3000);
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 5000);
     }
 </script>
 {% endblock %}

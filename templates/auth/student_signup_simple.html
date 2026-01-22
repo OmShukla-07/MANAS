@@ -7,10 +7,8 @@
     <link rel="icon" type="image/png" href="/static/images/images/icons/manas fevicon edited.png">
     <link rel="shortcut icon" type="image/png" href="/static/images/images/icons/manas fevicon edited.png">
     <link rel="apple-touch-icon" href="/static/images/images/icons/manas fevicon edited.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -18,169 +16,291 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
             overflow-x: hidden;
+            background: #ffffff;
         }
 
-        /* Animated background particles */
-        .particles {
-            position: fixed;
+        .signup-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Left Side - Branding */
+        .branding-section {
+            flex: 1;
+            background: linear-gradient(135deg, #4ca1af 0%, #2c7a75 50%, #2c5f5a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            position: sticky;
             top: 0;
-            left: 0;
+            height: 100vh;
+        }
+
+        /* Animated background elements */
+        .branding-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .floating-shapes {
+            position: absolute;
             width: 100%;
             height: 100%;
+            top: 0;
+            left: 0;
             pointer-events: none;
-            z-index: 0;
         }
 
-        .particle {
+        .shape {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             animation: float 6s ease-in-out infinite;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
-        }
-
-        /* Floating elements */
-        .floating-icon {
-            position: absolute;
-            font-size: 24px;
-            color: rgba(255, 255, 255, 0.2);
-            animation: floatIcon 8s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(10deg); }
-        }
-
-        .icon-1 { top: 10%; left: 10%; animation-delay: 0s; }
-        .icon-2 { top: 20%; right: 15%; animation-delay: 2s; }
-        .icon-3 { bottom: 20%; left: 15%; animation-delay: 4s; }
-        .icon-4 { bottom: 30%; right: 10%; animation-delay: 6s; }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            max-width: 600px;
-            width: 100%;
-            position: relative;
-            z-index: 1;
-            animation: slideInUp 0.8s ease-out;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo-container {
+        .shape:nth-child(1) {
             width: 80px;
             height: 80px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .shape:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            top: 30%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        .brand-content {
+            text-align: center;
+            color: white;
+            z-index: 10;
+            max-width: 500px;
+        }
+
+        .logo-wrapper {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: pulse 2s ease-in-out infinite;
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: pulse 3s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+            }
         }
 
-        .logo-container i {
-            font-size: 32px;
+        .logo-wrapper i {
+            font-size: 48px;
             color: white;
         }
 
-        .header h1 {
-            color: #2d3748;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: 800;
+        .brand-content h1 {
             font-family: 'Playfair Display', serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: fadeInDown 1s ease-out 0.3s both;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
         }
 
-        @keyframes fadeInDown {
+        .brand-content p {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            opacity: 0.95;
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
+
+        .benefits-list {
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .benefit-item i {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .benefit-item span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Right Side - Signup Form */
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem;
+            background: #ffffff;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .form-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: #718096;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Messages */
+        .messages {
+            margin-bottom: 2rem;
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(-30px);
+                transform: translateX(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
         }
 
-        .header p {
-            color: #4a5568;
-            font-size: 1.1rem;
-            animation: fadeInUp 1s ease-out 0.5s both;
+        .alert-error {
+            background: #fff5f5;
+            color: #c53030;
+            border-left: 4px solid #c53030;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .alert-success {
+            background: #f0fff4;
+            color: #22543d;
+            border-left: 4px solid #22543d;
         }
 
+        /* Form Styles */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 25px;
-            animation: fadeInLeft 0.8s ease-out;
+            margin-bottom: 1.5rem;
         }
 
         .form-group.full-width {
@@ -189,101 +309,95 @@
 
         .section-title {
             grid-column: 1 / -1;
-            color: #667eea;
+            color: #4ca1af;
             font-weight: 700;
             font-size: 1.2rem;
-            margin: 30px 0 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+            margin: 2rem 0 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid rgba(76, 161, 175, 0.2);
             position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .section-title::before {
+        .section-title::after {
             content: '';
             position: absolute;
             bottom: -2px;
             left: 0;
-            width: 50px;
+            width: 60px;
             height: 2px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            animation: expandWidth 1s ease-out;
+            background: linear-gradient(135deg, #4ca1af 0%, #2c7a75 100%);
         }
 
-        @keyframes expandWidth {
-            from { width: 0; }
-            to { width: 50px; }
-        }
-
-        label {
+        .form-label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
             color: #2d3748;
-            font-weight: 500;
-            transition: color 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        input[type="text"], input[type="email"], input[type="password"], input[type="date"], select {
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
             width: 100%;
-            padding: 15px 20px;
+            padding: 0.9rem 0.9rem 0.9rem 2.8rem;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.9);
-            position: relative;
+            background: #f7fafc;
+            color: #2d3748;
         }
 
-        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="date"]:focus, select:focus {
+        .form-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-            transform: translateY(-2px);
-            background: white;
-        }
-
-        input[type="text"]:focus + label, input[type="email"]:focus + label {
-            color: #667eea;
-        }
-
-        .input-group {
-            position: relative;
+            border-color: #4ca1af;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(76, 161, 175, 0.1);
+            transform: translateY(-1px);
         }
 
         .input-icon {
             position: absolute;
+            left: 1rem;
             top: 50%;
-            right: 15px;
             transform: translateY(-50%);
             color: #a0aec0;
-            font-size: 18px;
-            pointer-events: none;
+            font-size: 1rem;
             transition: color 0.3s ease;
         }
 
-        .input-group input:focus ~ .input-icon {
-            color: #667eea;
+        .form-input:focus ~ .input-icon {
+            color: #4ca1af;
         }
 
-        .submit-btn {
+        .signup-button {
             width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4ca1af 0%, #2c7a75 100%);
             color: white;
             border: none;
+            padding: 1.15rem 1.5rem;
             border-radius: 12px;
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 1.05rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(76, 161, 175, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 2rem;
             position: relative;
             overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .submit-btn::before {
+        .signup-button::before {
             content: '';
             position: absolute;
             top: 0;
@@ -294,347 +408,480 @@
             transition: left 0.5s ease;
         }
 
-        .submit-btn:hover::before {
+        .signup-button:hover::before {
             left: 100%;
         }
 
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        .signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(76, 161, 175, 0.4);
         }
 
-        .submit-btn:active {
-            transform: translateY(-1px);
+        .signup-button:active {
+            transform: translateY(0);
         }
 
-        .links {
+        .signup-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .divider {
             text-align: center;
-            margin-top: 30px;
-            animation: fadeIn 1s ease-out 0.8s both;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .links a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-            margin: 0 15px;
-            transition: all 0.3s ease;
+            margin: 2rem 0;
             position: relative;
         }
 
-        .links a::after {
+        .divider::before {
             content: '';
             position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 50%;
-            background: #667eea;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1.5rem;
+            color: #718096;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .login-link {
+            text-align: center;
+        }
+
+        .login-link a {
+            color: #4ca1af;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            display: inline-block;
             transition: all 0.3s ease;
         }
 
-        .links a:hover::after {
-            width: 100%;
-            left: 0;
+        .login-link a:hover {
+            background: rgba(76, 161, 175, 0.05);
+            transform: translateY(-1px);
         }
 
-        .links a:hover {
-            color: #764ba2;
-            transform: translateY(-2px);
+        .back-link {
+            margin-top: 2rem;
+            text-align: center;
         }
 
-        .role-badge {
+        .back-link a {
+            color: #718096;
+            text-decoration: none;
+            font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
-            animation: bounceIn 1s ease-out;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 8px;
         }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .role-badge i {
-            margin-right: 8px;
-            font-size: 16px;
+        .back-link a:hover {
+            color: #4ca1af;
+            background: rgba(76, 161, 175, 0.05);
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px;
-                margin: 10px;
+        @media (max-width: 1024px) {
+            .branding-section {
+                display: none;
             }
-            
+
+            .form-section {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .form-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-header h2 {
+                font-size: 2rem;
+            }
+
             .form-grid {
                 grid-template-columns: 1fr;
-                gap: 15px;
             }
-            
-            .header h1 {
+
+            .brand-content h1 {
                 font-size: 2rem;
             }
         }
 
-        /* Loading Animation for Form Submission */
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
+        /* Animations */
+        .form-container {
+            animation: fadeIn 0.8s ease-out;
         }
 
-        .loading .submit-btn {
-            background: #a0aec0;
-        }
-
-        /* Custom Select Styling */
-        select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 12px center;
-            background-repeat: no-repeat;
-            background-size: 16px;
-            padding-right: 40px;
-            appearance: none;
-            cursor: pointer;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Animated Background Elements -->
-    <div class="particles">
-        <div class="particle" style="left: 10%; top: 20%; animation-delay: 0s;"></div>
-        <div class="particle" style="left: 20%; top: 60%; animation-delay: 1s;"></div>
-        <div class="particle" style="left: 80%; top: 40%; animation-delay: 2s;"></div>
-        <div class="particle" style="left: 70%; top: 80%; animation-delay: 3s;"></div>
-        <div class="particle" style="left: 90%; top: 10%; animation-delay: 4s;"></div>
-        <div class="particle" style="left: 30%; top: 90%; animation-delay: 5s;"></div>
-    </div>
-
-    <!-- Floating Icons -->
-    <div class="floating-icon icon-1"><i class="fas fa-graduation-cap"></i></div>
-    <div class="floating-icon icon-2"><i class="fas fa-heart"></i></div>
-    <div class="floating-icon icon-3"><i class="fas fa-brain"></i></div>
-    <div class="floating-icon icon-4"><i class="fas fa-users"></i></div>
-
-    <div class="container">
-        <div class="header">
-            <div class="logo-container">
-                <i class="fas fa-graduation-cap"></i>
+    <div class="signup-wrapper">
+        <!-- Left Side - Branding -->
+        <div class="branding-section">
+            <div class="floating-shapes">
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
             </div>
-            <div class="role-badge">
-                <i class="fas fa-user-graduate"></i>
-                Student Registration
+            
+            <div class="brand-content">
+                <div class="logo-wrapper">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                
+                <h1>Join MANAS</h1>
+                <p>Start your mental wellness journey with us</p>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Free AI mental health support</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-user-md"></i>
+                        <span>Connect with counselors</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-lock"></i>
+                        <span>100% confidential & secure</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-clock"></i>
+                        <span>24/7 available assistance</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-heart"></i>
+                        <span>Supportive community</span>
+                    </div>
+                </div>
             </div>
-            <h1>Join MANAS</h1>
-            <p>Create your student account for comprehensive mental health support</p>
         </div>
 
-        <form method="post" id="studentSignupForm">
-            {% csrf_token %}
-            <input type="hidden" name="role" value="student">
-            
-            <div class="form-grid">
-                <!-- Basic Information Section -->
-                <h3 class="section-title">
-                    <i class="fas fa-user"></i> Basic Information
-                </h3>
+        <!-- Right Side - Signup Form -->
+        <div class="form-section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Create Account</h2>
+                    <p>Quick signup - just the essentials</p>
+                </div>
+
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {% if message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% else %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post" id="signupForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="role" value="student">
+                    
+                    <div class="form-grid">
+                        <!-- Personal Information -->
+                        <h3 class="section-title">
+                            <i class="fas fa-user"></i> Personal Information
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="first_name" class="form-label">First Name *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="first_name" 
+                                    name="first_name" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Tejas"
+                                >
+                                <i class="input-icon fas fa-user"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="last_name" class="form-label">Last Name *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="last_name" 
+                                    name="last_name" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Shukla"
+                                >
+                                <i class="input-icon fas fa-user"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username" class="form-label">Username *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="username" 
+                                    name="username" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="tejasshukla"
+                                >
+                                <i class="input-icon fas fa-at"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="tejas.shukla@gmail.com"
+                                >
+                                <i class="input-icon fas fa-envelope"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone_number" class="form-label">Phone Number *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="phone_number" 
+                                    name="phone_number" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="+91 9876543210"
+                                >
+                                <i class="input-icon fas fa-phone"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date_of_birth" class="form-label">Date of Birth *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="date" 
+                                    id="date_of_birth" 
+                                    name="date_of_birth" 
+                                    class="form-input" 
+                                    required
+                                >
+                                <i class="input-icon fas fa-calendar"></i>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Contact -->
+                        <h3 class="section-title">
+                            <i class="fas fa-phone-square-alt"></i> Emergency Contact
+                        </h3>
+
+                        <div class="form-group full-width">
+                            <label for="emergency_contact_name" class="form-label">Contact Name *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="emergency_contact_name" 
+                                    name="emergency_contact_name" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Parent/Guardian Name"
+                                >
+                                <i class="input-icon fas fa-user-shield"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="emergency_contact_email" class="form-label">Contact Email *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="email" 
+                                    id="emergency_contact_email" 
+                                    name="emergency_contact_email" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="guardian@example.com"
+                                >
+                                <i class="input-icon fas fa-envelope"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="emergency_contact_phone" class="form-label">Contact Phone *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="emergency_contact_phone" 
+                                    name="emergency_contact_phone" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="+91 9876543210"
+                                >
+                                <i class="input-icon fas fa-mobile-alt"></i>
+                            </div>
+                        </div>
+
+                        <!-- Security -->
+                        <h3 class="section-title">
+                            <i class="fas fa-lock"></i> Security
+                        </h3>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Minimum 6 characters"
+                                >
+                                <i class="input-icon fas fa-key"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm_password" class="form-label">Confirm Password *</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="confirm_password" 
+                                    name="confirm_password" 
+                                    class="form-input" 
+                                    required 
+                                    placeholder="Re-enter password"
+                                >
+                                <i class="input-icon fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="signup-button" id="signupBtn">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </button>
+                </form>
                 
-                <div class="form-group">
-                    <label for="first_name">First Name *</label>
-                    <div class="input-group">
-                        <input type="text" id="first_name" name="first_name" required>
-                        <i class="input-icon fas fa-user"></i>
-                    </div>
+                <div class="divider">
+                    <span>Already have an account?</span>
                 </div>
-
-                <div class="form-group">
-                    <label for="last_name">Last Name *</label>
-                    <div class="input-group">
-                        <input type="text" id="last_name" name="last_name" required>
-                        <i class="input-icon fas fa-user"></i>
-                    </div>
+                
+                <div class="login-link">
+                    <a href="/login/">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </a>
                 </div>
-
-                <div class="form-group">
-                    <label for="username">Username *</label>
-                    <div class="input-group">
-                        <input type="text" id="username" name="username" required>
-                        <i class="input-icon fas fa-at"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <div class="input-group">
-                        <input type="email" id="email" name="email" required>
-                        <i class="input-icon fas fa-envelope"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone_number">Phone Number</label>
-                    <div class="input-group">
-                        <input type="text" id="phone_number" name="phone_number" placeholder="e.g., +91 9876543210">
-                        <i class="input-icon fas fa-phone"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="date_of_birth">Date of Birth</label>
-                    <div class="input-group">
-                        <input type="date" id="date_of_birth" name="date_of_birth">
-                        <i class="input-icon fas fa-calendar"></i>
-                    </div>
-                </div>
-
-                <!-- Academic Information Section -->
-                <h3 class="section-title">
-                    <i class="fas fa-university"></i> Academic Information
-                </h3>
-
-                <div class="form-group">
-                    <label for="institution">Institution/University *</label>
-                    <div class="input-group">
-                        <input type="text" id="institution" name="institution" placeholder="e.g., Delhi University" required>
-                        <i class="input-icon fas fa-building"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="course">Course/Program *</label>
-                    <div class="input-group">
-                        <input type="text" id="course" name="course" placeholder="e.g., B.Tech Computer Science" required>
-                        <i class="input-icon fas fa-book"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="year_of_study">Year of Study *</label>
-                    <select id="year_of_study" name="year_of_study" required>
-                        <option value="">Select Year</option>
-                        <option value="1">1st Year</option>
-                        <option value="2">2nd Year</option>
-                        <option value="3">3rd Year</option>
-                        <option value="4">4th Year</option>
-                        <option value="5">5th Year</option>
-                        <option value="6">6th Year</option>
-                    </select>
-                </div>
-
-                <!-- Emergency Contact Section -->
-                <h3 class="section-title">
-                    <i class="fas fa-phone-alt"></i> Emergency Contact
-                </h3>
-
-                <div class="form-group">
-                    <label for="emergency_contact_name">Emergency Contact Name *</label>
-                    <div class="input-group">
-                        <input type="text" id="emergency_contact_name" name="emergency_contact_name" placeholder="e.g., Parent/Guardian Name" required>
-                        <i class="input-icon fas fa-user-shield"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="emergency_contact_phone">Emergency Contact Phone *</label>
-                    <div class="input-group">
-                        <input type="text" id="emergency_contact_phone" name="emergency_contact_phone" placeholder="e.g., +91 9876543210" required>
-                        <i class="input-icon fas fa-mobile-alt"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="emergency_contact_relationship">Relationship *</label>
-                    <select id="emergency_contact_relationship" name="emergency_contact_relationship" required>
-                        <option value="">Select Relationship</option>
-                        <option value="father">Father</option>
-                        <option value="mother">Mother</option>
-                        <option value="guardian">Guardian</option>
-                        <option value="sibling">Sibling</option>
-                        <option value="spouse">Spouse</option>
-                        <option value="friend">Friend</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-
-                <!-- Password Section -->
-                <h3 class="section-title">
-                    <i class="fas fa-lock"></i> Security
-                </h3>
-
-                <div class="form-group">
-                    <label for="password">Password *</label>
-                    <div class="input-group">
-                        <input type="password" id="password" name="password" required>
-                        <i class="input-icon fas fa-key"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="confirm_password">Confirm Password *</label>
-                    <div class="input-group">
-                        <input type="password" id="confirm_password" name="confirm_password" required>
-                        <i class="input-icon fas fa-check"></i>
-                    </div>
+                
+                <div class="back-link">
+                    <a href="/choose-user/">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Role Selection
+                    </a>
                 </div>
             </div>
-
-            <button type="submit" class="submit-btn">
-                <i class="fas fa-user-plus"></i> Create Student Account
-            </button>
-        </form>
-
-        <div class="links">
-            <a href="/choose-user/"><i class="fas fa-arrow-left"></i> Back to Role Selection</a>
-            <a href="/login/"><i class="fas fa-sign-in-alt"></i> Already have an account?</a>
         </div>
     </div>
 
     <script>
-        // Form animation on load
         document.addEventListener('DOMContentLoaded', function() {
-            const formGroups = document.querySelectorAll('.form-group');
-            formGroups.forEach((group, index) => {
-                group.style.animationDelay = `${index * 0.1}s`;
-            });
-        });
+            const signupForm = document.getElementById('signupForm');
+            const signupBtn = document.getElementById('signupBtn');
+            const originalBtnText = signupBtn.innerHTML;
 
-        // Form validation and submission
-        document.getElementById('studentSignupForm').addEventListener('submit', function(e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-            
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Passwords do not match!');
-                return;
-            }
-            
-            // Add loading state
-            this.classList.add('loading');
-        });
+            signupForm.addEventListener('submit', function(e) {
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                    return;
+                }
 
-        // Input focus animations
-        document.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'scale(1.02)';
+                if (password.length < 6) {
+                    e.preventDefault();
+                    alert('Password must be at least 6 characters long!');
+                    return;
+                }
+                
+                // Show loading state
+                signupBtn.disabled = true;
+                signupBtn.innerHTML = '<div class="loading-spinner"></div> Creating Account...';
+                
+                // Re-enable button after 5 seconds if form hasn't redirected
+                setTimeout(() => {
+                    signupBtn.disabled = false;
+                    signupBtn.innerHTML = originalBtnText;
+                }, 5000);
             });
-            
-            input.addEventListener('blur', function() {
-                this.parentElement.style.transform = 'scale(1)';
+
+            // Focus animation for inputs
+            const inputs = document.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-1px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    window.location.href = "/choose-user/";
+                }
             });
         });
     </script>

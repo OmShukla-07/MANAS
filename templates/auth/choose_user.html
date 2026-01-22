@@ -217,7 +217,7 @@
 
         .role-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
         }
 
         /* Role-specific styling */
@@ -225,12 +225,27 @@
             --accent-color: #598980;
         }
 
+        .role-card.student:hover {
+            background: linear-gradient(135deg, rgba(76, 161, 175, 0.05) 0%, rgba(44, 122, 117, 0.05) 50%, rgba(44, 95, 90, 0.05) 100%);
+            border: 2px solid #4ca1af;
+        }
+
         .role-card.counselor {
             --accent-color: #4ca1af;
         }
 
+        .role-card.counselor:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(85, 104, 227, 0.05) 50%, rgba(68, 81, 184, 0.05) 100%);
+            border: 2px solid #667eea;
+        }
+
         .role-card.admin {
             --accent-color: #8364e8;
+        }
+
+        .role-card.admin:hover {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(193, 154, 107, 0.05) 50%, rgba(166, 124, 82, 0.05) 100%);
+            border: 2px solid #D4A574;
         }
 
         .role-icon {
@@ -510,26 +525,6 @@
             </p>
         </div>
 
-        <!-- Stats Section -->
-        <div class="stats-section">
-            <div class="stat-item">
-                <div class="stat-number">10K+</div>
-                <div class="stat-label">Active Students</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">500+</div>
-                <div class="stat-label">Professional Counselors</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Institutions</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">24/7</div>
-                <div class="stat-label">Support Available</div>
-            </div>
-        </div>
-
         <!-- Role Cards -->
         <div class="roles-grid">
             <a href="{{ student_url }}" class="role-card student">
@@ -585,6 +580,26 @@
                     <span class="feature-tag">Configuration</span>
                 </div>
             </a>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-item">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Active Students</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Professional Counselors</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Institutions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support Available</div>
+            </div>
         </div>
 
         <!-- Login Section -->

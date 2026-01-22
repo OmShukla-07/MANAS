@@ -5,7 +5,7 @@
 
 /* Support Banner */
 .support-banner {
-    background: linear-gradient(135deg, #7BA098 0%, #6B9289 100%);
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
     padding: 1.5rem;
     border-radius: 15px;
@@ -13,7 +13,7 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 20px rgba(123, 160, 152, 0.2);
+    box-shadow: 0 4px 20px rgba(89, 137, 128, 0.25);
 }
 
 .banner-icon {
@@ -53,8 +53,8 @@
 
 .option-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: #7BA098;
+    box-shadow: 0 8px 25px rgba(89, 137, 128, 0.15);
+    border-color: #598980;
 }
 
 .option-icon {
@@ -70,19 +70,19 @@
 }
 
 .option-icon.campus {
-    background: linear-gradient(135deg, #4A90E2, #357ABD);
+    background: linear-gradient(135deg, #598980, #7ba399);
 }
 
 .option-icon.video {
-    background: linear-gradient(135deg, #4CAF50, #45A049);
+    background: linear-gradient(135deg, #4ca1af, #7ba399);
 }
 
 .option-icon.phone {
-    background: linear-gradient(135deg, #FF8C42, #E67E22);
+    background: linear-gradient(135deg, #7ba399, #598980);
 }
 
 .option-icon.text {
-    background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+    background: linear-gradient(135deg, #598980, #4ca1af);
 }
 
 .option-label {
@@ -93,7 +93,7 @@
 
 /* Book Session Button */
 .book-session-btn {
-    background: linear-gradient(135deg, #7BA098, #6B9289);
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
     border: none;
     padding: 1rem 2rem;
@@ -105,12 +105,13 @@
     display: block;
     margin: 0 auto 3rem;
     min-width: 250px;
+    box-shadow: 0 4px 16px rgba(89, 137, 128, 0.25);
 }
 
 .book-session-btn:hover {
-    background: linear-gradient(135deg, #6B9289, #5A7F78);
+    background: linear-gradient(135deg, #4a7670, #598980);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(123, 160, 152, 0.3);
+    box-shadow: 0 6px 20px rgba(89, 137, 128, 0.35);
 }
 
 /* Section Titles */
@@ -276,13 +277,15 @@
 }
 
 .book-btn {
-    background: linear-gradient(135deg, #7BA098, #6B9289);
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
+    box-shadow: 0 2px 8px rgba(89, 137, 128, 0.25);
 }
 
 .book-btn:hover {
-    background: linear-gradient(135deg, #6B9289, #5A7F78);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #4a7670, #598980);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(89, 137, 128, 0.35);
 }
 
 .profile-btn {
@@ -632,9 +635,9 @@
 
 .action-btn {
     padding: 0.5rem 1rem;
-    border: 1px solid #7BA098;
+    border: 1px solid #598980;
     background: white;
-    color: #7BA098;
+    color: #598980;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.85rem;
@@ -644,9 +647,10 @@
 }
 
 .action-btn:hover {
-    background: #7BA098;
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(89, 137, 128, 0.3);
 }
 
 .action-btn.cancel {
@@ -749,7 +753,7 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #7BA098, #6B9289);
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -758,11 +762,13 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(89, 137, 128, 0.25);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #6B9289, #5A7F78);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #4a7670, #598980);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(89, 137, 128, 0.35);
 }
 
 /* Animation */

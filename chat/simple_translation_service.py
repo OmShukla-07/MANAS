@@ -1,45 +1,23 @@
 """
-Simplified and working translation service for MANAS AI Chat
+Simple Translation Service - No API Keys Required
+Uses free MyMemory Translation API
 """
 
-import json
 import logging
 import requests
-from django.conf import settings
 from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
 
 class SimpleTranslationService:
+    """Free translation service using MyMemory API - No setup required"""
+    
     def __init__(self):
-        # Language mapping for MyMemory API (format that actually works)
-        self.language_mapping = {
-            'hi': 'hi-IN',    # Hindi
-            'bn': 'bn-IN',    # Bengali
-            'te': 'te-IN',    # Telugu
-            'ta': 'ta-IN',    # Tamil
-            'gu': 'gu-IN',    # Gujarati
-            'kn': 'kn-IN',    # Kannada
-            'ml': 'ml-IN',    # Malayalam
-            'mr': 'mr-IN',    # Marathi
-            'pa': 'pa-IN',    # Punjabi
-            'or': 'or-IN',    # Odia
-            'as': 'as-IN',    # Assamese
-            'ur': 'ur-PK',    # Urdu
-            'es': 'es-ES',    # Spanish
-            'fr': 'fr-FR',    # French
-            'de': 'de-DE',    # German
-            'ja': 'ja-JP',    # Japanese
-            'ko': 'ko-KR',    # Korean
-            'zh': 'zh-CN',    # Chinese (Simplified)
-            'ar': 'ar-SA',    # Arabic
-            'en': 'en-GB',    # English
-        }
-        
+        self.base_url = "https://api.mymemory.translated.net/get"
         self.supported_languages = {
             'en': 'English',
             'hi': 'हिंदी (Hindi)',
-            'bn': 'বাংলা (Bengali)', 
+            'bn': 'বাংলা (Bengali)',
             'te': 'తెలుగు (Telugu)',
             'mr': 'मराठी (Marathi)',
             'ta': 'தமிழ் (Tamil)',
@@ -47,8 +25,6 @@ class SimpleTranslationService:
             'kn': 'ಕನ್ನಡ (Kannada)',
             'ml': 'മലയാളം (Malayalam)',
             'pa': 'ਪੰਜਾਬੀ (Punjabi)',
-            'or': 'ଓଡ଼ିଆ (Odia)',
-            'as': 'অসমীয়া (Assamese)',
             'ur': 'اردو (Urdu)',
             'es': 'Español (Spanish)',
             'fr': 'Français (French)',
@@ -56,171 +32,155 @@ class SimpleTranslationService:
             'ja': '日本語 (Japanese)',
             'ko': '한국어 (Korean)',
             'zh': '中文 (Chinese)',
-            'ar': 'العربية (Arabic)'
+            'ar': 'العربية (Arabic)',
+            'pt': 'Português (Portuguese)',
+            'ru': 'Русский (Russian)',
+            'it': 'Italiano (Italian)',
+            'nl': 'Nederlands (Dutch)',
+            'tr': 'Türkçe (Turkish)',
         }
-        
-        # UI translations in key languages
-        self.ui_translations = {
-            'en': {
-                'hello': 'Hello',
-                'goodbye': 'Goodbye', 
-                'thank_you': 'Thank you',
-                'please': 'Please',
-                'yes': 'Yes',
-                'no': 'No',
-                'send': 'Send',
-                'type_message': 'Type your message...',
-                'new_chat': 'New Chat',
-                'history': 'History',
-                'delete': 'Delete',
-                'translate': 'Translate',
-                'language': 'Language',
-                'settings': 'Settings',
-                'help': 'Help',
-                'loading': 'Loading...',
-                'error': 'Error',
-                'retry': 'Retry',
-                'cancel': 'Cancel',
-                'save': 'Save',
-                'close': 'Close'
-            },
-            'hi': {
-                'hello': 'नमस्ते',
-                'goodbye': 'अलविदा', 
-                'thank_you': 'धन्यवाद',
-                'please': 'कृपया',
-                'yes': 'हाँ',
-                'no': 'नहीं',
-                'send': 'भेजें',
-                'type_message': 'अपना संदेश टाइप करें...',
-                'new_chat': 'नई चैट',
-                'history': 'इतिहास',
-                'delete': 'हटाएं',
-                'translate': 'अनुवाद करें',
-                'language': 'भाषा',
-                'settings': 'सेटिंग्स',
-                'help': 'सहायता',
-                'loading': 'लोड हो रहा है...',
-                'error': 'त्रुटि',
-                'retry': 'पुनः प्रयास करें',
-                'cancel': 'रद्द करें',
-                'save': 'सेव करें',
-                'close': 'बंद करें'
-            },
-            'es': {
-                'hello': 'Hola',
-                'goodbye': 'Adiós', 
-                'thank_you': 'Gracias',
-                'please': 'Por favor',
-                'yes': 'Sí',
-                'no': 'No',
-                'send': 'Enviar',
-                'type_message': 'Escribe tu mensaje...',
-                'new_chat': 'Nuevo Chat',
-                'history': 'Historial',
-                'delete': 'Eliminar',
-                'translate': 'Traducir',
-                'language': 'Idioma',
-                'settings': 'Configuración',
-                'help': 'Ayuda',
-                'loading': 'Cargando...',
-                'error': 'Error',
-                'retry': 'Reintentar',
-                'cancel': 'Cancelar',
-                'save': 'Guardar',
-                'close': 'Cerrar'
-            }
-        }
-
+    
     def translate_text(self, text, target_language, source_language='en'):
-        """Translate text using MyMemory API"""
-        if not text or target_language == source_language:
-            return text
+        """
+        Translate text using MyMemory free API
+        
+        Args:
+            text (str): Text to translate
+            target_language (str): Target language code (e.g., 'hi', 'es')
+            source_language (str): Source language code (default: 'en')
             
-        # Create cache key
-        cache_key = f"translate_{hash(text)}_{source_language}_{target_language}"
+        Returns:
+            dict: Translation result with translated text
+        """
+        if not text or not text.strip():
+            return {
+                'success': False,
+                'error': 'Empty text provided'
+            }
         
         # Check cache first
+        cache_key = f"translation_{source_language}_{target_language}_{text[:50]}"
         cached_result = cache.get(cache_key)
         if cached_result:
+            logger.info(f"Translation cache hit for: {text[:30]}...")
             return cached_result
         
         try:
-            # Map language codes
-            source_code = self.language_mapping.get(source_language, 'en-GB')
-            target_code = self.language_mapping.get(target_language, 'en-GB')
-            
-            # MyMemory API call
-            url = "https://api.mymemory.translated.net/get"
+            # Make API request
             params = {
                 'q': text,
-                'langpair': f"{source_code}|{target_code}"
+                'langpair': f'{source_language}|{target_language}'
             }
             
-            response = requests.get(url, params=params, timeout=10)
+            response = requests.get(self.base_url, params=params, timeout=10)
             response.raise_for_status()
+            
             data = response.json()
             
             if data.get('responseStatus') == 200:
-                translated_text = data.get('responseData', {}).get('translatedText', text)
+                translated_text = data['responseData']['translatedText']
+                
+                result = {
+                    'success': True,
+                    'original_text': text,
+                    'translated_text': translated_text,
+                    'source_language': source_language,
+                    'target_language': target_language
+                }
                 
                 # Cache for 1 hour
-                cache.set(cache_key, translated_text, 3600)
+                cache.set(cache_key, result, 3600)
                 
                 logger.info(f"Translation successful: {text[:30]}... -> {translated_text[:30]}...")
-                return translated_text
+                return result
             else:
-                logger.warning(f"Translation failed: {data.get('responseDetails', 'Unknown error')}")
-                return text
+                return {
+                    'success': False,
+                    'error': 'Translation failed',
+                    'original_text': text
+                }
                 
+        except requests.RequestException as e:
+            logger.error(f"Translation API request failed: {e}")
+            return {
+                'success': False,
+                'error': f'API request failed: {str(e)}',
+                'original_text': text
+            }
         except Exception as e:
             logger.error(f"Translation error: {e}")
-            return text
-
-    def get_ui_translations(self, language='en'):
-        """Get UI translations for specified language"""
-        return self.ui_translations.get(language, self.ui_translations['en'])
-
-    def get_companion_welcome_message(self, language='en', companion='arjun'):
-        """Get companion welcome message in specified language"""
-        welcome_messages = {
-            'en': {
-                'arjun': "Hello! I'm Arjun, your academic support companion. How can I help you today?",
-                'priya': "Hi there! I'm Priya, your emotional support companion. I'm here to listen and support you.",
-                'vikram': "Hello, I'm Vikram, your crisis support companion. I'm here for you right now. How can I help?"
-            },
-            'hi': {
-                'arjun': "नमस्ते! मैं अर्जुन हूँ, आपका शैक्षणिक सहायता साथी। आज मैं आपकी कैसे मदद कर सकता हूँ?",
-                'priya': "हैलो! मैं प्रिया हूँ, आपकी भावनात्मक सहायता साथी। मैं आपकी बात सुनने और आपका समर्थन करने के लिए यहाँ हूँ।",
-                'vikram': "नमस्ते, मैं विक्रम हूँ, आपका संकट सहायता साथी। मैं अभी आपके लिए यहाँ हूँ। मैं आपकी कैसे मदद कर सकता हूँ?"
-            },
-            'es': {
-                'arjun': "¡Hola! Soy Arjun, tu compañero de apoyo académico. ¿Cómo puedo ayudarte hoy?",
-                'priya': "¡Hola! Soy Priya, tu compañera de apoyo emocional. Estoy aquí para escucharte y apoyarte.",
-                'vikram': "Hola, soy Vikram, tu compañero de apoyo en crisis. Estoy aquí para ti ahora mismo. ¿Cómo puedo ayudarte?"
+            return {
+                'success': False,
+                'error': str(e),
+                'original_text': text
             }
-        }
+    
+    def detect_language(self, text):
+        """
+        Basic language detection (limited functionality with free API)
         
-        # Check if we have hardcoded translations
-        if language in welcome_messages and companion in welcome_messages[language]:
-            return welcome_messages[language][companion]
-        
-        # Fall back to English and translate if needed
-        english_message = welcome_messages['en'].get(companion, welcome_messages['en']['arjun'])
-        
-        if language == 'en':
-            return english_message
+        Args:
+            text (str): Text to detect language
             
-        return self.translate_text(english_message, language, 'en')
-
+        Returns:
+            dict: Detected language info
+        """
+        # Simple heuristic detection based on character sets
+        if any('\u0900' <= char <= '\u097F' for char in text):
+            return {'success': True, 'detected_language': 'hi', 'confidence': 0.8}
+        elif any('\u0980' <= char <= '\u09FF' for char in text):
+            return {'success': True, 'detected_language': 'bn', 'confidence': 0.8}
+        elif any('\u0C00' <= char <= '\u0C7F' for char in text):
+            return {'success': True, 'detected_language': 'te', 'confidence': 0.8}
+        elif any('\u0B80' <= char <= '\u0BFF' for char in text):
+            return {'success': True, 'detected_language': 'ta', 'confidence': 0.8}
+        elif any('\u0A80' <= char <= '\u0AFF' for char in text):
+            return {'success': True, 'detected_language': 'gu', 'confidence': 0.8}
+        elif any('\u0600' <= char <= '\u06FF' for char in text):
+            return {'success': True, 'detected_language': 'ar', 'confidence': 0.8}
+        elif any('\u4E00' <= char <= '\u9FFF' for char in text):
+            return {'success': True, 'detected_language': 'zh', 'confidence': 0.8}
+        else:
+            return {'success': True, 'detected_language': 'en', 'confidence': 0.6}
+    
+    def translate_batch(self, texts, target_language, source_language='en'):
+        """
+        Translate multiple texts
+        
+        Args:
+            texts (list): List of texts to translate
+            target_language (str): Target language code
+            source_language (str): Source language code
+            
+        Returns:
+            dict: Batch translation results
+        """
+        translated_texts = []
+        
+        for text in texts:
+            result = self.translate_text(text, target_language, source_language)
+            if result.get('success'):
+                translated_texts.append(result['translated_text'])
+            else:
+                translated_texts.append(text)  # Keep original if translation fails
+        
+        return {
+            'success': True,
+            'original_texts': texts,
+            'translated_texts': translated_texts,
+            'source_language': source_language,
+            'target_language': target_language,
+            'count': len(translated_texts)
+        }
+    
     def get_supported_languages(self):
-        """Get list of supported languages"""
-        return self.supported_languages
+        """Return list of supported languages"""
+        return {
+            'success': True,
+            'languages': self.supported_languages,
+            'count': len(self.supported_languages)
+        }
 
-    def get_language_direction(self, language):
-        """Get text direction for language (RTL or LTR)"""
-        rtl_languages = ['ar', 'he', 'fa', 'ur']
-        return 'rtl' if language in rtl_languages else 'ltr'
 
-# Global instance
+# Create singleton instance
 simple_translation_service = SimpleTranslationService()

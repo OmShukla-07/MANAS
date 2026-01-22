@@ -86,6 +86,7 @@ class StudentProfile(models.Model):
     
     # Emergency contact
     emergency_contact_name = models.CharField(max_length=100, blank=True)
+    emergency_contact_email = models.EmailField(blank=True, help_text=_('Emergency contact email for notifications'))
     emergency_contact_phone = models.CharField(max_length=17, blank=True)
     emergency_contact_relationship = models.CharField(max_length=50, blank=True)
     

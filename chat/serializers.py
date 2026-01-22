@@ -89,14 +89,16 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = [
             'id', 'session', 'sender', 'sender_name', 'sender_role',
-            'content', 'message_type', 'ai_confidence_score',
-            'contains_crisis_keywords', 'crisis_keywords_detected',
-            'status', 'metadata', 'reactions_count', 'is_edited',
-            'created_at', 'updated_at', 'is_read', 'read_at'
+            'content', 'message_type', 'ai_confidence', 'ai_model_used',
+            'contains_crisis_keywords', 'crisis_indicators',
+            'status', 'sentiment_score', 'emotion_detected',
+            'reactions_count', 'is_edited',
+            'created_at', 'updated_at', 'read_at'
         ]
         read_only_fields = [
-            'sender', 'ai_confidence_score', 'contains_crisis_keywords',
-            'crisis_keywords_detected', 'created_at', 'updated_at'
+            'sender', 'ai_confidence', 'ai_model_used',
+            'contains_crisis_keywords', 'crisis_indicators',
+            'created_at', 'updated_at'
         ]
     
     def get_sender_name(self, obj):
@@ -105,12 +107,14 @@ class MessageSerializer(serializers.ModelSerializer):
         return "MANAS AI"
     
     def get_sender_role(self, obj):
+        if obj.message_type == 'ai':
+            return "ai"
         if obj.sender:
-            return obj.sender.role
+            return getattr(obj.sender, 'role', 'student')
         return "ai"
     
     def get_reactions_count(self, obj):
-        return obj.reactions.count()
+        return obj.reactions.count() if hasattr(obj, 'reactions') else 0
     
     def get_is_edited(self, obj):
         return obj.created_at != obj.updated_at
@@ -121,7 +125,7 @@ class MessageCreateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Message
-        fields = ['session', 'content', 'message_type', 'metadata']
+        fields = ['session', 'content', 'message_type']
     
     def create(self, validated_data):
         validated_data['sender'] = self.context['request'].user

@@ -164,3 +164,7 @@ logs/
 *.bak
 *_backup.*
 *_old.*
+
+# Legacy code - not to be pushed
+legacy_api_services/
+chat/legacy_api_services/

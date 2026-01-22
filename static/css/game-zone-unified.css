@@ -2,13 +2,13 @@
 
 /* Quote Card */
 .quote-card {
-    background: linear-gradient(135deg, #7BA098 0%, #6B9289 100%);
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
     padding: 2rem;
     border-radius: 15px;
     text-align: center;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 20px rgba(123, 160, 152, 0.2);
+    box-shadow: 0 4px 20px rgba(89, 137, 128, 0.25);
 }
 
 .quote-card h3 {
@@ -43,78 +43,79 @@
 
 .game-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: #7BA098;
+    box-shadow: 0 8px 25px rgba(89, 137, 128, 0.15);
+    border-color: #598980;
 }
 
 .game-icon {
     width: 60px;
     height: 60px;
-    background: #F0F8F6;
+    background: rgba(89, 137, 128, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1rem;
     font-size: 1.5rem;
-    color: #7BA098;
+    color: #598980;
     transition: all 0.3s ease;
 }
 
 .game-card:hover .game-icon {
-    background: #7BA098;
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
     transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(89, 137, 128, 0.3);
 }
 
 /* Game Icon Color Variations */
 .game-icon.breathe {
-    background: #E6F3FF;
-    color: #4A90E2;
+    background: rgba(89, 137, 128, 0.15);
+    color: #598980;
 }
 
 .game-card:hover .game-icon.breathe {
-    background: #4A90E2;
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
 }
 
 .game-icon.journal {
-    background: #FFF2E6;
-    color: #FF8C42;
+    background: rgba(76, 161, 175, 0.15);
+    color: #4ca1af;
 }
 
 .game-card:hover .game-icon.journal {
-    background: #FF8C42;
+    background: linear-gradient(135deg, #4ca1af, #7ba399);
     color: white;
 }
 
 .game-icon.relax {
-    background: #E8F5E8;
-    color: #4CAF50;
+    background: rgba(123, 163, 153, 0.15);
+    color: #7ba399;
 }
 
 .game-card:hover .game-icon.relax {
-    background: #4CAF50;
+    background: linear-gradient(135deg, #7ba399, #598980);
     color: white;
 }
 
 .game-icon.anxiety {
-    background: #FFE6E6;
-    color: #E74C3C;
+    background: rgba(74, 118, 112, 0.15);
+    color: #4a7670;
 }
 
 .game-card:hover .game-icon.anxiety {
-    background: #E74C3C;
+    background: linear-gradient(135deg, #4a7670, #598980);
     color: white;
 }
 
 .game-icon.wellbeing {
-    background: #F3E5F5;
-    color: #9C27B0;
+    background: rgba(76, 161, 175, 0.15);
+    color: #4ca1af;
 }
 
 .game-card:hover .game-icon.wellbeing {
-    background: #9C27B0;
+    background: linear-gradient(135deg, #4ca1af, #598980);
     color: white;
 }
 
@@ -274,14 +275,15 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #7BA098, #6B9289);
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
+    box-shadow: 0 2px 8px rgba(89, 137, 128, 0.25);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #6B9289, #5A7F78);
+    background: linear-gradient(135deg, #4a7670, #598980);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(123, 160, 152, 0.3);
+    box-shadow: 0 4px 16px rgba(89, 137, 128, 0.35);
 }
 
 /* Section Headings */

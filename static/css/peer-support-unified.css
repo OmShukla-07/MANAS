@@ -13,13 +13,13 @@
 
 /* Quote Card */
 .quote-card {
-    background: linear-gradient(135deg, #7BA098, #6B9289);
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
     border-radius: 12px;
     padding: 30px;
     text-align: center;
     margin-bottom: 30px;
-    box-shadow: 0 4px 12px rgba(123, 160, 152, 0.2);
+    box-shadow: 0 4px 16px rgba(89, 137, 128, 0.25);
 }
 
 .quote-card h3 {
@@ -65,13 +65,13 @@
 }
 
 .support-card:hover {
-    border-color: #7BA098;
-    box-shadow: 0 4px 12px rgba(123, 160, 152, 0.15);
-    transform: translateY(-2px);
+    border-color: #598980;
+    box-shadow: 0 4px 16px rgba(89, 137, 128, 0.2);
+    transform: translateY(-4px);
 }
 
 .support-card:hover .support-icon {
-    background: #7BA098;
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
     transform: scale(1.1);
 }
@@ -79,13 +79,13 @@
 .support-icon {
     width: 60px;
     height: 60px;
-    background: #F0F9FF;
+    background: rgba(89, 137, 128, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    color: #7BA098;
+    color: #598980;
     font-size: 1.5rem;
     transition: all 0.3s ease;
 }
@@ -141,7 +141,7 @@
 .feature-icon {
     width: 40px;
     height: 40px;
-    background: #7BA098;
+    background: linear-gradient(135deg, #598980, #7ba399);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -149,6 +149,7 @@
     margin: 0 auto 15px;
     color: white;
     font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(89, 137, 128, 0.2);
 }
 
 .feature-title {
@@ -174,7 +175,7 @@
 }
 
 .action-btn {
-    background: #7BA098;
+    background: linear-gradient(135deg, #598980, #7ba399);
     color: white;
     border: none;
     padding: 12px 24px;
@@ -186,12 +187,13 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    box-shadow: 0 2px 8px rgba(89, 137, 128, 0.2);
 }
 
 .action-btn:hover {
-    background: #6B9289;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(123, 160, 152, 0.3);
+    background: linear-gradient(135deg, #4a7670, #598980);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(89, 137, 128, 0.3);
 }
 
 .action-btn.secondary {

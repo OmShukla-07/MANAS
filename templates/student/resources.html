@@ -23,7 +23,7 @@
     
     <!-- Topic Cards Grid -->
     <div class="topic-grid">
-        <div class="topic-card" onclick="openTopic('anxiety')">
+        <div class="topic-card" onclick="openYouTubePlaylist('https://www.youtube.com/playlist?list=PLiUrrIiqidTWhubkHEJcr6iTLVRxXZmPE')">
             <div class="topic-icon">
                 <span class="emoji">🧠</span>
             </div>
@@ -31,7 +31,7 @@
             <p class="topic-meta">12 articles • 8 videos</p>
         </div>
 
-        <div class="topic-card" onclick="openTopic('stress')">
+        <div class="topic-card" onclick="openYouTubePlaylist('https://www.youtube.com/playlist?list=PLHS3g9s2j-zGjeuCqoN0683NwH3IZ1koQ')">
             <div class="topic-icon">
                 <span class="emoji">😊</span>
             </div>
@@ -39,7 +39,7 @@
             <p class="topic-meta">15 articles • 10 videos</p>
         </div>
 
-        <div class="topic-card" onclick="openTopic('social')">
+        <div class="topic-card" onclick="openYouTubePlaylist('https://www.youtube.com/playlist?list=PLHS3g9s2j-zGjeuCqoN0683NwH3IZ1koQ')">
             <div class="topic-icon">
                 <span class="emoji">💼</span>
             </div>
@@ -47,7 +47,7 @@
             <p class="topic-meta">8 articles • 5 videos</p>
         </div>
 
-        <div class="topic-card" onclick="openTopic('sleep')">
+        <div class="topic-card" onclick="openYouTubePlaylist('https://www.youtube.com/playlist?list=PLPNW_gerXa4M58QbO_KM4aMLmSINuywh3')">
             <div class="topic-icon">
                 <span class="emoji">😴</span>
             </div>
@@ -55,7 +55,7 @@
             <p class="topic-meta">9 articles • 6 videos</p>
         </div>
 
-        <div class="topic-card" onclick="openTopic('academic')">
+        <div class="topic-card" onclick="openYouTubePlaylist('https://www.youtube.com/playlist?list=PLD4cyJhQaFwXja4yIVEVHIECvzsl_Xo1K')">
             <div class="topic-icon">
                 <span class="emoji">📚</span>
             </div>
@@ -63,12 +63,28 @@
             <p class="topic-meta">11 articles • 7 videos</p>
         </div>
 
-        <div class="topic-card" onclick="openTopic('resilience')">
+        <div class="topic-card" onclick="openYouTubePlaylist('https://www.youtube.com/playlist?list=PLAE6TaDhXDU4rdZ7QpDcGeUDxQpx_aHo7')">
             <div class="topic-icon">
                 <span class="emoji">⚡</span>
             </div>
             <h3 class="topic-title">Resilience Building</h3>
             <p class="topic-meta">10 articles • 9 videos</p>
+        </div>
+
+        <div class="topic-card" onclick="openYouTubePlaylist('https://www.youtube.com/playlist?list=PL7by6RYPG3HDc04dtETBExwyl_az6iWoY')">
+            <div class="topic-icon">
+                <span class="emoji">🧘</span>
+            </div>
+            <h3 class="topic-title">Mindfulness & Meditation</h3>
+            <p class="topic-meta">14 articles • 12 videos</p>
+        </div>
+
+        <div class="topic-card" onclick="openYouTubePlaylist('https://www.youtube.com/playlist?list=PLiUrrIiqidTWje-Oc4uA6LZZO8vSaHaDL')">
+            <div class="topic-icon">
+                <span class="emoji">💙</span>
+            </div>
+            <h3 class="topic-title">Depression Support</h3>
+            <p class="topic-meta">13 articles • 11 videos</p>
         </div>
     </div>
 
@@ -292,6 +308,11 @@
         if (targetSection) {
             targetSection.style.display = 'block';
         }
+    }
+
+    function openYouTubePlaylist(playlistUrl) {
+        // Open YouTube playlist in a new tab
+        window.open(playlistUrl, '_blank');
     }
 
     function openTopic(topicName) {
