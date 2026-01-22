@@ -6,8 +6,8 @@ services:
     region: singapore
     plan: free
     buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
-    startCommand: "python manage.py migrate && gunicorn manas_backend.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4"
-    healthCheckPath: /
+    startCommand: "python manage.py migrate && gunicorn manas_backend.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120 --preload"
+    healthCheckPath: /api/health/
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
@@ -25,6 +25,10 @@ services:
         generateValue: true
       - key: ALLOWED_HOSTS
         value: *.onrender.com
+      - key: USE_NLP_CHATBOT
+        value: true
+      - key: DISABLE_HUGGINGFACE
+        value: true
       - key: GEMINI_API_KEY
         sync: false  # Set manually in Render dashboard
 

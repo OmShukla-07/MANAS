@@ -39,13 +39,19 @@ class HuggingFaceMentalHealthService:
             r'\bself.?harm\b'
         ]
         
-        # Load the model
-        self.load_model()
+        # Lazy load the model (don't load on init to save memory)
+        self.pipe = None
+        self.tokenizer = None
+        self.model = None
+        self._model_loaded = False
         
-        logger.info("✨ Hugging Face Chatbot ready!")
+        logger.info("✨ Hugging Face Chatbot initialized (model will load on first use)!")
     
     def load_model(self):
-        """Load the Hugging Face BERT model"""
+        """Load the Hugging Face BERT model (lazy loading)"""
+        if self._model_loaded:
+            return  # Already loaded
+            
         try:
             # Try the mental health model first (requires authentication)
             model_name = "ourafla/mental-health-bert-finetuned"
@@ -73,11 +79,14 @@ class HuggingFaceMentalHealthService:
                 
                 logger.info(f"✅ Alternative model loaded: {model_name}")
             
+            self._model_loaded = True
+            
         except Exception as e:
             logger.error(f"❌ Error loading model: {e}")
             self.pipe = None
             self.tokenizer = None
             self.model = None
+            self._model_loaded = False
     
     def detect_crisis(self, text):
         """
@@ -106,6 +115,11 @@ class HuggingFaceMentalHealthService:
         Returns: (emotion_label, confidence, all_scores)
         """
         try:
+            # Load model on first use (lazy loading)
+            if not self._model_loaded:
+                logger.info("Loading model on first use...")
+                self.load_model()
+            
             if not self.pipe:
                 logger.error("❌ Model not loaded")
                 return None, 0.0, []

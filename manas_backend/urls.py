@@ -13,9 +13,13 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+from core.health_views import HealthCheckView
 
 # Main URL patterns
 urlpatterns = [
+    # Health check endpoint (no auth required)
+    path('api/health/', HealthCheckView.as_view(), name='health_check'),
+    
     # Admin interface
     path('admin/', admin.site.urls),
     

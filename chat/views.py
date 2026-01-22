@@ -1,11 +1,11 @@
 """
-Chat Views - Hugging Face AI Mental Health Chatbot
-Using Hugging Face emotion classification model
-No external API dependencies, local processing
+Chat Views - AI Mental Health Chatbot
+Supports both Hugging Face and NLP-based chatbots
 """
 
 import json
 import logging
+import os
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -20,7 +20,21 @@ from rest_framework.views import APIView
 
 from .models import ChatSession, Message, AIPersonality
 from .serializers import ChatSessionDetailSerializer, MessageSerializer
-from .huggingface_chatbot_service import get_huggingface_service
+
+# Lazy import based on environment
+if os.environ.get('DISABLE_HUGGINGFACE', 'false').lower() == 'true':
+    from .nlp_chatbot_service import NLPChatbotService
+    chatbot_service = NLPChatbotService()
+    CHATBOT_TYPE = 'nlp'
+    logger = logging.getLogger(__name__)
+    logger.info("🚀 Using NLP Chatbot (memory-efficient)")
+else:
+    from .huggingface_chatbot_service import get_huggingface_service
+    chatbot_service = None  # Will be initialized on first use
+    CHATBOT_TYPE = 'huggingface'
+    logger = logging.getLogger(__name__)
+    logger.info("🤗 Using Hugging Face Chatbot")
+
 from crisis.models import CrisisAlert, CrisisType
 
 logger = logging.getLogger(__name__)
@@ -207,11 +221,16 @@ class ChatMessageSendView(APIView):
                 content=message_text
             )
             
-            # Get Hugging Face AI service
-            hf_service = get_huggingface_service()
-            
-            # Get AI response
-            response_data = hf_service.chat(message_text)
+            # Get AI service (lazy load for Hugging Face)
+            if CHATBOT_TYPE == 'huggingface':
+                global chatbot_service
+                if chatbot_service is None:
+                    chatbot_service = get_huggingface_service()
+                response_data = chatbot_service.chat(message_text)
+                model_used = 'huggingface'
+            else:
+                response_data = chatbot_service.generate_response(message_text)
+                model_used = 'nlp'
             
             # Save AI response
             ai_message = Message.objects.create(
@@ -219,7 +238,7 @@ class ChatMessageSendView(APIView):
                 sender=request.user,  # Still requires a user for FK
                 message_type='ai',
                 content=response_data['response'],
-                ai_model_used='huggingface',
+                ai_model_used=model_used,
                 ai_confidence=response_data.get('confidence', 0.0),
                 contains_crisis_keywords=response_data.get('is_crisis', False)
             )
