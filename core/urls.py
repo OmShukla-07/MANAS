@@ -77,11 +77,11 @@ urlpatterns = [
     # User Management AJAX
     path('admin/user-action/', views.admin_user_action_ajax, name='admin-user-action-ajax'),
     
-    # Supabase Integration
-    path('supabase/status/', views.supabase_status, name='supabase-status'),
-    path('supabase/migrate/', views.migrate_to_supabase, name='supabase-migrate'),
-    path('supabase/setup-guide/', views.supabase_setup_guide, name='supabase-setup-guide'),
-    path('supabase/dashboard/', views.supabase_dashboard_view, name='supabase-dashboard'),
+    # Supabase Integration - DISABLED (using Render PostgreSQL)
+    # path('supabase/status/', views.supabase_status, name='supabase-status'),
+    # path('supabase/migrate/', views.migrate_to_supabase, name='supabase-migrate'),
+    # path('supabase/setup-guide/', views.supabase_setup_guide, name='supabase-setup-guide'),
+    # path('supabase/dashboard/', views.supabase_dashboard_view, name='supabase-dashboard'),
     
     # Router URLs
     path('', include(router.urls)),

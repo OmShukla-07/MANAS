@@ -10,11 +10,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 
-# Import Supabase views
-from .supabase_views import (
-    supabase_status, migrate_to_supabase, 
-    supabase_setup_guide, supabase_dashboard_view
-)
+# Supabase views disabled (not using Supabase)
+# from .supabase_views import (
+#     supabase_status, migrate_to_supabase, 
+#     supabase_setup_guide, supabase_dashboard_view
+# )
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Avg, Q, Max, F
 from django.utils import timezone

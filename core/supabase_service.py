@@ -4,10 +4,18 @@ Handles database connections, authentication, and real-time features
 """
 
 import os
-from supabase import create_client, Client
 from django.conf import settings
 from decouple import config
 import logging
+
+# Optional import - Supabase not required for core functionality
+try:
+    from supabase import create_client, Client
+    SUPABASE_AVAILABLE = True
+except ImportError:
+    SUPABASE_AVAILABLE = False
+    create_client = None
+    Client = None
 
 # Try to load environment variables from .env file if available (for local development)
 try:
