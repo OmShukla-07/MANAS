@@ -36,11 +36,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY') or config('SECRET_KEY', default='djang
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes') if os.environ.get('DEBUG') else config('DEBUG', default=True, cast=bool)
 
-# Render.com and Railway deployment support
+# Render.com, Railway, and Hugging Face Space deployment support
 if os.environ.get('RENDER'):
     ALLOWED_HOSTS = ['*']  # Render handles HTTPS termination
 elif os.environ.get('RAILWAY_ENVIRONMENT'):
     ALLOWED_HOSTS = ['*']  # Railway handles HTTPS termination
+elif os.environ.get('SPACE_ID'):  # Hugging Face Space
+    ALLOWED_HOSTS = ['*']  # HF Space handles HTTPS termination
 else:
     ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if os.environ.get('ALLOWED_HOSTS') else config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
 
