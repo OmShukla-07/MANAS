@@ -158,10 +158,14 @@ class HuggingFaceMentalHealthService:
             logger.error(f"❌ Error in emotion classification: {e}")
             return None, 0.0, []
     
-    def get_response(self, user_message, emotion=None, confidence=0.0):
+    def get_response(self, user_message, emotion=None, confidence=0.0, conversation_history=None):
         """
         Generate appropriate response based on emotion classification
+        Now uses HuggingFace conversational model for natural responses
         """
+        # Import conversational service
+        from .hf_conversational_service import hf_conversational_service
+        
         # Detect crisis first
         is_crisis, crisis_conf, crisis_type = self.detect_crisis(user_message)
         
@@ -172,8 +176,17 @@ class HuggingFaceMentalHealthService:
         if not emotion:
             emotion, confidence, _ = self.classify_emotion(user_message)
         
-        # Generate response based on emotion AND user message context
-        return self.generate_emotion_response(emotion, confidence, user_message)
+        # Generate conversational response using HF API
+        conv_response = hf_conversational_service.generate_response(
+            user_message=user_message,
+            conversation_history=conversation_history
+        )
+        
+        # Add emotion metadata
+        conv_response['emotion'] = emotion
+        conv_response['emotion_confidence'] = confidence
+        
+        return conv_response
     
     def get_crisis_response(self, crisis_type='suicidal'):
         """Get immediate crisis intervention response"""
