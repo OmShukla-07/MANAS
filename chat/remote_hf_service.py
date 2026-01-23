@@ -84,16 +84,24 @@ class RemoteHFService:
                 "max_length": 100
             }
             
+            logger.info(f"🤖 Calling /chat endpoint: {self.chat_endpoint}")
+            logger.info(f"📝 Payload: message='{message[:50]}...', history_len={len(context) if context else 0}")
+            
             response = requests.post(
                 self.chat_endpoint,
                 json=payload,
                 timeout=30
             )
             
+            logger.info(f"📡 Response status: {response.status_code}")
+            
             if response.status_code == 200:
                 data = response.json()
+                ai_response = data.get("response", "")
+                logger.info(f"✅ AI Response: '{ai_response[:100]}...'")
+                
                 return {
-                    "response": data.get("response", ""),
+                    "response": ai_response if ai_response else "I'm here to listen. Tell me more about what you're experiencing.",
                     "emotion": data.get("emotion", "neutral"),
                     "confidence": data.get("confidence", 0.5),
                     "is_crisis": False,
@@ -102,7 +110,8 @@ class RemoteHFService:
                 }
             
             # Fallback to emotion detection + template if /chat not available
-            logger.warning(f"Chat endpoint returned {response.status_code}, using fallback")
+            logger.warning(f"❌ Chat endpoint returned {response.status_code}: {response.text[:200]}")
+            logger.warning(f"⚠️ Using fallback templates")
             
         except Exception as e:
             logger.warning(f"Chat endpoint failed: {e}, using fallback")
