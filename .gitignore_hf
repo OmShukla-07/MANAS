@@ -1,0 +1,21 @@
+# Only push API files to HF Space, exclude full Django app
+*.pyc
+__pycache__/
+.venv/
+*.sqlite3
+*.db
+static/images/
+media/
+staticfiles/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.svg
+
+# Keep only these files for HF Space:
+!app_hf.py
+!requirements_hf.txt
+!Dockerfile
+!README.space.md

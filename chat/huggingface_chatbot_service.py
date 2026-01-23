@@ -111,52 +111,24 @@ class HuggingFaceMentalHealthService:
     
     def classify_emotion(self, text):
         """
-        Classify the emotion/mental health state of the text
+        Classify emotion using HuggingFace API (no local model loading)
         Returns: (emotion_label, confidence, all_scores)
         """
         try:
-            # Load model on first use (lazy loading)
-            if not self._model_loaded:
-                logger.info("Loading model on first use...")
-                self.load_model()
+            # Use HuggingFace API instead of loading local model
+            from .hf_conversational_service import hf_conversational_service
             
-            if not self.pipe:
-                logger.error("❌ Model not loaded")
-                return None, 0.0, []
+            emotion, confidence, scores = hf_conversational_service.detect_emotion_api(text)
             
-            # Use pipeline for classification
-            result = self.pipe(text, truncation=True, max_length=512)
+            if emotion:
+                logger.info(f"🎯 Emotion detected: {emotion} (confidence: {confidence:.2f})")
+                return emotion, confidence, scores
             
-            # Handle different response formats
-            if isinstance(result, list) and len(result) > 0:
-                # If top_k=None, we get a list of all scores
-                if isinstance(result[0], list):
-                    # Multiple scores returned
-                    scores = result[0]
-                    # Sort by score
-                    scores_sorted = sorted(scores, key=lambda x: x['score'], reverse=True)
-                    top_result = scores_sorted[0]
-                    emotion = top_result['label']
-                    confidence = top_result['score']
-                    all_scores = scores_sorted
-                else:
-                    # Single top prediction
-                    top_result = result[0]
-                    emotion = top_result['label']
-                    confidence = top_result['score']
-                    all_scores = result
-            else:
-                emotion = None
-                confidence = 0.0
-                all_scores = []
-            
-            logger.info(f"🎯 Emotion detected: {emotion} (confidence: {confidence:.2f})")
-            
-            return emotion, confidence, all_scores
+            return 'neutral', 0.5, []
             
         except Exception as e:
             logger.error(f"❌ Error in emotion classification: {e}")
-            return None, 0.0, []
+            return 'neutral', 0.5, []
     
     def get_response(self, user_message, emotion=None, confidence=0.0, conversation_history=None):
         """

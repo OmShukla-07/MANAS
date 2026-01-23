@@ -1,12 +1,14 @@
 ---
 title: MANAS AI Model API
 emoji: 🧠
-colorFrom: teal
+colorFrom: green
 colorTo: green
 sdk: docker
+sdk_version: "4.36.0"
+app_file: app_hf.py
+app_port: 7860
 pinned: false
 license: mit
-app_port: 7860
 ---
 
 # MANAS AI Model API

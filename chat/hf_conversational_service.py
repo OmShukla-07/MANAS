@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class HFConversationalService:
     """
-    HuggingFace Inference API for mental health conversations
+    HuggingFace Inference API for mental health conversations AND emotion detection
     Privacy-friendly: Data processed but not stored by HuggingFace
     """
     
@@ -33,11 +33,15 @@ class HFConversationalService:
             'conversational': 'microsoft/DialoGPT-medium',           # 117M params - Natural chat
             'blenderbot': 'facebook/blenderbot-400M-distill',        # 400M params - Empathetic
             'instruction': 'meta-llama/Llama-2-7b-chat-hf',         # 7B params - Advanced (may need auth)
+            'emotion': 'j-hartmann/emotion-english-distilroberta-base'  # Emotion detection
         }
         
         # Use BlenderBot as default (more empathetic for mental health)
         self.current_model = self.models['blenderbot']
         self.api_url = f"https://api-inference.huggingface.co/models/{self.current_model}"
+        
+        # Emotion detection API
+        self.emotion_api_url = f"https://api-inference.huggingface.co/models/{self.models['emotion']}"
         
         # Conversation context (for multi-turn conversations)
         self.max_context_length = 5  # Keep last 5 exchanges
@@ -245,6 +249,49 @@ class HFConversationalService:
             'model': 'template',
             'source': 'fallback'
         }
+    
+    def detect_emotion_api(self, text):
+        """
+        Detect emotion using HuggingFace API (no local model needed)
+        Returns: (emotion, confidence, all_scores)
+        """
+        if not self.api_token:
+            return 'neutral', 0.5, []
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.api_token}",
+                "Content-Type": "application/json"
+            }
+            
+            payload = {"inputs": text}
+            
+            response = requests.post(
+                self.emotion_api_url,
+                headers=headers,
+                json=payload,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                
+                # Extract emotion scores
+                if isinstance(result, list) and len(result) > 0:
+                    scores = result[0]
+                    
+                    # Find highest scoring emotion
+                    top_emotion = max(scores, key=lambda x: x['score'])
+                    emotion = top_emotion['label']
+                    confidence = top_emotion['score']
+                    
+                    return emotion, confidence, scores
+            
+            return 'neutral', 0.5, []
+            
+        except Exception as e:
+            logger.error(f"Emotion detection API error: {e}")
+            return 'neutral', 0.5, []
     
     def switch_model(self, model_type='conversational'):
         """Switch between different HuggingFace models"""
