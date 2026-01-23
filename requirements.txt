@@ -29,44 +29,15 @@ vine==5.1.0
 billiard==4.2.2
 amqp==5.3.1
 
-# API Clients
+# API Clients - ONLY REQUESTS (for HuggingFace API)
 requests==2.32.5
-httpx==0.28.1
-httpcore==1.0.9
-
-# Translation
-deep-translator==1.11.4
-
-# Google AI (Optional)
-google-generativeai==0.8.5
-google-cloud-translate==3.17.0
-google-ai-generativelanguage==0.6.15
-google-api-core==2.25.1
-google-api-python-client==2.181.0
-google-auth==2.40.3
-google-auth-httplib2==0.2.0
-googleapis-common-protos==1.70.0
-
-# Supabase (Optional)
-supabase==2.20.0
-supabase-auth==2.20.0
-supabase-functions==2.20.0
-postgrest==2.20.0
-realtime==2.20.0
-storage3==2.20.0
 
 # Utilities
 python-dotenv==1.0.1
-python-decouple==3.8
 python-dateutil==2.9.0.post0
-python-crontab==3.3.0
 pillow==11.0.0
-beautifulsoup4==4.13.5
-tqdm==4.67.1
-cron_descriptor==2.0.6
 
 # Security
-cryptography==46.0.1
 PyJWT==2.10.1
 certifi==2025.7.14
 
@@ -75,25 +46,16 @@ asgiref==3.9.1
 sqlparse==0.5.3
 tzdata==2025.2
 websockets==15.0.1
-packaging==25.0
-click==8.2.1
-colorama==0.4.6
-
-# Protocol/Network
-grpcio==1.74.0
-grpcio-status==1.71.2
-h11==0.16.0
-h2==4.3.0
-hpack==4.1.0
-hyperframe==6.1.0
-proto-plus==1.26.1
-protobuf==5.29.5
 
 # Types/Validation
 pydantic==2.11.7
 pydantic_core==2.33.2
 typing_extensions==4.15.0
-annotated-types==0.7.0
 
-# NO PyTorch/Transformers - Using HuggingFace API instead!
-# This reduces build time from 30 mins to 3 mins
+# REMOVED HEAVY PACKAGES:
+# ❌ Google AI packages (not needed - using HuggingFace Space)
+# ❌ Supabase packages (not needed in production)
+# ❌ grpcio (heavy compilation, not needed)
+# ❌ httpx, translation, etc. (not critical)
+# 
+# BUILD TIME: 3-5 minutes (down from 20+ mins)
