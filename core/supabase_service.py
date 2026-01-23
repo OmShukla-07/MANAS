@@ -33,6 +33,17 @@ class SupabaseService:
     """
     
     def __init__(self):
+        # Check if Supabase is available
+        if not SUPABASE_AVAILABLE:
+            logger.warning("Supabase package not installed - Supabase features disabled")
+            self.client = None
+            self.admin_client = None
+            self.url = None
+            self.key = None
+            self.service_role_key = None
+            self.storage_bucket = None
+            return
+        
         # Try multiple methods to get environment variables
         self.url = os.environ.get('SUPABASE_URL') or config('SUPABASE_URL', default=None)
         self.key = os.environ.get('SUPABASE_KEY') or config('SUPABASE_KEY', default=None)
