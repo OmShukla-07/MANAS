@@ -36,8 +36,8 @@ class HFConversationalService:
             'emotion': 'j-hartmann/emotion-english-distilroberta-base'  # Emotion detection
         }
         
-        # Use BlenderBot as default (more empathetic for mental health)
-        self.current_model = self.models['blenderbot']
+        # Use DialoGPT as default (more reliable and faster)
+        self.current_model = self.models['conversational']
         self.api_url = f"https://api-inference.huggingface.co/models/{self.current_model}"
         
         # Emotion detection API
@@ -95,19 +95,23 @@ class HFConversationalService:
             payload = {
                 "inputs": context,
                 "parameters": {
-                    "max_length": 200,
-                    "temperature": 0.7,
-                    "top_p": 0.9,
+                    "max_new_tokens": 60,         # Shorter responses = less hallucination
+                    "temperature": 0.7,           # Lower = more focused
+                    "top_p": 0.85,                # Nucleus sampling
+                    "repetition_penalty": 1.2,    # Avoid repetition
                     "do_sample": True,
                     "return_full_text": False
                 },
                 "options": {
                     "wait_for_model": True,
-                    "use_cache": True
+                    "use_cache": False  # Disable cache for fresh responses
                 }
             }
             
             # Make API request
+            logger.info(f"🤖 Calling HuggingFace API: {self.current_model}")
+            logger.info(f"📝 Context length: {len(context)} chars")
+            
             response = requests.post(
                 self.api_url,
                 headers=headers,
@@ -115,8 +119,11 @@ class HFConversationalService:
                 timeout=30
             )
             
+            logger.info(f"📡 API Response Status: {response.status_code}")
+            
             if response.status_code == 200:
                 result = response.json()
+                logger.info(f"✅ API Response: {result}")
                 
                 # Extract generated text
                 if isinstance(result, list) and len(result) > 0:
@@ -130,6 +137,7 @@ class HFConversationalService:
                 generated_text = self._clean_response(generated_text, user_message)
                 
                 if generated_text:
+                    logger.info(f"💬 Generated response: {generated_text[:100]}...")
                     return {
                         'response': generated_text,
                         'confidence': 0.85,
@@ -138,7 +146,7 @@ class HFConversationalService:
                     }
             
             # If API fails, fallback to templates
-            logger.warning(f"HuggingFace API error: {response.status_code}")
+            logger.warning(f"❌ HuggingFace API error: {response.status_code} - {response.text[:200]}")
             return self._get_template_response(user_message)
             
         except requests.exceptions.Timeout:
@@ -149,35 +157,23 @@ class HFConversationalService:
             return self._get_template_response(user_message)
     
     def _build_context(self, user_message, conversation_history, companion_type):
-        """Build conversation context with system prompt"""
+        """Build conversation context - simplified for DialoGPT"""
         
-        # Personality variations
-        personalities = {
-            'supportive': "You are warm, empathetic, and validating. You focus on emotional support.",
-            'analytical': "You are logical, structured, and solution-oriented. You help break down problems.",
-            'mindful': "You are calm, present-focused, and teach mindfulness techniques."
-        }
+        # Build simple context with recent messages only
+        context_parts = []
         
-        personality = personalities.get(companion_type, personalities['supportive'])
-        
-        # Build context string
-        context = f"{self.system_prompt} {personality}\n\n"
-        
-        # Add conversation history (last few exchanges)
-        if conversation_history:
-            recent_history = conversation_history[-self.max_context_length:]
-            for msg in recent_history:
-                role = msg.get('role', 'user')
-                content = msg.get('content', '')
-                if role == 'user':
-                    context += f"Student: {content}\n"
-                elif role == 'assistant':
-                    context += f"MANAS: {content}\n"
+        # Add last 2 exchanges only (4 messages)
+        if conversation_history and len(conversation_history) > 0:
+            recent = conversation_history[-4:]
+            for msg in recent:
+                content = msg.get('content', '')[:100]  # Limit each message to 100 chars
+                context_parts.append(content)
         
         # Add current message
-        context += f"Student: {user_message}\nMANAS:"
+        context_parts.append(user_message)
         
-        return context
+        # Join with simple separator
+        return " ".join(context_parts)
     
     def _clean_response(self, response, user_message):
         """Clean up generated response"""

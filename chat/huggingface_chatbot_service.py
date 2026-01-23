@@ -387,7 +387,7 @@ class HuggingFaceMentalHealthService:
         Main chat interface
         Args:
             user_message: User's message text
-            context: Optional conversation context
+            context: Optional conversation context (conversation_history)
         Returns:
             Response dictionary with message and metadata
         """
@@ -403,8 +403,13 @@ class HuggingFaceMentalHealthService:
             # Classify emotion
             emotion, confidence, all_scores = self.classify_emotion(user_message)
             
-            # Generate response
-            response_data = self.get_response(user_message, emotion, confidence)
+            # Generate response WITH conversation history
+            response_data = self.get_response(
+                user_message, 
+                emotion, 
+                confidence,
+                conversation_history=context  # Pass context as conversation_history
+            )
             
             # Add classification details
             response_data['classification'] = {

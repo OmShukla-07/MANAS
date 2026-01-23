@@ -21,22 +21,12 @@ from rest_framework.views import APIView
 from .models import ChatSession, Message, AIPersonality
 from .serializers import ChatSessionDetailSerializer, MessageSerializer
 
-# Check if we should use remote HF API or local models
-USE_REMOTE_HF = os.environ.get('USE_REMOTE_HF', 'true').lower() == 'true'
-
-if USE_REMOTE_HF:
-    from .remote_hf_service import get_remote_hf_service
-    chatbot_service = get_remote_hf_service()
-    CHATBOT_TYPE = 'remote_hf'
-    logger = logging.getLogger(__name__)
-    logger.info("🌐 Using Remote HF Space API for AI predictions")
-else:
-    # Fallback to local NLP
-    from .nlp_chatbot_service import NLPChatbotService
-    chatbot_service = NLPChatbotService()
-    CHATBOT_TYPE = 'nlp'
-    logger = logging.getLogger(__name__)
-    logger.info("🚀 Using Local NLP Chatbot")
+# Always use your HuggingFace Space for predictions
+from .remote_hf_service import get_remote_hf_service
+chatbot_service = get_remote_hf_service()
+CHATBOT_TYPE = 'remote_hf'
+logger = logging.getLogger(__name__)
+logger.info("🌐 Using Your HuggingFace Space API")
 
 from crisis.models import CrisisAlert, CrisisType
 
@@ -224,13 +214,22 @@ class ChatMessageSendView(APIView):
                 content=message_text
             )
             
-            # Get AI service response
-            if CHATBOT_TYPE == 'remote_hf':
-                response_data = chatbot_service.chat(message_text)
-                model_used = 'remote_hf'
-            else:
-                response_data = chatbot_service.generate_response(message_text)
-                model_used = 'nlp'
+            # Get conversation history for context (last 10 messages)
+            previous_messages = Message.objects.filter(
+                session=session
+            ).order_by('-created_at')[:10]
+            
+            conversation_history = []
+            for msg in reversed(previous_messages):
+                role = 'user' if msg.message_type == 'user' else 'assistant'
+                conversation_history.append({
+                    'role': role,
+                    'content': msg.content
+                })
+            
+            # Get AI service response with conversation history
+            response_data = chatbot_service.chat(message_text, context=conversation_history)
+            model_used = CHATBOT_TYPE
             
             # Save AI response
             ai_message = Message.objects.create(
