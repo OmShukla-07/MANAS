@@ -18,8 +18,15 @@ except ImportError:
 try:
     from decouple import config
 except ImportError:
-    def config(key, default=None):
-        return os.environ.get(key, default)
+    def config(key, default=None, cast=None):
+        """Fallback config function that supports cast parameter"""
+        value = os.environ.get(key, default)
+        if cast and value is not None:
+            try:
+                return cast(value)
+            except (ValueError, TypeError):
+                return default
+        return value
 
 # Import required for database configuration
 try:
