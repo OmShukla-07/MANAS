@@ -25,10 +25,10 @@ services:
         generateValue: true
       - key: ALLOWED_HOSTS
         value: *.onrender.com
-      - key: USE_NLP_CHATBOT
+      - key: USE_REMOTE_HF
         value: true
-      - key: DISABLE_HUGGINGFACE
-        value: true
+      - key: HF_SPACE_URL
+        value: https://omshukla16-manas-edu.hf.space
       - key: GEMINI_API_KEY
         sync: false  # Set manually in Render dashboard
 

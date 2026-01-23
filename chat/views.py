@@ -1,6 +1,6 @@
 """
 Chat Views - AI Mental Health Chatbot
-Supports both Hugging Face and NLP-based chatbots
+Hybrid mode: Calls HF Space API for model inference
 """
 
 import json
@@ -21,19 +21,22 @@ from rest_framework.views import APIView
 from .models import ChatSession, Message, AIPersonality
 from .serializers import ChatSessionDetailSerializer, MessageSerializer
 
-# Lazy import based on environment
-if os.environ.get('DISABLE_HUGGINGFACE', 'false').lower() == 'true':
+# Check if we should use remote HF API or local models
+USE_REMOTE_HF = os.environ.get('USE_REMOTE_HF', 'true').lower() == 'true'
+
+if USE_REMOTE_HF:
+    from .remote_hf_service import get_remote_hf_service
+    chatbot_service = get_remote_hf_service()
+    CHATBOT_TYPE = 'remote_hf'
+    logger = logging.getLogger(__name__)
+    logger.info("🌐 Using Remote HF Space API for AI predictions")
+else:
+    # Fallback to local NLP
     from .nlp_chatbot_service import NLPChatbotService
     chatbot_service = NLPChatbotService()
     CHATBOT_TYPE = 'nlp'
     logger = logging.getLogger(__name__)
-    logger.info("🚀 Using NLP Chatbot (memory-efficient)")
-else:
-    from .huggingface_chatbot_service import get_huggingface_service
-    chatbot_service = None  # Will be initialized on first use
-    CHATBOT_TYPE = 'huggingface'
-    logger = logging.getLogger(__name__)
-    logger.info("🤗 Using Hugging Face Chatbot")
+    logger.info("🚀 Using Local NLP Chatbot")
 
 from crisis.models import CrisisAlert, CrisisType
 
@@ -221,13 +224,10 @@ class ChatMessageSendView(APIView):
                 content=message_text
             )
             
-            # Get AI service (lazy load for Hugging Face)
-            if CHATBOT_TYPE == 'huggingface':
-                global chatbot_service
-                if chatbot_service is None:
-                    chatbot_service = get_huggingface_service()
+            # Get AI service response
+            if CHATBOT_TYPE == 'remote_hf':
                 response_data = chatbot_service.chat(message_text)
-                model_used = 'huggingface'
+                model_used = 'remote_hf'
             else:
                 response_data = chatbot_service.generate_response(message_text)
                 model_used = 'nlp'

@@ -1,35 +1,49 @@
 ---
-title: MANAS Mental Health Platform
+title: MANAS AI Model API
 emoji: 🧠
 colorFrom: teal
 colorTo: green
 sdk: docker
 pinned: false
 license: mit
-app_port: 8000
+app_port: 7860
 ---
 
-# MANAS - Mental Health Support Platform
+# MANAS AI Model API
 
-AI-powered mental health chatbot for educational institutions using Hugging Face transformers for emotion classification and crisis detection.
+This Space provides **AI model inference only** for the MANAS Mental Health Platform.
 
-## 🌟 Features
-- 🤖 AI Chatbot with emotion detection using BERT
-- 🚨 Real-time crisis detection and alerting
-- 🌐 Multi-language support (18 languages including Hindi, Tamil, Telugu)
-- 💬 NLP-based conversational AI
-- 📊 Mental health insights and analytics
-- 👥 Student counseling support
-- 📅 Appointment scheduling with counselors
+## 🎯 What This Does
+This is the **AI brain** of MANAS - it:
+- Receives text input via API
+- Analyzes emotion using BERT
+- Detects crisis situations
+- Returns predictions to the main app
 
-## 🛠️ Tech Stack
-- Django 5.2.6 + REST Framework
-- Hugging Face Transformers (BERT)
-- PostgreSQL Database
-- WebSockets (Real-time chat)
-- JWT Authentication
+## 🔌 API Endpoints
 
-## 🚀 Live Demo
-This space runs the full MANAS platform with all features enabled.
+### `POST /predict`
+```json
+{
+  "text": "I'm feeling anxious about my exams"
+}
+```
 
-Visit: https://huggingface.co/spaces/OmShukla16/Manas-edu
+**Response:**
+```json
+{
+  "emotion": "fear",
+  "confidence": 0.87,
+  "is_crisis": false,
+  "all_scores": [...]
+}
+```
+
+### `GET /health`
+Check if model is loaded
+
+## 🌐 Integration
+The main MANAS app on Render calls this API for all AI predictions.
+
+**Main App:** https://manas-mental-health.onrender.com
+**AI API:** https://huggingface.co/spaces/OmShukla16/Manas-edu
